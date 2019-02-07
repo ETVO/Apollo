@@ -1,0 +1,174 @@
+.header {
+    grid-area: header;
+    display: flex;
+}
+
+.headerContent {
+    background: none;
+    border-bottom: solid 3px #00B1F6;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    margin: auto;
+    width: 70%;
+}
+
+.headerGrid {
+    width: 98%;
+    margin: auto;
+	display: grid;
+	grid-template-rows: auto;
+	grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: ". logo ."
+    ". sublogo ."
+    "menu pesquisa conta";
+}
+
+.logo {
+    /* background: red; */
+    grid-area: logo;
+	display: grid;
+	grid-template-rows: auto auto;
+}
+
+.logo_image {
+    display: flex;
+}
+
+.logo_image img {
+    max-width: 150px;
+    height: 150px;
+    margin: auto;
+    margin-top: 10px; 
+    content: url("../img/logo.png");
+}
+
+.logo_title {
+    display: flex;
+}
+
+.logo_title h1 {
+    margin: auto;
+}
+
+.sublogo {
+    grid-area: sublogo;
+    display: flex;
+}
+
+.sublogo p {
+    margin: auto;
+    font-size: 0.9em;
+}
+
+.menu {
+    grid-area: menu;
+}
+
+.menuContent {
+    display: flex;
+    width: 100%;
+}
+
+.menuOption {
+    display: flex;
+    width: 100%;
+}
+
+.menuOption a {
+    width: 100%;
+    text-align: center;
+    background: none;
+    text-emphasis: none;
+    text-decoration: none;
+    margin: auto;
+    padding: 10px;
+    border-bottom: solid 1px white;
+}
+
+.menuOption a:hover {
+    /* font-weight: bold; */
+}
+
+.menuOption a div {
+    transition-property: width;
+    transition-duration: 0.1s;
+    display: block;
+    background: #00B1F6;
+    height: 2px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    width: 0;
+    margin: auto;
+}
+
+.menuOption a:hover div {
+    width: 30%;
+}
+
+.menuOption a#active:hover {
+}
+
+.menuOption a#active div {
+    width: 30%;
+    background: #00B1F6;
+    transition-property: background;
+    transition-duration: 0.2s;
+}
+
+.menuOption a#active:hover div {
+    background: #00B1F6;
+}
+
+.pesquisa {
+    grid-area: pesquisa;
+    display: flex;
+}
+
+.pesquisaContent {
+    margin: auto;
+    display: flex;
+}
+
+.pesquisaFrm {
+    margin: auto;
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.pesquisaIcon {
+    content: url("../img/search_icon.png");
+    max-height: 20px;
+    margin: 10px;
+}
+
+.pesquisaInput { 
+    margin: auto;
+    margin-left: 10px;
+}
+
+.conta {
+    grid-area: conta;
+    display: flex;
+}
+
+.contaContent {
+    margin: auto;
+}
+
+.contaText {
+    text-align: center;
+    margin: auto;
+    color: #5a5a5a;
+}
+
+.contaText a {
+    text-align: center;
+    text-emphasis: none;
+    text-decoration: none;
+    color: inherit;
+}
+
+.contaText a:hover {
+    text-decoration: underline;
+    color: black;
+}

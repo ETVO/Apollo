@@ -1,0 +1,35 @@
+.sobre {
+    grid-area: content;
+    display: flex;
+}
+
+.sobreContent {
+    margin: auto;
+    width: 70%;
+    display: block;
+    text-align: center;
+}
+
+.sobreText {
+    margin: auto;
+    width: 80%;
+}
+
+.desenv {
+    display: flex;
+}
+
+.desenvGrid {
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.desenvPerson {
+    margin: auto;
+    width: 80%;
+}
+
+.desenvPerson img {
+    width: 60%;
+}

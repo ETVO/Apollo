@@ -1,0 +1,51 @@
+.livros {
+    grid-area: content;
+    display: flex;
+}
+
+.livrosContent {
+    margin: auto;
+    width: 70%;
+    display: block;
+}
+
+.livrosTitle {
+    margin: auto;
+    text-align: center;
+}
+
+.livrosCatalog {
+    display: flex;
+}
+
+.livro {
+    max-width: 21%;
+    float: left;
+    padding: 2%;
+}
+
+.livroImage {
+    width: 100%;
+}
+
+.livroImage img {
+    width: 100%;
+}
+
+.livroInfo {
+    display: grid;
+    margin: auto;
+    text-align: center;
+    grid-template-rows: auto;
+}
+
+.livroTitle {
+}
+
+.livroAutor h4 {
+    font-weight: normal;
+}
+
+#livroEmprestimo {
+    content="A";
+}

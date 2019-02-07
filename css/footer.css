@@ -1,0 +1,57 @@
+.footer {
+    grid-area: footer;
+    display: flex;
+}
+
+.footerContent {
+    /* border-top: solid 3px #00B1F6; */
+    /* border-top: solid 3px rgba(0, 0, 0, 0.4);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px; */
+    margin: auto;
+    width: 100%;
+}
+
+.footerGrid {
+    width: 98%;
+    margin: auto;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+}
+
+.voltaTopo {
+    width: 100%;
+    display: flex;
+    height: 50px;
+}
+
+.voltaTopo a {
+    margin: auto;
+    text-decoration: none;
+}
+
+.voltaTopo a:hover {
+    text-decoration: underline;
+}
+
+.footerText {
+    display: block;
+    left: 0;
+    right: 0;
+    border-top: solid 1px rgba(67, 67, 67, 0.4);
+    padding: 10px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    text-align: center;
+    line-height: 1.4em;
+}
+
+.footerText a {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.footerText a:hover {
+    text-decoration: underline;
+}

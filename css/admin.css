@@ -1,0 +1,19 @@
+.headerContent {
+    border-bottom: solid 3px rgb(0, 0, 0);
+}
+
+.admin {
+    grid-area: content;
+    display: flex;
+}
+
+.adminContent {
+    margin: auto;
+    width: 70%;
+    display: block;
+}
+
+.adminTitle {
+    margin: auto;
+    text-align: center;
+}

@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS public.genero;
+
+CREATE TABLE public.genero (
+    id_genero BIGSERIAL NOT NULL,
+    nome TEXT NOT NULL,
+    sigla VARCHAR(5) NOT NULL,
+    excluido BOOLEAN NOT NULL DEFAULT FALSE,
+    CONSTRAINT pk_genero PRIMARY KEY (id_genero, nome, sigla)
+);
+
+INSERT INTO public.genero VALUES (DEFAULT, 'Literatura Brasileira Contos', 'LBC', DEFAULT);
+
+SELECT * FROM public.genero;

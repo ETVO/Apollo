@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS public.editora CASCADE;
+
+CREATE TABLE public.editora (
+    id_editora BIGSERIAL PRIMARY KEY NOT NULL,
+    nome TEXT NOT NULL,
+    excluido BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+INSERT INTO public.editora VALUES (DEFAULT, 'Saraiva', DEFAULT);
+
+SELECT * FROM public.editora;

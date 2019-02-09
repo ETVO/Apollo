@@ -16,6 +16,7 @@
 
 .livrosCatalog {
     display: flex;
+    margin: auto;
 }
 
 .livro {
@@ -25,7 +26,7 @@
 }
 
 .livroImage {
-    width: 100%;
+    width: 100%; display: none;
 }
 
 .livroImage img {
@@ -44,8 +45,11 @@
 
 .livroAutor h4 {
     font-weight: normal;
+    margin-top: 0; 
 }
 
-#livroEmprestimo {
-    content="A";
+.livroCodigo h4 {
+    font-weight: normal;
+    margin-top: 0; 
+    font-size: 0.9em;
 }

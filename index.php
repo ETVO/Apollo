@@ -1,3 +1,67 @@
+<?php
+    session_start();
+
+    $fb = 0; // inicio
+
+    $login = '';
+    $bdsession = '';
+
+    if(isset($_GET['logout']))
+    {
+        $logout = $_GET['logout'];
+        if($logout){
+            session_destroy();
+            session_start();
+        }
+    }
+
+    if(isset($_POST['subLogin']))
+    {
+        try 
+        {
+            include "config/php/connect.php";
+
+            $login = $_POST['login'];
+            $senha = $_POST['password'];
+            $md5 = md5($senha);
+
+            $sql = "SELECT senha FROM user WHERE login = '$login'";
+
+            $res = mysqli_query($conn, $sql);
+            
+            if(mysqli_affected_rows($conn) > 0){
+                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+                $bd = $row['senha'];
+                
+                if($md5 == $bd){
+                    $fb = 3;
+                    successful($md5, $login);
+                }
+                else
+                    $fb = 2; // senha incorreta
+
+            } 
+            else {
+                $fb = 1; // login incorreto;
+            }
+
+            close($conn);
+        } catch (Exception $e){
+            $fb = 5;
+        }
+    }
+
+    function successful ($md5, $login) {
+        $_SESSION['login'] = $login;
+        $_SESSION['senha'] = $md5;
+
+        // echo $_SESSION['senha'];
+        // echo $_SESSION['login'];
+    }
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <script>
@@ -11,125 +75,83 @@
 
     <title>Apolo</title>
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/livros.css">
-    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/login.css"> 
+    <script src="config/js/sweetalert.min.js"></script>
+    <link rel="shortcut icon" href="favicon.ico">    
 </head>
 
 <body>
-    <div class="index">
-        <div class="header" id="topo">
-            <div class="headerContent">
-                <div class="headerGrid">
-                    <div class="logo">
-                        <div class="logo_image">
+<?php
+    $error_msg = array("Login incorreto!", "Senha incorreta!");
+    
+    if($fb == 5){
+        
+    }
+
+    // echo $fb;
+    if($fb == 3){
+        ?>
+            <script>
+                swal({
+                    title: "Conexão bem sucedida!",
+                    text: "Entrando em sua conta...",
+                    icon: "success",
+                }).then((value) =>{
+                    if(value){
+                        window.location.href="main";
+                    }
+                    else {
+                        window.location.href="main";
+                    }
+                });
+            </script>
+        <?php
+    }
+    else if($fb != 0){
+        ?>
+            <script>
+                swal({
+                    title: "<?php echo $error_msg[$fb-1] ?>",
+                    icon: "error",
+                });
+            </script>
+        <?php
+    }
+?>
+
+<div class="index">
+            <div class="indexContent">
+                <div class="present">
+                    <div class="presentContent">
+                        <div class="presentLogo">
                             <img src="" alt="">
                         </div>
-                        <div class="logo_title">
-                            <h1>Apolo</h1>
+                        <div class="presentTitle">
+                            <h1 onclick="window.location.href='main';">Apolo</h1>
                         </div>
                     </div>
-                    <div class="sublogo">
-                        <p>Organizando livros e leitores</p>
-                    </div>
-                    <div class="menu">
-                        <div class="menuContent">
-                            <div class="menuOption">
-                                <a href="" id="inicio" title="Visão Geral">Início
-                                    <div></div>
-                                </a>
+                </div>
+                <div class="login">
+                    <div class="loginContent">
+                        <form action="" class="loginFrm" method="post">
+                            <div class="loginField">
+                                <div><label for="login">Login</label></div>
+                                <input type="text" name="login" id="login" maxlength="20" <?php if($fb == 1) echo 'style="border-color:red"'; else if($fb == 2) echo 'value = "'.$login.'"'; ?>>
                             </div>
-                            <div class="menuOption">
-                                <a href="sobre/" id="sobre" title="Sobre o Sistema">Sobre
-                                    <div></div>
-                                </a>
+                            <div class="loginField">
+                                <div for="senha" class="lblSenha"><label for="" id="senhaLabel">Senha</label><a onclick="senha()" id="senhaInfo" style="display: none">Esqueci minha senha</a></div>
+                                <input type="password" name="password" id="senha"  <?php if($fb == 2) echo 'style="border-color:red"'; ?>>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="pesquisa">
-                        <div class="pesquisaContent">    
-                            <form action="" class="pesquisaFrm" id="frmPesquisa">
-                                <input type="search" name="search" class="pesquisaInput" title="Pesquisar">
-                                <a onclick="submitPesquisa()"><img src="" alt="" class="pesquisaIcon" title="Pesquisar"></a>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="conta">
-                        <div class="contaContent">
-                            <div class="contaText">
-                                <a href="" title="Faça seu login!">Fazer Login</a>
+                            <div class="btnSubmit">
+                                <input type="submit" name="subLogin" value="Entrar">
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="livros">
-            <div class="livrosContent">
-                <div class="livrosTitle">
-                    <h2>Livros</h3>
-                </div>
-                <div class="livrosCatalog">
-                    <div class="livrosLivros">
-                        <?php
-                        $i = 0;
-                        while($i++ < 4){
-                        ?>
-                        <div class="livro">
-                            <form action="">
-                                <div class="livroImage">
-                                    <img src="https://images-na.ssl-images-amazon.com/images/I/41Q11CAxpcL._SX321_BO1,204,203,200_.jpg"
-                                        alt="" title="A História do Lorem Ipsum">
-                                </div>
-                                <div class="livroInfo">
-                                    <div class="livroTitle">
-                                        <h3>
-                                            A História do Lorem Ipsum
-                                        </h3>
-                                    </div>
-                                    <div class="livroAutor">
-                                        <h4>
-                                            Marcus Tullius Cicero
-                                        </h4>
-                                    </div>
-                                </div>
-                                <div class="btnSubmit">
-                                    <input type="submit" value="Empréstimo" title="Emprestar este livro">
-                                </div>
-                            </form>
-                        </div>
-                        <?php 
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer">
-            <div class="footerContent">
-                <div class="footerGrid">
-                    <div class="voltaTopo">
-                        <a href="#topo" title="Voltar ao topo da página">Voltar ao topo</a>
-                    </div>
-                    <div class="footerText">
-                        @ 2019
-                        <br>
-                        <a href="sobre" title="Sobre">Apolo - Sistema de Biblioteca - CTI</a>
-                        <br>
-                        Desenvolvido por Estevão Rolim e Pedro Neves
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        <?php
+    ?>
 </body>
-<script>
-    var menuActive = document.getElementById(page);
-
-    menuActive.setAttribute("id", "active");
-</script>
-
 <script src="js/main.js"></script>
 </html>

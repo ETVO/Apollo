@@ -1,0 +1,131 @@
+html {
+    height: 96vh;
+}
+
+.index {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.indexContent {
+    width: 60%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: "logo" "login";
+    box-sizing: border-box;
+}
+
+.present {
+    grid-area: logo;
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+    margin-top: 55px;
+    /* background: red; */
+}
+
+.presentContent {
+    width: 20%;
+    margin: auto;
+    display: grid;
+    grid-template-rows: auto auto;
+}
+
+.presentLogo img {
+    content: url("../imgs/logo.png");
+    max-width: 100%;
+    margin: auto;
+}
+
+.presentTitle {
+    display: flex;
+}
+
+.presentTitle h1{
+    margin: auto;
+    font-size: 3em;
+    /* font-weight: normal; */
+}
+
+.login {
+    grid-area: login;
+    width: 100%;
+    display: flex;
+    margin-top: 10px;
+    /* margin-bottom: 10px; */
+    /* background: green; */
+}
+
+.loginContent {
+    width: 40%;
+    /* height: 200px; */
+    margin: auto;
+    display: flex;
+    /* border: solid 1px rgb(130, 130, 130); */
+    -webkit-box-shadow: 0px 0px 22px -2px rgba(0,0,0,0.23);
+-moz-box-shadow: 0px 0px 22px -2px rgba(0,0,0,0.23);
+box-shadow: 0px 0px 22px -2px rgba(0,0,0,0.23);
+    border-radius: 3px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.loginFrm {
+    margin: auto;
+    width: 100%;
+}
+
+.loginFrm input {
+    font-size: 1.1em;
+}
+
+.loginField {
+    width: 100%;
+    display: grid;
+}
+
+.loginField div {
+    width: 100%;
+    padding: 5px;
+    padding-left: 0;
+    /* font-size: 1.1em; */
+    font-weight: bold;
+}
+
+.lblSenha {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: 1fr;
+}
+
+#senhaInfo {
+    font-size: 0.8em;
+    font-weight: normal;
+    margin: auto;
+    margin-right: 0;
+    color: rgb(55, 55, 255);
+    text-decoration: none;
+}
+
+#senhaInfo:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.loginField input {
+    width: 100%;
+    margin-bottom: 5px; 
+    box-sizing: border-box;
+}
+
+.btnSubmit {
+    margin-top: 10px; 
+}
+
+.frmReq {
+    font-weight: normal;
+    color: red;
+}

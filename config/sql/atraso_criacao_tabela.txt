@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS public.atraso;
+
+CREATE TABLE public.atraso (
+    id_emprestimo BIGINT references public.emprestimo(id_emprestimo) PRIMARY KEY,
+    data_dev DATE,
+    multa NUMERIC(5,2),
+    justificativa TEXT
+);
+
+SELECT * FROM public.atraso;

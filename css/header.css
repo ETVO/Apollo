@@ -18,9 +18,15 @@
 	display: grid;
 	grid-template-rows: auto;
 	grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas: ". logo ."
+    grid-template-areas: "voltar logo ."
     ". sublogo ."
     "menu pesquisa conta";
+}
+
+.voltar {
+    margin: 10px;
+    padding: 10px;
+    font-size: 0.8em;
 }
 
 .logo {
@@ -39,7 +45,7 @@
     height: 150px;
     margin: auto;
     margin-top: 10px; 
-    content: url("../img/logo.png");
+    content: url("../imgs/logo.png");
 }
 
 .logo_title {
@@ -136,7 +142,7 @@
 }
 
 .pesquisaIcon {
-    content: url("../img/search_icon.png");
+    content: url("../imgs/search_icon.png");
     max-height: 20px;
     margin: 10px;
 }
@@ -158,17 +164,30 @@
 .contaText {
     text-align: center;
     margin: auto;
-    color: #5a5a5a;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: 1fr;
+    max-width: 100%;
 }
 
 .contaText a {
-    text-align: center;
-    text-emphasis: none;
-    text-decoration: none;
-    color: inherit;
+    cursor: pointer;
 }
 
-.contaText a:hover {
-    text-decoration: underline;
-    color: black;
+.contaAdm img {
+    content: url("../imgs/adm_icon.png");
+    max-width: 20px;
+    margin-left: 10px;
+}
+
+/* .contaAdm img:hover {
+    content: url("../imgs/adm_icon_hover.png");
+    max-width: 20px;
+    margin-left: 10px;
+} */
+
+.contaLogout img {
+    content: url("../imgs/logout_icon.png");
+    max-width: 20px;
+    margin-left: 10px;
 }

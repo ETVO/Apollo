@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS public.autor CASCADE;
+
+CREATE TABLE public.autor (
+    id_autor BIGSERIAL PRIMARY KEY NOT NULL,
+    nome TEXT NOT NULL,
+    ano_nasc INT,
+    excluido BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+INSERT INTO public.autor VALUES (DEFAULT, 'Machado de Assis', 1839, DEFAULT);
+
+SELECT * FROM public.autor;

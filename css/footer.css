@@ -1,57 +1,56 @@
 .footer {
-    grid-area: footer;
-    display: flex;
-}
-
-.footerContent {
-    /* border-top: solid 3px #00B1F6; */
-    /* border-top: solid 3px rgba(0, 0, 0, 0.4);
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px; */
-    margin: auto;
+    background: #eee;
     width: 100%;
-}
-
-.footerGrid {
-    width: 98%;
+    padding: 15px 20px 15px 20px;
+    box-sizing: border-box;
     margin: auto;
     display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: 1fr;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 1fr;
+    color: #727272;
+    font-size: 0.9em;
+    border-top: solid 1px rgba(0, 0, 0, 0.17);
 }
 
-.voltaTopo {
-    width: 100%;
-    display: flex;
-    height: 50px;
+.footer div {
+    color: inherit;
 }
 
-.voltaTopo a {
-    margin: auto;
+.footer div b, .footer div b a{
+    color: inherit;
+}
+
+.footer div b a {
     text-decoration: none;
 }
 
-.voltaTopo a:hover {
+.footer div b a:hover,.footer div b a:focus {
     text-decoration: underline;
+    color: black;
 }
 
-.footerText {
+.footerItems ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    color: inherit;
+}
+
+.footerItems li {
+    float: right;
+    margin: 0 10px 0 10px;
+    color: inherit;
+}
+
+.footerItems li a {
     display: block;
-    left: 0;
-    right: 0;
-    border-top: solid 1px rgba(67, 67, 67, 0.4);
-    padding: 10px;
-    margin-bottom: 5px;
-    margin-top: 10px;
     text-align: center;
-    line-height: 1.4em;
-}
-
-.footerText a {
-    font-weight: bold;
     text-decoration: none;
+    color: inherit;
 }
-
-.footerText a:hover {
+ 
+.footerOpt:hover,.footerOpt:focus {
+    color: black;
     text-decoration: underline;
 }

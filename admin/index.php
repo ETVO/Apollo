@@ -1,44 +1,70 @@
 <?php
     session_start();
+    session_destroy();
+    session_start();
 
+    $fb = 0; // inicio
 
-    $login = $_SESSION['login'];
-    $senha = $_SESSION['senha'];
-    $nome = '';
-    if(!isset($_SESSION['login']) || !isset($_SESSION['senha'])) {
-        header("Location: ..");
-    }
-    else {
+    $login = '';
+    $bdsession = '';
+
+    // if(isset($_GET['logout']))
+    // {
+    //     $logout = $_GET['logout'];
+    //     if($logout){
+    //         session_destroy();
+    //         session_start();
+    //     }
+    // }
+
+    if(isset($_POST['subLogin']))
+    {
         try 
         {
             include "../config/php/connect.php";
 
-            $sql = "SELECT nome FROM user WHERE login = '$login'";
+            $login = $_POST['login'];
+            $senha = $_POST['password'];
+            $md5 = md5($senha);
+
+            $sql = "SELECT senha FROM user WHERE login = '$login'";
 
             $res = mysqli_query($conn, $sql);
             
             if(mysqli_affected_rows($conn) > 0){
                 $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-                $nome = utf8_encode($row['nome']);
-                $nome = explode(" ", $nome)[0];
+                $bd = $row['senha'];
+                
+                if($md5 == $bd){
+                    $fb = 3;
+                    successful($md5, $login);
+                }
+                else
+                    $fb = 2; // senha incorreta
+
             } 
             else {
-                header("Location: ..");
+                $fb = 1; // login incorreto;
             }
 
-            close($conn);
+            mysqli_close($conn);
         } catch (Exception $e){
-
+            $fb = 5;
         }
+    }
+
+    function successful ($md5, $login) {
+        $_SESSION['login'] = $login;
+        $_SESSION['senha'] = $md5;
+
+        // echo $_SESSION['senha'];
+        // echo $_SESSION['login'];
     }
 
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
-<script>
-    var page = "none";
-</script>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -49,114 +75,87 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/login.css">
     <link rel="stylesheet" href="../css/footer.css">
     <script src="../config/js/sweetalert.min.js"></script>
     <link rel="shortcut icon" href="../favicon.ico"> 
 </head>
 
 <body>
-    <div class="main">
-        <div class="header" id="topo">
-            <div class="headerContent">
-                <div class="headerGrid">
-                    <div class="logo">
-                        <a class="logo_image" href="../main">
-                            <img src="" alt="">
-                        </a>
-                        <div class="logo_title">
-                            <h1>Apolo</h1>
-                        </div>
-                    </div>
-                    <div class="sublogo">
-                        <p>Organizando livros e leitores</p>
-                    </div>
-                    <div class="menu">
-                        <div class="menuContent">
-                            <div class="menuOption">
-                                <a href="../main" id="inicio" title="Visão Geral">Início
-                                    <div></div>
-                                </a>
-                            </div>
-                            <div class="menuOption">
-                                <a href="../sobre/" id="sobre" title="Sobre o Sistema">Sobre
-                                    <div></div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="pesquisa">
-                        <div class="pesquisaContent">    
-                            <form action="" class="pesquisaFrm" id="frmPesquisa">
-                                <input type="search" placeholder="Pesquisar..." name="search" class="pesquisaInput" title="Pesquisar">
-                                <a onclick="submitPesquisa()"><img src="" alt="" class="pesquisaIcon" title="Pesquisar"></a>
-                            </form>
-                        </div>
-                    </div>
+<?php
 
-                    <div class="conta">
-                        <div class="contaContent">
-                            <div class="contaText">
-                                <div><label for=""><b>Administrador: </b><?php echo $nome?></label></div><a href="../admin" class="contaAdm" title="Funções de Administrador"><img src="" alt=""></a><a class="contaLogout" title="Sair da Conta" onclick="sure()"><img src="" alt=""></a>
-                            </div>
+    $error_msg = array("Login incorreto!", "Senha incorreta!");
+    
+    if($fb == 5){
+        
+    }
+
+    // echo $fb;
+    if($fb == 3){
+        ?>
+            <script>
+                swal({
+                    title: "Conexão bem sucedida!",
+                    icon: "success",
+                }).then((value) =>{
+                    if(value){
+                        window.location.href="main.php";
+                    }
+                    else {
+                        window.location.href="main.php";
+                    }
+                });
+            </script>
+        <?php
+    }
+    else if($fb != 0){
+        ?>
+            <script>
+                swal({
+                    title: "<?php echo $error_msg[$fb-1] ?>",
+                    icon: "error",
+                });
+            </script>
+        <?php
+    }
+?>
+    <div class="centerAdm heightAdm">
+        <div class="centerAdmContent">     
+            <div class="admin">
+                <h3 class="adminApolo">Apolo</h3>
+                <h1 class="adminTitle">Administração</h1>
+            </div>
+            <div class="login">
+                <div class="loginContent">
+                    <form action="" class="loginFrm" method="post">
+                        <div class="loginField">
+                            <div><label for="login">Login</label></div>
+                            <input type="text" name="login" id="login" maxlength="20" <?php if($fb == 1) echo 'style="border-color:red"'; else if($fb == 2) echo 'value = "'.$login.'"'; ?>>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="admin">
-            <div class="adminContent">
-                <div class="adminTitle">
-                    <h2>Administração</h3>
-                </div>
-            </div>
-        </div>
-        <div class="footer">
-            <div class="footerContent">
-                <div class="footerGrid">
-                    <div class="voltaTopo">
-                        <a href="#topo" title="Voltar ao topo da página">Voltar ao topo</a>
-                    </div>
-                    <div class="footerText">
-                        @ 2019
-                        <br>
-                        <a href="../sobre" title="Sobre">Apolo - Sistema de Biblioteca - CTI</a>
-                        <br>
-                        Desenvolvido por Estevão Rolim e Pedro Neves
-                    </div>
+                        <div class="loginField">
+                            <div for="senha" class="lblSenha"><label for="" id="senhaLabel">Senha</label><a onclick="senha()" id="senhaInfo" style="display: none">Esqueci minha senha</a></div>
+                            <input type="password" name="password" id="senha"  <?php if($fb == 2) echo 'style="border-color:red"'; ?>>
+                        </div>
+                        <div class="loginSubmit">
+                            <button type="submit" class="loginBtn" name="subLogin">Entrar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+    <div class="footer">
+        <div class="footerDesc">
+            © 2019 <b><a href="../main" title="Início">Apolo</a></b> - Sistema da Biblioteca CTI
+        </div>
+        <div class="footerItems">
+            <ul>
+                <li><a href="../admin" target="_blank" class="footerOpt" title="Funções administrativas">Administração</a></li>
+                <li><a href="../sobre" class="footerOpt"  title="Sobre o sistema">Sobre</a></li>
+            </ul>
+        </div>
+    </div>
 </body>
 
-<script src="js/main.js"></script>
-<script>
-    var menuActive = document.getElementById(page);
-
-    menuActive.setAttribute("id", "active");
-
-    function sure() {
-        swal({
-            title: "Sair da Conta",
-            text: "Deseja realmente sair de sua conta?",
-            icon: "warning",
-            buttons: [{
-                text: "Sim",
-                value: true,
-                visible: true,
-                className: "",
-                closeModal: true,
-            }, 
-            {
-                text: "Não",
-                value: false,
-            }],
-        }).then((value)=> {
-            if(value){
-                window.location.href="../?logout=true";
-            }
-        });
-    }
-</script>
+<script src="../js/main.js"></script>
 </html>

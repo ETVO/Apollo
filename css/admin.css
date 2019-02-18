@@ -1,19 +1,35 @@
-.headerContent {
-    border-bottom: solid 3px rgb(0, 0, 0);
+.heightAdm {
+    height: 92vh;
 }
 
-.admin {
-    grid-area: content;
+.centerAdm {
     display: flex;
 }
 
-.adminContent {
+.centerAdmContent {
     margin: auto;
-    width: 70%;
-    display: block;
+}
+
+.admin {
+    display: grid;
+    grid-template-rows: auto;
+}
+
+.adminApolo {
+    font-weight: normal;
+    margin: auto;
 }
 
 .adminTitle {
     margin: auto;
+    text-align: center;
+}
+
+.admOpts {
+    /* margin: auto; */
+}
+
+.admUl {
+    list-style: none;
     text-align: center;
 }

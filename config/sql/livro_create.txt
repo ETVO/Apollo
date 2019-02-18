@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS livro;
+
+CREATE TABLE livro (
+    id_livro SERIAL PRIMARY KEY NOT NULL,
+    titulo TEXT NOT NULL,
+    genero TEXT NOT NULL,
+    autor TEXT NOT NULL,
+    editora TEXT NOT NULL,
+    ano INT,
+    edicao INT,
+    disponivel BOOLEAN NOT NULL DEFAULT TRUE,
+    obs TEXT DEFAULT NULL
+);
+
+INSERT INTO livro VALUES (DEFAULT, 'Memórias Póstumas de Brás Cubas', 'Literatura Brasileira', 'Machado de Assis', 'Companhia das Letras', 1998, 1, DEFAULT, DEFAULT);
+
+SELECT * FROM livro;

@@ -1,0 +1,298 @@
+.searchHead { 
+    box-sizing: border-box;
+    /* float: left; */
+    width: 100%;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 15fr 5fr;
+    position: fixed;
+    background: #fff;
+    border-bottom: solid 1px #bbb;
+}
+
+.presentContent {
+    display: flex;
+}
+
+.presentTitle {
+    margin: auto;
+    margin-left: 10px;
+}
+
+.search {
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+}
+
+.searchBar {
+    margin: auto;
+	width: 98%;
+}
+
+.frmSearch {
+    width: 100%;
+    float: left;
+}
+
+.frmSearch input {
+    /* padding: 5px;
+    box-sizing: border-box; */
+}
+
+.searchField {
+    width: 35%;
+    background: #fff;    
+    border-radius: 10px;
+    border: 1px solid #dfe1e5;
+    box-sizing: border-box;
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    padding: 10px 15px 10px 15px;
+    margin: 0 10px 0 10px;
+}
+
+.searchField:active, .searchField:hover, .searchField:focus {
+    outline: none;
+    -webkit-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.23);
+    -moz-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.23);
+    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.23);
+}
+
+.searchBtn {
+    margin: auto; 
+    background: #f3f3f3;
+    color: #777;
+    border: solid 1px #f4f4f4;
+    padding: 10px 20px 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+.searchBtn:hover, .searchBtn:focus {
+    margin: auto; 
+    background: linear-gradient(#fafafa, #f3f3f3);
+    color: #333;
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+}
+
+.homeLink { 
+    text-decoration: none;
+}
+
+.emprestimo {
+    width: 100%;
+    display: flex;
+}
+
+.emprestimoContent {
+    margin: auto;
+    margin-right: 10px; 
+}
+
+.emprestimoFinalizar {
+    display: block;
+    font-size: 0.9em;
+    text-decoration: none;
+    background: #1b7af7;
+    color: white;
+    border: solid 1px #eee;
+    font-weight: bold;
+    padding: 20px 20px 20px 20px;
+    border-radius: 5px;
+}
+
+.emprestimoFinalizar:hover, .emprestimoFinalizar:focus {
+    background: linear-gradient(#4291f8, #1b7af7);
+    color: white;
+    border: solid 1px #aaa;
+}
+
+.emprestimoContent a {
+    display: block;
+    font-size: 0.9em;
+    margin: 5px 0 0 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.delimiter {
+    /* display: block; */
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #bbb;
+    border: 0;
+    margin: 0;
+}
+
+.content {
+    display: block;
+    height: 100px;
+}
+
+.searchResults {
+    padding: 10px;
+    margin-bottom: 10px; 
+}
+
+.searchContent {
+    display: flex;
+}
+
+.searchTable {
+    margin: auto;
+    width: 90%;
+}
+
+.titulo {
+    /* font-weight: normal; */
+    margin: 0;
+    margin-top: 10px;
+}
+
+.autor {
+    font-weight: normal;
+    /* font-size: 1.1em; */
+    margin: 0;
+    margin-top: 10px;
+    /* margin-left: 0; */
+    color: #666;
+}
+
+.genero {
+    margin-top: 10px;
+    margin-bottom: 10px; 
+}
+
+.edicao_ano {
+    margin: 0;
+    font-weight: normal;
+}
+
+.searchTable {
+	font-size: 0.9em;
+	background: #fff;
+	margin: auto;
+	border-collapse: collapse;
+	width: 95%;
+	/* border: solid 1px rgba(0, 0, 0, 0.17); */
+}
+
+.searchTable tr:nth-child(even){
+	/* background: #f9f9f9; */
+}
+
+.searchTable th {
+	font-weight: normal;
+	text-align: left;
+	padding: 10px;
+}
+
+
+.searchTable td{
+	padding: 10px;
+	font-weight: bold;
+    word-wrap: break-word;
+	/* border-bottom: solid 1px #ddd; */
+	border-top: solid 1px #ddd;
+    font-size: 1em;
+}
+
+td.main {
+    font-size: 1.1em;
+}
+
+.searchTable td b {
+    font-weight: normal;
+    display: block;
+    margin: 5px;
+    margin-left: 0;
+    font-size: 0.9em;
+}
+
+.searchTableFooter {
+    border-top: solid 1px #ddd; 
+}
+
+.searchEmprestar a {
+    display: block;
+    padding: 20px 10px 20px 10px;
+    background: #1b7af7;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: solid 1px #eee;
+    border-radius: 5px;
+}   
+
+.searchEmprestar a:hover, .searchEmprestar a:focus {
+    outline: none;
+    background: linear-gradient(#4291f8, #1b7af7);
+    border: solid 1px #888;
+    /* text-decoration: underline; */
+} 
+
+.empIndisp a {
+    display: block;
+    padding: 20px 10px 20px 10px;
+	/* background: #e20000; */
+	background: #00b90f;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: solid 1px #eee;
+}
+
+.empIndisp a:hover, .empIndisp a:focus {
+    outline: none;
+    /* background: linear-gradient(#f82424, #e20000); */
+    background: linear-gradient(#00c410, #00b90f);
+    border: solid 1px #888;
+    /* text-decoration: underline; */
+}
+
+.empSelecionado a {
+    background: #fafafa;
+    color: #242424;
+    border: solid 1px #eee;
+}
+
+.empSelecionado a:hover, .empSelecionado a:focus {
+    background: linear-gradient(#fafafa, #eee);
+    color: #000;
+    border: solid 1px #888;
+    /* cursor: unset; */
+}
+
+.trIndisp {
+    background: #f5f5f5;
+}
+
+.pagination {
+    width: 100%;
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+}
+
+.paginationUl {
+	list-style-type: none;
+}
+
+.paginationLi {
+	float: left;
+}
+
+.paginationLi a {
+	padding: 5px;
+	display: block;
+	font-size: 0.9em;
+}
+
+.pageSelected { 
+	font-weight: bold;
+}
+
+.trSelecionado {
+    background: #ddd;
+}

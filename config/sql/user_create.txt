@@ -6,14 +6,12 @@ CREATE TABLE user (
     ra VARCHAR(7) UNIQUE,
     login VARCHAR(20) UNIQUE NOT NULL,
     senha TEXT NOT NULL,
-    turma TEXT,
-    ano INT NOT NULL,
+    ano INT,
     tipo VARCHAR(15) NOT NULL,
     telefone VARCHAR(15),
-    adm BOOLEAN NOT NULL DEFAULT FALSE,
     bloqueado BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-INSERT INTO user VALUES (DEFAULT, 'Estev„o Pereira Rolim', '1757075', 'ETVO', '952388fda169f9d66a929b6c95ca7c53', '73A/83A', 2019, 'Aluno', '14981743304', TRUE, DEFAULT);
+INSERT INTO user VALUES (DEFAULT, 'Estev√£o Pereira Rolim', '1757075', 'ETVO', '952388fda169f9d66a929b6c95ca7c53', 3, 'Aluno', '14981743304', DEFAULT);
 
 SELECT * FROM user;

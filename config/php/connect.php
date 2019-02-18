@@ -16,7 +16,8 @@
         exit;
     }
 
-    function close($conn){
-        mysqli_close($conn);
-    }
+    // function close($conn)
+    // {
+    //     mysqli_close($conn);
+    // }
 ?>

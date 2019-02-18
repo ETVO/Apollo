@@ -1,0 +1,14 @@
+order nas consultas
+
+
+                    <!-- <td class="info">
+                        <h3 class="titulo">Memórias Póstumas de Brás Cubas</h3>
+                        <h4 class="autor">Machado de Assis</h4>
+                        <h4 class="genero">Literatura Brasileira</h4>
+                    </td>
+                    <td class="obs"> 
+                        <h4 class="edicao_ano">1a Edição - 1990</h4>
+                    </td>
+                    <td class="searchEmprestar">
+                        asas
+                    </td> -->

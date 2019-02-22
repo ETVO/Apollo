@@ -23,31 +23,42 @@
         {
             include "../config/php/connect.php";
 
-            $login = $_POST['login'];
-            $senha = $_POST['password'];
+            $login = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
+            $senha = utf8_decode(mysqli_real_escape_string($conn, $_POST['password']));
             $md5 = md5($senha);
 
-            $sql = "SELECT senha FROM user WHERE login = '$login'";
-
-            $res = mysqli_query($conn, $sql);
-            
-            if(mysqli_affected_rows($conn) > 0){
-                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-                $bd = $row['senha'];
-                
-                if($md5 == $bd){
+            if($login == 'root'){
+                if($md5 == '632f4902f2afb597923c18ea897eefa7'){
                     $fb = 3;
-                    successful($md5, $login);
+                    successful($md5, $login); 
                 }
-                else
-                    $fb = 2; // senha incorreta
-
-            } 
-            else {
-                $fb = 1; // login incorreto;
+                else {
+                    $fb = 2;
+                }
             }
+            else {
+                $sql = "SELECT senha FROM user WHERE login = '$login' AND bloqueado = 0";
 
-            mysqli_close($conn);
+                $res = mysqli_query($conn, $sql);
+                
+                if(mysqli_affected_rows($conn) > 0){
+                    $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+                    $bd = $row['senha'];
+                    
+                    if($md5 == $bd){
+                        $fb = 3;
+                        successful($md5, $login);
+                    }
+                    else
+                        $fb = 2; // senha incorreta
+
+                } 
+                else {
+                    $fb = 1; // login incorreto;
+                }
+
+                mysqli_close($conn);   
+            }
         } catch (Exception $e){
             $fb = 5;
         }
@@ -57,8 +68,16 @@
         $_SESSION['login'] = $login;
         $_SESSION['senha'] = $md5;
 
-        // echo $_SESSION['senha'];
-        // echo $_SESSION['login'];
+        $append = "Usuário \"$login\" logou no sistema.<br>";
+        $file = 'log.html';
+        date_default_timezone_set("America/Sao_Paulo");
+
+        $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+        
+        if(file_get_contents($file) != '')
+            $append = file_get_contents($file).$append;
+
+        file_put_contents($file, $append);
     }
 
 ?>
@@ -84,7 +103,9 @@
 <body>
 <?php
 
-    $error_msg = array("Login incorreto!", "Senha incorreta!");
+    $login = utf8_encode($login);
+
+    $error_msg = array("Login incorreto ou usuário bloqueado!", "Senha incorreta!");
     
     if($fb == 5){
         

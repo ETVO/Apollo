@@ -109,6 +109,12 @@
     border: solid 1px #aaa;
 }
 
+.empDisabled, .empDisabled:hover, .empDisabled:focus {
+    background: #cecece;
+	color: #ddd;
+	border: solid 1px rgba(0, 0, 0, 0);
+}
+
 .emprestimoContent a {
     display: block;
     font-size: 0.9em;
@@ -233,10 +239,10 @@ td.main {
     /* text-decoration: underline; */
 } 
 
-.empIndisp a {
+/* .empIndisp a {
     display: block;
     padding: 20px 10px 20px 10px;
-	/* background: #e20000; */
+	background: #e20000;
 	background: #00b90f;
     color: white;
     text-align: center;
@@ -246,11 +252,24 @@ td.main {
 
 .empIndisp a:hover, .empIndisp a:focus {
     outline: none;
-    /* background: linear-gradient(#f82424, #e20000); */
+    background: linear-gradient(#f82424, #e20000);
     background: linear-gradient(#00c410, #00b90f);
     border: solid 1px #888;
-    /* text-decoration: underline; */
+    text-decoration: underline;
+} */
+
+.empIndisp a {
+    background: #cecece;
+	color: #ddd;
+	border: solid 1px rgba(0, 0, 0, 0);
 }
+
+.empIndisp a:hover, .empIndisp a:focus {
+    background: #cecece;
+	color: #ddd;
+	border: solid 1px rgba(0, 0, 0, 0);
+}
+
 
 .empSelecionado a {
     background: #fafafa;
@@ -266,7 +285,7 @@ td.main {
 }
 
 .trIndisp {
-    background: #f5f5f5;
+    /* background: #444; */
 }
 
 .pagination {

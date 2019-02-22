@@ -7,10 +7,14 @@
 	margin: auto;
 } */
 
+body {
+	min-height: 92vh;
+}
+
 .voltaInicio {
 	display:block;
 	position: absolute; 
-	padding:10px; 
+	margin:10px; 
 	font-size: 0.8em;
 	color: #727272;
 }
@@ -103,6 +107,9 @@
 .admTable tr:nth-child(even){
 	background: #f9f9f9;
 }
+.admTable tr.trAtrasado{
+	background: rgba(255, 0, 0, 0.1);
+}
 
 .admTable th {
 	font-weight: normal;
@@ -149,15 +156,11 @@
 	text-decoration: none;
 }
 
-.admExcluir:hover {
+.admExcluir:hover, .admExcluir:focus {
 	background: #e20000;
 	color: white;
 }
 
-.admExcluir a {
-	text-decoration: none;
-	color: inherit;
-}
 
 .admSearch { 
 	width: 98%;
@@ -204,62 +207,66 @@
 	font-weight: bold;
 }
 
-.cadastro {
-	width: 100%;
-	display: flex;
-	box-sizing: border-box;
-}
-
-.cadastroFrm {
-	margin: auto;
-	font-size: 0.9em;
-	width: 30%;
-	padding: 10px;
-	box-sizing: border-box;
-}
-
-.cadBtn {
-    /* float: right; */
-    margin: auto; 
-    background: #1b7af7;
-    color: #fefefe;
-    border: solid 1px #f4f4f4;
-    padding: 10px 20px 10px 20px;
-	font-weight: bold;
-	font-size: 0.9em;
-    border-radius: 5px;
-}
-
-.cadBtn:hover, .cadBtn:focus {
-    background: linear-gradient(#3689f5, #1b7af7);
-    border: solid 1px rgba(0, 0, 0, 0.17);
-    cursor: pointer;
-	outline: none;
-}
-
-.reset {
-    background: #fafafa;
-    color: #777;
-    border: solid 1px #888;
-}
-
-.reset:hover, .reset:focus {
-    background: linear-gradient( #fafafa, #f2f2f2);
-    color: #000;
-    border: solid 1px #000;
-    cursor: pointer;
-	outline: none;
-}
-
-.resize_v { 
-	resize: vertical;
-}
-
-.requiredField {
-	color: red;
-	font-weight: normal;
-}
 
 .admActions {
 	float: left;
+}
+
+.painelTable {
+	font-size: 0.9em;
+	background: none;
+	margin: auto;
+	margin-top: 40px;
+	/* border-collapse: collapse; */
+	width: 90%;
+}
+
+.painelTable th {
+	text-align: left;
+}
+
+.painelTable th::after {
+	content: ":";
+}
+
+.painelTable td::before {
+	content: "- ";
+}
+
+.painelTable td {
+	display: block;
+	padding: 5px 5px 5px 10px;	
+	/* width: 33%; */
+	/* text-align: center; */
+}
+
+.relLinks {
+	color: #666;
+}
+
+.relLinks:hover, .relLinks:focus {
+	color: black;
+}
+
+.grid_3 {
+	width: 70%;
+}
+
+.grid_2 {
+	width: 70%;
+}
+
+.admDevolver{
+	/* background: #e20000;
+	color: white; */
+	display: block;
+	padding: 20px 10px 20px 10px;
+	color: #00b90f;
+	text-align: center;
+	text-decoration: none;
+}
+
+.admDevolver:hover, .admDevolver:focus {
+	background: #00b90f;
+	color: white;
 }

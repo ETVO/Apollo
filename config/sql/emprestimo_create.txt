@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS emprestimo;
+
+CREATE TABLE emprestimo (
+    id_emprestimo SERIAL PRIMARY KEY NOT NULL,
+    id_livro BIGINT,
+    id_admin BIGINT,
+    nome TEXT NOT NULL,
+    telefone VARCHAR(15),
+    data_emp DATE NOT NULL,
+    data_prev_dev DATE NOT NULL,
+    data_dev DATE,
+    obs TEXT,
+    devolvido BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+SELECT * FROM emprestimo;

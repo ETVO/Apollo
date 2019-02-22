@@ -1,0 +1,120 @@
+.visualizar {
+	width: 100%;
+	background: #f1f1f1;
+	display: flex;
+    box-sizing: border-box;
+}
+
+.visualizarFrm {
+	margin: auto;
+	font-size: 0.9em;
+	width: 30%;
+	padding: 10px;
+    box-sizing: border-box;
+    display: none;
+}
+
+.visBtn {
+    /* float: right; */
+    margin: auto; 
+    background: #1b7af7;
+    color: #fefefe;
+    border: solid 1px #f4f4f4;
+    padding: 10px 20px 10px 20px;
+	font-weight: bold;
+	font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.visBtn:hover, .visBtn:focus {
+    background: linear-gradient(#3689f5, #1b7af7);
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    cursor: pointer;
+	outline: none;
+}
+
+.reset {
+    background: #fafafa;
+    color: #777;
+    border: solid 1px #888;
+}
+
+.reset:hover, .reset:focus {
+    background: linear-gradient( #fafafa, #f2f2f2);
+    color: #000;
+    border: solid 1px #000;
+    cursor: pointer;
+	outline: none;
+}
+
+.resize_v { 
+	resize: vertical;
+}
+
+.requiredField {
+	color: red;
+	font-weight: normal;
+}
+
+.visualizarContent {
+	margin: auto;
+	font-size: 1em;
+	width: 30%;
+	padding: 10px;
+	box-sizing: border-box;
+	font-size: 0.9em;
+}
+
+.visualizarInfo label::after {
+    content: ":";
+}
+
+.visualizarInfo h3 {
+    display: block;
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.visualizarInfo p {
+    font-weight: bold;
+    display: block;
+    margin-top: 0;
+    font-size: 16px;
+}
+
+.btnEditar {
+    /* float: right; */
+    margin: auto; 
+    background: #1b7af7;
+    color: #fefefe;
+    border: solid 1px #f4f4f4;
+    padding: 10px 20px 10px 20px;
+	font-weight: bold;
+	font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.btnEditar:hover, .btnEditar:focus {
+    background: linear-gradient(#3689f5, #1b7af7);
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    cursor: pointer;
+	outline: none;
+}
+
+.btnExcluir {
+    margin: auto; 
+    background: #e20000;
+    color: #fefefe;
+    border: solid 1px #f4f4f4;
+    padding: 10px 20px 10px 20px;
+	font-weight: bold;
+	font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.btnExcluir:hover, .btnExcluir:focus {
+    background: linear-gradient(#f51c1c, #e20000);
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    cursor: pointer;
+	outline: none;
+}

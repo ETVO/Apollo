@@ -1,0 +1,200 @@
+.voltaInicio {
+	display:block;
+	position: absolute; 
+	padding:10px; 
+	font-size: 0.8em;
+	color: #727272;
+}
+
+.voltaInicio:hover {
+	color: black;
+}
+
+.textcenter {
+	text-align: center;
+}
+
+.textcenter h4 {
+	margin-bottom: 0;
+	font-weight: normal;
+}
+
+.textcenter h2 {
+	margin-top: 0;
+}
+
+.rolTitle {
+    text-align: center;
+    margin: auto;
+}
+
+.searchTable {
+	font-size: 0.9em;
+	background: #fff;
+	margin: auto;
+	border-collapse: collapse;
+	width: 95%;
+	/* border: solid 1px rgba(0, 0, 0, 0.17); */
+}
+
+.searchTable tr:nth-child(even){
+	/* background: #f9f9f9; */
+}
+
+.searchTable th {
+	font-weight: normal;
+	text-align: left;
+	padding: 10px;
+}
+
+
+.searchTable td{
+	padding: 10px;
+	font-weight: bold;
+    word-wrap: break-word;
+	/* border-bottom: solid 1px #ddd; */
+	border-top: solid 1px #ddd;
+    font-size: 1em;
+}
+
+td.main {
+    font-size: 1.1em;
+}
+
+.searchTable td b {
+    font-weight: normal;
+    display: block;
+    margin: 5px;
+    margin-left: 0;
+    font-size: 0.9em;
+}
+
+.searchTableFooter {
+    border-top: solid 1px #ddd; 
+}
+
+.searchContent {
+    border: solid 1px rgba(0, 0, 0, 0.2);
+    margin: auto;
+    width: 65%;
+	border-radius: 8px;
+	-webkit-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.15);
+-moz-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.15);
+box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.15);	
+}
+
+.searchResults {
+	margin: 20px;
+}
+
+.remFinal {
+	color: #e20000;
+}
+
+.info {
+	width: 100%;
+	/* display: grid; */
+	box-sizing: border-box;
+}
+
+.infoTitle {
+	text-align: center;
+	margin: auto;
+}
+
+.infoFrm {
+	width: 50%;
+	margin: auto;
+	padding: 20px;
+	padding-top: 0;
+}
+
+.infoField {
+	margin: auto;
+	width: 50%;
+	padding: 10px;
+}
+
+.infoField label {
+	font-size: 0.9em;
+}
+
+.infoField input {
+	font-size: 1em;
+}
+
+
+.infoTable {
+	width: 50%;
+	margin: auto;
+	padding: 20px;
+	padding-top: 0;
+}
+
+.infoTable th {
+	font-weight: normal;
+	text-align: left;
+	width: 33%;
+}
+
+.infoTable td {
+	padding: 0;
+	margin: auto;
+	width: 50%;
+}
+
+.infoTable td h4 {
+	margin-top: 0;
+}
+
+
+.infoBtns {
+	margin: auto;
+    box-sizing: border-box;
+	width: 50%;
+	padding: 10px 10px 10px 0;
+}
+
+.infoBtn {
+    margin: auto; 
+    background: #1b7af7;
+    color: #fefefe;
+    border: solid 1px #f4f4f4;
+    padding: 10px 20px 10px 20px;
+    font-weight: bold;
+	border-radius: 5px;
+}
+
+.infoBtn:hover, .infoBtn:focus {
+    background: linear-gradient(#3689f5, #1b7af7);
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    cursor: pointer;
+}
+
+.centerLogin {
+    display: flex;
+}
+
+.centerLoginContent {
+    margin: auto;
+}
+
+.autoriza {
+    display: grid;
+	grid-template-rows: auto;
+	margin-top: 20px;
+}
+
+.autorizaApolo {
+    font-weight: normal;
+    margin: auto;
+}
+
+.autorizaTitle {
+    margin: auto;
+    text-align: center;
+}
+
+.login {
+	margin-bottom: 20px;
+}

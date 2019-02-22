@@ -13,58 +13,67 @@ function submitPesquisa() {
 function required() {
     var label = document.getElementsByTagName("label");
 
-for(var i = 0; i < label.length; i ++)
-{
-    var lblfor = label[i].getAttribute("for");
-    var input = document.getElementById(lblfor);
+    for(var i = 0; i < label.length; i ++)
+    {
+        var lblfor = label[i].getAttribute("for");
+        var input = document.getElementById(lblfor);
 
-    if(input.hasAttribute("required")){
-        label[i].innerHTML = label[i].innerText + ' <b class="requiredField">*</b>';
-        label[i].setAttribute("title", "Campo obrigatório!");
+        if(input != null)
+        {
+            if(input.hasAttribute("required")){
+                label[i].innerHTML = label[i].innerText + ' <b class="requiredField">*</b>';
+                label[i].setAttribute("title", "Campo obrigatório!");
+            }
+        }
     }
 }
-}
 
-window.onload = required();
+window.onload = load();
+function load() {
+    required();
+    verAluno();
+}
 
 function verAluno() {
     var tipo = document.getElementById("tipo");
     var ano = document.getElementById("ano");
     var ra = document.getElementById("ra");
     
-    if(tipo.value == "Aluno"){
-        ano.removeAttribute("disabled");
-        ano.setAttribute("required", "true");
-        var label = document.getElementById("lblAno");
-        label.innerHTML = 'Ano <b class="requiredField">*</b>';
-        label.setAttribute("title", "Campo obrigatório!");
-
-        ra.removeAttribute("disabled");
-        ra.setAttribute("required", "true");
-        label = document.getElementById("lblRa");
-        label.innerHTML = 'RA <b class="requiredField">*</b>';
-        label.setAttribute("title", "Campo obrigatório!");
-    }
-    else {
-        ano.removeAttribute("required");
-        ano.setAttribute("disabled", true);
-        ano.value = "";
-        var label = document.getElementById("lblAno");
-        label.innerHTML = 'Ano';
-        label.setAttribute("title", "Apenas para alunos");
-        
-        ra.removeAttribute("required");
-        ra.setAttribute("disabled", true);
-        label = document.getElementById("lblRa");
-        label.innerHTML = 'RA';
-        label.setAttribute("title", "Apenas para alunos!");
+    if(tipo != null)
+    {
+        if(tipo.value == "Aluno"){
+            ano.removeAttribute("disabled");
+            ano.setAttribute("required", "true");
+            var label = document.getElementById("lblAno");
+            label.innerHTML = 'Série <b class="requiredField">*</b>';
+            label.setAttribute("title", "Campo obrigatório!");
+    
+            ra.removeAttribute("disabled");
+            ra.setAttribute("required", "true");
+            label = document.getElementById("lblRa");
+            label.innerHTML = 'RA <b class="requiredField">*</b>';
+            label.setAttribute("title", "Campo obrigatório!");
+        }
+        else {
+            ano.removeAttribute("required");
+            ano.setAttribute("disabled", true);
+            var label = document.getElementById("lblAno");
+            label.innerHTML = 'Série';
+            label.setAttribute("title", "Apenas para alunos");
+            
+            ra.removeAttribute("required");
+            ra.setAttribute("disabled", true);
+            label = document.getElementById("lblRa");
+            label.innerHTML = 'RA';
+            label.setAttribute("title", "Apenas para alunos!");
+        }
     }
 }
 
 var empIndisp = document.getElementsByClassName("empIndispA");
 
 for(var i = 0; i < empIndisp.length; i++) {
-    empIndisp[i].innerText = "Reservar";
+    // empIndisp[i].innerText = "Visualizar";
 }
 
 var empSelec = document.getElementsByClassName("empSelecionadoA");

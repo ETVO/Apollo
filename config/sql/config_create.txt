@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS config;
+
+CREATE TABLE config (
+    id_config SERIAL PRIMARY KEY NOT NULL,
+    nome TEXT NOT NULL UNIQUE,
+    valor TEXT NOT NULL,
+    tipo TEXT NOT NULL
+);
+
+SELECT * FROM config;

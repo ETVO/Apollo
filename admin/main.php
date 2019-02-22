@@ -9,12 +9,14 @@
         session_destroy();
         header("Location: index.php");
     }
+    else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
+    }
     else {
         try 
         {
             include "../config/php/connect.php";
 
-            $sql = "SELECT nome FROM user WHERE login = '$login'";
+            $sql = "SELECT nome FROM user WHERE login = '$login' AND bloqueado = 0 AND bloqueado = 0";
 
             $res = mysqli_query($conn, $sql);
             
@@ -34,14 +36,29 @@
         }
     }
 
+    function flname($name, $del)
+    {
+        $a_nome = explode($del,$name);
+
+        if(count($a_nome) >= 3)
+        {
+            $name = $a_nome[0].' '.$a_nome[count($a_nome) - 1];
+        }
+        
+        return $name;
+    }
+
     $selected = '0';
 
     if(isset($_GET['sel'])){
         $selected = $_GET['sel'];
     }
+    else
+        $selected = '';
 
     if(isset($_GET['exc']))
     {
+        $success = false;
         $onscript = "";
         $ontext = "";
         $exc = $_GET['exc'];
@@ -67,12 +84,30 @@
                 echo "<script>
                 alert('$ontext excluído com sucesso!');
                 </script>";
+
+                $success = true;
             } 
             else {
             }
         } catch(Exception $e) {
 
         }
+        
+        if($success)
+        {
+            if($onscript == 'user') $onscript = 'administrador';
+            $append = "Usuário \"$login\" excluiu o $onscript id $exc.<br>";
+            $file = 'log.html';
+            date_default_timezone_set("America/Sao_Paulo");
+
+            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+            
+            if(file_get_contents($file) != '')
+                $append = file_get_contents($file).$append;
+
+            file_put_contents($file, $append);
+        }
+
         header("Location: ?sel=$selected");
     }
 ?>
@@ -119,8 +154,272 @@
         <div class="dashboard">
             <div class="dashboardContent">
                 <?php
-                    if($selected == 'e'){
-                        echo 'em construção';
+                    if($selected == '')
+                    {
+                        ?>
+                        <h2 class="textcenter dashboardTitle" ><a href="?sel=" class="a">Painel</a></h2>
+                        <a href="config.php" target="_blank" class="addNew textcenter a">Configurações do Sistema</a>
+
+                        <div class="grid_3">
+                            <table class="painelTable">
+                                <tr>
+                                    <th colspan="3">Gerar Relação (.pdf)</th>
+                                </tr>
+                                <tr>
+                                    <td><a href="pdf.php?ent=e" target="_blank" class="a relLinks">Empréstimos Atrasados</a></td>
+                                    <td><a href="pdf.php?ent=l" target="_blank" class="a relLinks">Livros</a></td>
+                                    <td><a href="pdf.php?ent=a" target="_blank" class="a relLinks">Administradores</a></td>
+                                </tr>
+                            </table>
+                            <table class="painelTable">
+                                <tr>
+                                    <th colspan="3">Backup (.csv)</th>
+                                </tr>
+                                <tr>
+                                    <td><a href="csv.php?ent=e" target="_blank" class="a relLinks">Empréstimos</a></td>
+                                    <td><a href="csv.php?ent=l" target="_blank" class="a relLinks">Livros</a></td>
+                                    <td><a href="csv.php?ent=a" target="_blank" class="a relLinks">Administradores</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <?php
+                    }
+                    else if($selected == 'e') {
+                        $sel_title = "empréstimos";
+                        ?>
+                        <h2 class="textcenter dashboardTitle" ><a href="?sel=<?php echo $selected; ?>" class="a">Empréstimos</a></h2>
+                        <a href=".." target="_blank" class="addNew textcenter a">Adicionar novo</a>
+
+                        <div class="admSearch">
+                            <form action="" method="get" class="frmSearch">
+                                <input type="hidden" name="sel" value="<?php echo $selected; ?>">
+                                <input type="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
+                                <input type="submit"  value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
+                            </form>
+                        </div>
+
+                        <table class="admTable">
+                            <tr class="header">
+                                <th>Livro</th>
+                                <th>Usuário</th>
+                                <!-- <th>Contato</th> -->
+                                <th>Autorizado por</th>
+                                <th>Emprestado em</th>
+                                <th>Devolução prevista</th>
+                                <th>Devolvido</th>
+                                <th>Devolução</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            
+                            <?php 
+                                try {
+                                    include "../config/php/connect.php";
+                                    
+                                    $page = 1;
+                                    
+                                    if(isset($_GET['page']))
+                                        $page = $_GET['page'];
+
+                                    $sql = "SELECT id_emprestimo, l.titulo, e.nome, e.telefone, a.nome AS admin, data_emp, 
+                                    data_prev_dev, devolvido, data_dev FROM emprestimo AS e 
+                                    INNER JOIN livro AS l ON e.id_livro = l.id_livro 
+                                    INNER JOIN user AS a ON e.id_admin = a.id_user OR e.id_admin = 0";
+
+                                    $sql_count = "SELECT COUNT(*) FROM emprestimo AS e 
+                                    INNER JOIN livro AS l ON e.id_livro = l.id_livro 
+                                    INNER JOIN user AS a ON e.id_admin = a.id_user";
+                                    
+                                    $search = '';
+                                    
+                                    if(isset($_GET['search'])){   
+                                        $search = utf8_decode($_GET['search']);
+                                        $search = strtolower($search);
+                                        $search_str = " WHERE (lower(l.titulo) LIKE '%$search%' OR lower(e.nome) LIKE '%$search%' 
+                                        OR lower(e.telefone) LIKE '%$search%' OR lower(a.nome) LIKE '%$search%' OR data_emp LIKE '%$search%' OR data_prev_dev LIKE '%$search%' OR data_dev LIKE '%$search%')";
+                                        $sql .= $search_str;
+                                        $sql_count .= $search_str;
+                                    }
+
+                                    $sql .= " ORDER BY e.nome ASC";
+
+                                    $res = mysqli_query($conn, $sql_count);
+
+                                    $row = mysqli_fetch_array($res, MYSQLI_NUM);
+
+                                    $count = $row[0];
+
+                                    $limit = 20;
+
+                                    $sql .= " LIMIT $limit";
+                                    
+                                    if($page > 1){
+                                        $offset = $page-1;
+                                        $offset = $offset * 20;
+                                        $sql .= " OFFSET $offset";
+                                    }
+
+                                    $res = mysqli_query($conn, $sql);
+
+                                    if(mysqli_affected_rows($conn) > 0){
+                                        while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
+                                        { 
+
+                                            $id = $row['id_emprestimo'];
+                                            $titulo = utf8_encode($row['titulo']);
+                                            $nome = utf8_encode($row['nome']);
+                                            $nome = flname($nome, ' ');  
+                                            $telefone = utf8_encode($row['telefone']);
+                                            $admin = utf8_encode($row['admin']);
+                                            $admin = flname($admin, ' ');
+                                            $data_emp = utf8_encode($row['data_emp']);
+                                            $data_prev_dev = utf8_encode($row['data_prev_dev']);
+                                            $devolvido = utf8_encode($row['devolvido']);
+                                            $data_dev = utf8_encode($row['data_dev']);
+
+                                            $atrasado = false;
+
+                                            if(strtotime(date('Y-m-d')) > strtotime($data_prev_dev)) $atrasado = true;
+
+                                            ?>
+                                            <tr <?php if($atrasado) echo 'class="trAtrasado" title="Este empréstimo está atrasado!"'; ?>>
+                                                <td><?php echo $titulo; ?></td>
+                                                <td><?php echo $nome; ?></td>
+                                                <td><?php echo $admin; ?></td>
+                                                <td><?php echo date('d/m/Y', strtotime($data_emp)); ?></td>
+                                                <td><?php echo date('d/m/Y', strtotime($data_prev_dev)); ?></td>
+                                                <td><?php if($devolvido) echo 'Sim'; else echo 'Não'; ?></td>
+                                                <td><?php if($data_dev == null) echo '-'; else echo date('d/m/Y', strtotime($data_dev)); ?></td>
+                                                <td class=""><a href="visusu.php?id=<?php echo $id ?>" target="_blank" class="admVisualizar">Visualizar</a></td>
+                                                <td class=""><a <?php if($atrasado) echo 'style="display:none"';?> onclick="<?php if($count > 1)
+                                                echo "swal({
+                                                    title: 'Atenção!',
+                                                    text:'Deseja realmente excluir o administrador \'$nome\'?',
+                                                    icon: 'warning',
+                                                    buttons: true,
+                                                    dangerMode: true,
+                                                }).then((willDelete) =>{
+                                                    if(willDelete){
+                                                        window.location.href = '?sel=$selected&page=$page&search=$search&exc=$id';
+                                                    }
+                                                });"; ?>" class="admDevolver">Devolver</a></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    } 
+                                    else {
+                                        ?>
+                                            <tr>
+                                                <td colspan="9" class="textcenter">
+                                                    Não há nenhum registro!
+                                                </td>
+                                            </tr>
+                                        <?php
+                                    }
+
+                                    mysqli_close($conn);
+                                } catch (Exception $e) {
+                                    ?>
+                                        <tr>
+                                            <td colspan="9" class="textcenter">
+                                                Não há nenhum registro!
+                                            </td>
+                                        </tr>
+                                    <?php
+                                }
+
+                            ?>
+        
+                            <tr class="footer">
+                                <th>Livro</th>
+                                <th>Usuário</th>
+                                <!-- <th>Contato</th> -->
+                                <th>Autorizado por</th>
+                                <th>Emprestado em</th>
+                                <th>Devolução prevista</th>
+                                <th>Devolvido</th>
+                                <th>Devolução</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </table>
+
+                        <?php
+                        if($count > $limit){
+
+                            $page_count = ceil($count/$limit);
+                            // $page_count = $count;
+                            // $page = 20;
+                        ?>
+                        <div class="pagination">
+                            <ul class="paginationUl">
+                                <?php
+                                if($page > 1) {
+                                    if($page > 6){
+                                        ?>
+                                        <li class="paginationLi">
+                                            <a href="<?php echo "?sel=$selected&page=1&search=$search"?>" class="a">Primeiro</a>    
+                                        </li>
+                                        <?php
+                                    }
+                                    $anterior = $page - 1;
+                                    ?>
+                                    <li class="paginationLi">
+                                        <a href="<?php echo "?sel=$selected&page=$anterior&search=$search"; ?>" class="a">Anterior</a>    
+                                    </li>
+                                    <?php
+                                }
+                                ?>
+                                <?php
+                                if($page > 6) {
+                                    $init = $page - 5;
+                                }
+                                else 
+                                    $init = 0;
+                                
+                                if($page_count >= $init + 10){
+                                    $end = $init + 10;
+                                }
+                                else {
+                                    $end = $page_count;
+                                }
+                                for($i = $init; $i < $end; $i++){
+                                    $ival = $i +1;
+                                    // if($ival == $page){
+                                        echo '<li class="paginationLi"><a href="?sel='.$selected.'&page='.$ival.'&search='.$search.'" class="a';
+                                        if($ival == $page)
+                                            echo ' pageSelected '; 
+                                        echo '">'.$ival.'</a></li>';
+                                    // }
+                                    // else
+                                        // echo '<li class="paginationLi"><a href="?sel=l&page='.$ival.'" class="a">'.$ival.'</a></li>';
+                                    // if($ival == $page + 20){
+                                    //     echo '<li class="paginationLi">...</li>';
+                                    //     $i = $count - 10;
+                                    // }
+                                }
+                                ?>
+                                <?php
+                                if($page < $page_count) {
+                                    $proximo = $page + 1;
+                                    ?>
+                                    <li class="paginationLi">
+                                        <a href="<?php echo "?sel=$selected&page=$proximo&search=$search"?>" class="a">Próximo</a>    
+                                    </li>
+                                    <?php
+                                    if($page_count >= $init + 11){
+                                        ?>
+                                        <li class="paginationLi">
+                                            <a href="<?php echo "?sel=$selected&page=$page_count&search=$search"?>" class="a">Último</a>    
+                                        </li>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                        <?php
+                        }
                     }
                     else if($selected == 'l') {
                         $sel_title = "livros";
@@ -169,7 +468,7 @@
 
                                     if(isset($_GET['search'])){        
                                         $search = utf8_decode($_GET['search']);
-                                        $search = strtolower($search);
+                                        $search = strtolower($search);  
                                         $search_str = " WHERE (lower(titulo) LIKE '%$search%' OR lower(genero) LIKE '%$search%' 
                                         OR lower(autor) LIKE '%$search%' OR lower(editora) LIKE '%$search%' OR ano LIKE '%$search%' OR edicao LIKE '%$search%')";
                                         $sql .= $search_str;
@@ -202,20 +501,6 @@
                                             $id = $row['id_livro'];
                                             $titulo = utf8_encode($row['titulo']);
                                             $genero = utf8_encode($row['genero']);
-                                            // switch($genero) {
-                                            //     case 'LB': $genero = "Literatura Brasileira";
-                                            //         break;
-                                            //     case 'LE': $genero = "Literatura Estrangeira";
-                                            //         break;
-                                            //     case 'LCN': $genero = "Literatura de Ciências Naturais";
-                                            //         break;
-                                            //     case 'LCS': $genero = "Literatura de Ciências Sociais";
-                                            //         break;
-                                            //     case 'HQ': $genero = "História em Quadrinhos";
-                                            //         break;
-                                            //     case 'LD': $genero = "Literatura Didática";
-                                            //         break;
-                                            // }
                                             $autor = utf8_encode($row['autor']);
 
                                             $a_autor = explode("; ", $autor);
@@ -237,7 +522,6 @@
 
                                             ?>
                                             <tr>
-                                                <!-- <td style="font-weight: normal"><?php echo $id; ?></td> -->
                                                 <td><?php echo $titulo; ?></td>
                                                 <td><?php echo $genero; ?></td>
                                                 <td><?php echo $autor; ?></td>
@@ -245,7 +529,7 @@
                                                 <td><?php echo $ano; ?></td>
                                                 <td><?php echo $edicao."ᵃ"; ?></td>
                                                 <td><?php echo $disp; ?></td>
-                                                <td class=""><a href="" class="admVisualizar">Visualizar</a></td>
+                                                <td class=""><a href="visliv.php?id=<?php echo $id ?>" target="_blank" class="admVisualizar">Visualizar</a></td>
                                                 <td class=""><a onclick="<?php 
                                                 echo "swal({
                                                     title: 'Atenção!',
@@ -384,9 +668,9 @@
 
                         <div class="admSearch">
                             <form action="" method="get" class="frmSearch">
-                                <input type="hidden" name="sel" value="$selected">
+                                <input type="hidden" name="sel" value="<?php echo $selected; ?>">
                                 <input type="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
-                                <input type="submit"  value="Pesquisar <?php echo $sel_title ?>">
+                                <input type="submit"  value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
                             </form>
                         </div>
 
@@ -419,13 +703,16 @@
                                     
                                     $search = '';
                                     
-                                    if(isset($_GET['search'])){        
-                                        $search = $_GET['search'];
+                                    if(isset($_GET['search'])){   
+                                        $search = utf8_decode($_GET['search']);
+                                        $search = strtolower($search);
                                         $search_str = " WHERE (lower(nome) LIKE '%$search%' OR lower(login) LIKE '%$search%' 
-                                        OR lower(turma) LIKE '%$search%' OR lower(tipo) LIKE '%$search%' OR ra LIKE '%$search%')";
+                                        OR ano LIKE '%$search%' OR lower(tipo) LIKE '%$search%' OR ra LIKE '%$search%')";
                                         $sql .= $search_str;
                                         $sql_count .= $search_str;
                                     }
+
+                                    $sql .= " ORDER BY nome ASC";
 
                                     $res = mysqli_query($conn, $sql_count);
 
@@ -471,8 +758,8 @@
                                                 <td><?php echo $tipo; ?></td>
                                                 <td><?php if($ano != null) echo $ano."º"; else echo '-'; ?></td>
                                                 <td><?php echo $bloq; ?></td>
-                                                <td class=""><a href="" class="admVisualizar">Visualizar</a></td>
-                                                <td class=""><a onclick="<?php 
+                                                <td class=""><a href="visusu.php?id=<?php echo $id ?>" target="_blank" class="admVisualizar">Visualizar</a></td>
+                                                <td class=""><a <?php if($count <= 1) echo 'style="display:none"';?> onclick="<?php if($count > 1)
                                                 echo "swal({
                                                     title: 'Atenção!',
                                                     text:'Deseja realmente excluir o administrador \'$nome\'?',

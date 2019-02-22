@@ -65,9 +65,9 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
         <title><?php echo $search; ?> - Pesquisa Apolo</title>
-        <link rel="stylesheet" href="../css/main.css">
         <link rel="stylesheet" href="../css/search.css">
         <link rel="stylesheet" href="../css/footer.css">
+        <link rel="stylesheet" href="../css/main.css">
         <script src="../config/js/sweetalert.min.js"></script>
         <link rel="shortcut icon" href="../favicon.ico"> 
     </head>
@@ -105,8 +105,8 @@
             </div>
             <div class="emprestimo">
                 <div class="emprestimoContent">
-                    <a href="finalizar.php" class="emprestimoFinalizar" title="Clique aqui para finalizar o empréstimo com os livros selecionados">Finalizar Empréstimo</a>
-                    <a href="finalizar.php" class="a" title="Clique para ver os livros selecionados"><?php echo "$rolcount livros selecionados"; ?></a>
+                    <a <?php if($rolcount >= 1) echo 'href="finalizar.php?s='.$search.'" class="emprestimoFinalizar" title="Clique aqui para finalizar o empréstimo com os livros selecionados"'; else echo 'class="emprestimoFinalizar empDisabled" title="Selecione algum livro para finalizar o empréstimo!"'; ?>>Finalizar Empréstimo</a>
+                    <a <?php if($rolcount >= 1) echo 'href="finalizar.php?s='.$search.'" class="a" title="Clique para ver os livros selecionados"'; else echo 'style="cursor: default"'; ?>><?php echo "$rolcount livro(s) selecionado(s)"; ?></a>
                 </div>
             </div>
         </div>
@@ -122,7 +122,7 @@
                     <?php
                     if(isset($_GET['search']))
                     {
-                        $search = $_GET['search'];
+                        $search = utf8_decode($_GET['search']);
                         $or_search = $search;
                         try {
                             include "../config/php/connect.php";
@@ -207,8 +207,8 @@
                                         <td><?php echo $ano; ?></td>
                                         <td><?php echo $edicao."ᵃ"; ?></td>
                                         <td><?php if($disp) echo 'Sim'; else echo 'Não';?></td>
-                                        <td class="searchEmprestar <?php if(!$disp) echo 'empIndisp'; if(in_array($id, $rol)) echo ' empSelecionado';?>">
-                                            <a href="<?php if($disp){ if(in_array($id, $rol)) echo "?exc=$id&search=$search&page=$page"; else echo "?emp=$id&search=$search&page=$page"; } ?>" class="<?php if(!$disp) echo 'empIndispA'; if(in_array($id, $rol)) echo ' empSelecionadoA';?>" title="<?php if(!$disp) echo 'Reservar'; else echo "Emprestar"; ?> '<?php echo $titulo;?>'">Emprestar</a>
+                                        <td class="searchEmprestar <?php if(!$disp) echo 'empIndisp'; if(in_array($id, $rol)) echo ' empSelecionado';?>" >
+                                            <a href="<?php if($disp){ if(in_array($id, $rol)) echo "?exc=$id&search=$search&page=$page"; else echo "?emp=$id&search=$search&page=$page"; } else echo "visualizar.php" ?>" class="<?php if(!$disp) echo 'empIndispA'; if(in_array($id, $rol)) echo ' empSelecionadoA';?>" <?php if(!$disp) echo 'disabled';?> title="<?php if($disp) echo "Emprestar '$titulo'"; else echo 'Livro indisponível!'?>">Emprestar</a>
                                         </td>
                                     </tr>
                                     <?php

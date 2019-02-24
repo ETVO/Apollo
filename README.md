@@ -1,8 +1,8 @@
 # Apolo
 ### Sistema para Biblioteca do CTI Bauru
 
-Focado na simplificação dos processos, eliminando classificações excessivas e propondo a utilização de estruturas mais pensadas para a experiência de usuário.
+Focado na simplificação dos processos. Priorizando as classificações essenciais, propõe a utilização de estruturas mais práticas para otimizar a experiência de usuário e a eficiência do sistema.
 
 Open Source: **pensado para melhorar, não para restringir.**
 
-### @ 2019 by [Estevão Rolim](https://www.linkedin.com/in/estevaoprolim/)
+### Em 2019 por [Estevão Rolim](https://www.linkedin.com/in/estevaoprolim/)

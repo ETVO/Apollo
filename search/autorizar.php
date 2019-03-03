@@ -183,8 +183,8 @@
                         livroIndisp($id_livro);
                     }
                     else{
-                        echo mysqli_error($conn);
-                        echo $sql;
+                        // echo mysqli_error($conn);
+                        // echo $sql;
                     }
                 }
 

@@ -5,6 +5,16 @@
     box-sizing: border-box;
 }
 
+.visualizarContentAtrasado {
+	margin: auto;
+	font-size: 1em;
+	width: 30%;
+	padding: 10px;
+	box-sizing: border-box;
+    font-size: 0.9em;
+    border: solid 1px red;
+}
+
 .visualizarFrm {
 	margin: auto;
 	font-size: 0.9em;
@@ -114,6 +124,77 @@
 
 .btnExcluir:hover, .btnExcluir:focus {
     background: linear-gradient(#f51c1c, #e20000);
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    cursor: pointer;
+	outline: none;
+}
+
+.hAtrasado {
+    color: #e20000;
+}
+
+.hEmDia {
+    color: #00b90f;
+}
+
+.hDevolvido {
+    color: #242424;
+}
+
+.hDevolvido b{
+    color: #00b90f;
+}
+
+.btnDevolver {
+    /* float: right; */
+    margin: auto; 
+    background: #1b7af7;
+    color: #fefefe;
+    border: solid 1px #f4f4f4;
+    padding: 10px 20px 10px 20px;
+	font-weight: bold;
+	font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.btnDevolver:hover, .btnDevolver:focus {
+    background: linear-gradient(#3689f5, #1b7af7);
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    cursor: pointer;
+	outline: none;
+}
+
+.btnRenovar {
+    margin: auto; 
+    background: #00b90f;
+    color: #fefefe;
+    border: solid 1px #f4f4f4;
+    padding: 10px 20px 10px 20px;
+	font-weight: bold;
+	font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.btnRenovar:hover, .btnRenovar:focus {
+    background: linear-gradient(#00da12, #00b90f);
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    cursor: pointer;
+	outline: none;
+}
+
+.btnRenovar {
+    margin: auto; 
+    background: #00b90f;
+    color: #fefefe;
+    border: solid 1px #f4f4f4;
+    padding: 10px 20px 10px 20px;
+	font-weight: bold;
+	font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.btnRenovar:hover, .btnRenovar:focus {
+    background: linear-gradient(#00da12, #00b90f);
     border: solid 1px rgba(0, 0, 0, 0.17);
     cursor: pointer;
 	outline: none;

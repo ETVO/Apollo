@@ -1,4 +1,7 @@
 <?php
+session_start();
+    session_destroy();
+    session_start();
 ?>
 
 <!DOCTYPE html>
@@ -13,12 +16,37 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/sobre.css">
+    <link rel="stylesheet" href="../css/search.css">
     <link rel="stylesheet" href="../css/footer.css">
     <script src="../config/js/sweetalert.min.js"></script>
     <link rel="shortcut icon" href="../favicon.ico"> 
 </head>
 
 <body>
+    <div class="sobre">
+        <div class="sobreContent">
+            <div class="logo">
+                <div class="presentLogo">
+                    <img src="" alt="">
+                </div>
+            </div>
+            <div class="textcenter">
+                <h1><a href=".." class="a">Apolo</a></h1>
+                <h2>Sistema para Biblioteca - CTI Bauru</h2>
+                <div class="sobreDesc">
+                <p>
+                    Focado na simplificação dos processos. Priorizando as classificações essenciais, propõe a utilização de estruturas mais práticas para otimizar a experiência de usuário e a eficiência do sistema.
+                </p>
+                <p class="opensource">
+                    Open Source:<br>pensado para melhorar, não para restringir.
+                </p>
+                <p>
+                    Em <b>2019</b> por <b>Estevão Rolim</b>
+                </p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="footer">
         <div class="footerDesc">
             © 2019 <b><a href="../main" title="Início">Apolo</a></b> - Sistema da Biblioteca CTI

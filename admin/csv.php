@@ -53,6 +53,12 @@
                 $a_csv = array('id_user', 'nome', 'ra', 'login', 'senha', 'ano', 'tipo', 'telefone', 'bloqueado');
                 break;
             
+            case 'e':
+                $onscript = 'emprestimo';
+                $a_csv = array('id_emprestimo', 'titulo', 'nome', 'telefone', 'admin', 'data_emp', 
+                'data_prev_dev', 'devolvido', 'data_dev');
+                break;
+            
             default:
                 echo "<script>window.close();</script>";
         }
@@ -69,7 +75,13 @@
         header('Content-Disposition: attachment; filename='.$onscript.'.csv');  
         $output = fopen("php://output", "w");  
         fputcsv($output, $a_csv);  
-        $query = "SELECT * from $onscript ORDER BY id_$onscript DESC";  
+        if($ent != 'e')
+            $query = "SELECT * from $onscript ORDER BY id_$onscript DESC";  
+        else 
+            $query = "SELECT id_emprestimo, l.titulo, e.nome, e.telefone, a.nome AS admin, data_emp, 
+            data_prev_dev, devolvido, data_dev FROM $onscript AS e 
+            INNER JOIN livro AS l ON e.id_livro = l.id_livro 
+            INNER JOIN user AS a ON e.id_admin = a.id_user OR e.id_admin = 0";
         $res = mysqli_query($conn, $query);  
         while($row = mysqli_fetch_assoc($res))  
         {  

@@ -3,7 +3,7 @@
 
     $server = "localhost";
     $username = "root";
-    $password = "";
+    $password = "rootAdmBibliotecaCTI";
     $db = "apolo";
 
     //Connection

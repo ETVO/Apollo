@@ -214,7 +214,8 @@
 </head>
 
 <body>    
-    <a href="main.php" class="a voltaInicio">Voltar à Administração</a>
+    <a href="" onclick="window.close();" class="a voltaInicio">Fechar</a><br>
+    <a href="main.php?sel=l" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
         <h3>Visualizar <a href="main.php?sel=l" class="a">Livro</a></h3>
     </div>
@@ -292,7 +293,12 @@
                 <p>
                 <?php if($obs != '') echo $obs; else echo "-"; ?>
                 </p>
-            </div>   
+            </div>  
+
+            <div class="visualizarInfo">
+                <label for="">Disponível</label>
+                <h3 class="<?php echo ($disp) ? 'green' : 'red'; ?>"><?php echo ($disp) ? 'Sim' : 'Não'; ?></h3>
+            </div>
 
             <div class="visualizarOptions">
                 <button onclick="<?php echo "window.location.href = '?id=$id&edit=true';" ?>" class="btnEditar">

@@ -37,10 +37,11 @@
                     <div class="searchContent">
                         <form action="../search" class="searchFrm" method="get">
                             <div class="searchField">
-                                <input type="search" name="search" id="search" autofocus required>
+                                <label for="">Pesquisar Livros</label>
+                                <input type="search" name="search" id="search" autofocus required title="Pesquisar livros...">
                             </div>
                             <div class="searchSubmit">
-                                <button class="searchBtn" title="Pesquisar livros">Pesquisar</button>
+                                <button class="searchBtn" title="Pesquisar livros...">Pesquisar</button>
                             </div>
                         </form>
                     </div>

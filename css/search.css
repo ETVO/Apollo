@@ -315,3 +315,9 @@ td.main {
 .trSelecionado {
     background: #ddd;
 }
+
+.fixed {
+    position: fixed;
+    /* width: 100%; */
+    background: white;  
+}

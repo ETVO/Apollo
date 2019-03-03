@@ -147,7 +147,8 @@
 </head>
 
 <body>    
-    <a href="main.php" class="a voltaInicio">Voltar à Administração</a>
+    <a href="" onclick="window.close();" class="a voltaInicio">Fechar</a><br>
+    <a href="main.php?sel=a" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
         <h3>Cadastro de <a href="main.php?sel=a" class="a">Administrador</a></h3>
     </div>

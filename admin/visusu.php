@@ -202,47 +202,6 @@
         }
     }
 
-    if(isset($_GET['exc']))
-    {
-        $exc = $_GET['exc'];
-        $success = false;
-        try {
-            include "../config/php/connect.php";
-
-            $sql = "DELETE FROM user WHERE id_user = $id";
-
-            $res = mysqli_query($conn, $sql);
-            
-            if(mysqli_affected_rows($conn) > 0){
-                echo "<script>
-                alert('Administrador excluído com sucesso!');
-                </script>";
-
-                $success = true;
-            } 
-            else {
-            }
-        } catch(Exception $e) {
-
-        }
-        if($success)
-        {
-            $append = "Usuário \"$login\" excluiu o administrador id $id.<br>";
-            $file = 'log.html';
-            date_default_timezone_set("America/Sao_Paulo");
-
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
-            
-            if(file_get_contents($file) != '')
-                $append = file_get_contents($file).$append;
-
-            file_put_contents($file, $append);
-        }
-
-        header("Location: main.php?sel=a");
-
-    }
-
     $count = 0;
 
     try {
@@ -257,6 +216,54 @@
             $count = $row[0];
         }
     } catch (Exception $e) {
+
+    }
+
+    if(isset($_GET['exc']))
+    {
+        if($count > 1)
+        {
+            $exc = $_GET['exc'];
+            $success = false;
+            try {
+                include "../config/php/connect.php";
+
+                $sql = "DELETE FROM user WHERE id_user = $id";
+
+                $res = mysqli_query($conn, $sql);
+                
+                if(mysqli_affected_rows($conn) > 0){
+                    echo "<script>
+                    alert('Administrador excluído com sucesso!');
+                    </script>";
+
+                    $success = true;
+                } 
+                else {
+                }
+            } catch(Exception $e) {
+
+            }
+            if($success)
+            {
+                $append = "Usuário \"$login\" excluiu o administrador id $id.<br>";
+                $file = 'log.html';
+                date_default_timezone_set("America/Sao_Paulo");
+
+                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                
+                if(file_get_contents($file) != '')
+                    $append = file_get_contents($file).$append;
+
+                file_put_contents($file, $append);
+            }
+
+            header("Location: main.php?sel=a");
+        }
+        else
+        {
+            header("Location: ?id=$id");   
+        }
 
     }
 ?>
@@ -279,7 +286,8 @@
 </head>
 
 <body>    
-    <a href="main.php" class="a voltaInicio">Voltar à Administração</a>
+    <a href="" onclick="window.close();" class="a voltaInicio">Fechar</a><br>
+    <a href="main.php?sel=a" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
         <h3>Visualizar <a href="main.php?sel=a" class="a">Usuário</a></h3>
     </div>

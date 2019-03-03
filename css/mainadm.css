@@ -23,21 +23,6 @@ body {
 	color: black;
 }
 
-
-
-.textcenter {
-	text-align: center;
-}
-
-.textcenter h4 {
-	margin-bottom: 0;
-	font-weight: normal;
-}
-
-.textcenter h2 {
-	margin-top: 0;
-}
-
 .double_grid {
 	display: grid;
 	grid-template-columns: 1fr 5fr;
@@ -269,4 +254,33 @@ body {
 .admDevolver:hover, .admDevolver:focus {
 	background: #00b90f;
 	color: white;
+}
+
+.admDevolverDisabled, .admDevolverDisabled:hover, .admDevolverDisabled:focus {
+	display: block;
+	padding: 20px 10px 20px 10px;
+	text-align: center;
+	text-decoration: none;
+	color: #bbb;
+	border: solid 1px rgba(0, 0, 0, 0);
+}
+
+.tdAtrasado {
+	color: #e20000;
+}
+
+.tdDevolvido {
+	color: #00b90f;
+}
+
+
+
+.b1 {
+	font-weight: bold;
+	color: #00b90f;
+}
+
+.b2 {
+	font-weight: bold;
+	/* color: #e20000; */
 }

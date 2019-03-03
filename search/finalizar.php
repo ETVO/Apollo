@@ -36,35 +36,13 @@
 
     include '../config/php/util.php';
 
-    $dias_dev = prazo_dev();
+    $dias_dev = getPrazo();
 
     $data_dev = addDays(strtotime(date('Y-m-d')), $dias_dev);
 
     $data_dev = date('Y-m-d', $data_dev);
 
-    function prazo_dev()
-    {
-        try {
-            include '../config/php/connect.php';
-
-            $sql = "SELECT valor FROM config WHERE nome='dias_dev'";
-
-            $res = mysqli_query($conn, $sql);
-
-            if(mysqli_affected_rows($conn) > 0)
-            {
-                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-
-                $dias_dev = $row['valor'];
-            }
-
-            mysqli_close($conn);
-        } catch (Exception $e) {
-
-        }
-
-        return $dias_dev;
-    }
+    
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -169,7 +147,7 @@
             </div>
             <div class="infoField">
                 <label for="telefone">Celular para contato</label>
-                <input type="text" name="telefone" id="telefone" minlength="9" required>
+                <input type="text" name="telefone" id="telefone" minlength="8" required>
             </div>
             <div class="infoField">
                 <label for="data_dev"><b>Data de devolução</b></label>

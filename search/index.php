@@ -22,6 +22,25 @@
     {
         if($rolcount <= 4){
             $id_emp = $_GET['emp'];
+
+            include '../config/php/connect.php';
+
+            $sql = "SELECT disponivel FROM livro WHERE id_livro = $id_emp";
+
+            $res = mysqli_query($conn, $sql);
+
+            if(mysqli_affected_rows($conn) > 0)
+            {
+                $row = mysqli_fetch_array($res, MYSQLI_NUM);
+
+                $disponivel = $row[0];
+
+                if(!$disponivel)
+                    header("Location: ?search=$search&page=$page");
+            }
+            else
+                header("Location: ?search=$search&page=$page");
+
             if(!in_array($id_emp, $rol))
                 array_push($rol, $id_emp);
             
@@ -108,7 +127,7 @@
                     <a <?php if($rolcount >= 1) echo 'href="finalizar.php?s='.$search.'" class="emprestimoFinalizar" title="Clique aqui para finalizar o empréstimo com os livros selecionados"'; else echo 'class="emprestimoFinalizar empDisabled" title="Selecione algum livro para finalizar o empréstimo!"'; ?>>Finalizar Empréstimo</a>
                     <a <?php if($rolcount >= 1) echo 'href="finalizar.php?s='.$search.'" class="a" title="Clique para ver os livros selecionados"'; else echo 'style="cursor: default"'; ?>><?php echo "$rolcount livro(s) selecionado(s)"; ?></a>
                 </div>
-            </div>
+            </div>              
         </div>
 
         <div class="content">
@@ -206,9 +225,9 @@
                                         <td><?php echo $editora; ?></td>
                                         <td><?php echo $ano; ?></td>
                                         <td><?php echo $edicao."ᵃ"; ?></td>
-                                        <td><?php if($disp) echo 'Sim'; else echo 'Não';?></td>
+                                        <td class="<?php echo ($disp) ? 'green' : 'red'; ?>"><?php if($disp) echo 'Sim'; else echo 'Não';?></td>
                                         <td class="searchEmprestar <?php if(!$disp) echo 'empIndisp'; if(in_array($id, $rol)) echo ' empSelecionado';?>" >
-                                            <a href="<?php if($disp){ if(in_array($id, $rol)) echo "?exc=$id&search=$search&page=$page"; else echo "?emp=$id&search=$search&page=$page"; } else echo "visualizar.php" ?>" class="<?php if(!$disp) echo 'empIndispA'; if(in_array($id, $rol)) echo ' empSelecionadoA';?>" <?php if(!$disp) echo 'disabled';?> title="<?php if($disp) echo "Emprestar '$titulo'"; else echo 'Livro indisponível!'?>">Emprestar</a>
+                                            <a href="<?php if($disp){ if(in_array($id, $rol)) echo "?exc=$id&search=$search&page=$page"; else echo "?emp=$id&search=$search&page=$page"; } else echo ""; ?>" class="<?php if(!$disp) echo 'empIndispA'; if(in_array($id, $rol)) echo ' empSelecionadoA';?>" <?php if(!$disp) echo 'disabled';?> title="<?php if($disp) echo "Emprestar '$titulo'"; else echo 'Livro indisponível!'?>">Emprestar</a>
                                         </td>
                                     </tr>
                                     <?php

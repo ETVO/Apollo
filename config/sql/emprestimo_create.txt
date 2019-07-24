@@ -6,6 +6,7 @@ CREATE TABLE emprestimo (
     id_admin BIGINT,
     nome TEXT NOT NULL,
     telefone VARCHAR(15),
+    turma VARCHAR(4),
     data_emp DATE NOT NULL,
     data_prev_dev DATE NOT NULL,
     data_dev DATE,

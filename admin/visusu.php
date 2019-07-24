@@ -12,7 +12,10 @@
     
     if(!isset($_SESSION['login']) || !isset($_SESSION['senha'])) {
         session_destroy();
+        echo "a";
+        exit;
         header("Location: index.php");
+        
     }
     else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
     }
@@ -207,7 +210,7 @@
     try {
         include "../config/php/connect.php";
 
-        $sql = 'SELECT COUNT(id_user) FROM user;';
+        $sql = 'SELECT COUNT(1) FROM user;';
 
         if($res = mysqli_query($conn, $sql)) 
         {
@@ -228,13 +231,17 @@
             try {
                 include "../config/php/connect.php";
 
-                $sql = "DELETE FROM user WHERE id_user = $id";
+                if($bloq == 1) $newbloq = 0; else $newbloq = 1;
+
+                $sql = "UPDATE user SET bloqueado = $newbloq WHERE id_user = $id";
 
                 $res = mysqli_query($conn, $sql);
+
+                if($newbloq == 1) $popup = "bloqueado"; else $popup = "desbloqueado";
                 
                 if(mysqli_affected_rows($conn) > 0){
                     echo "<script>
-                    alert('Administrador excluído com sucesso!');
+                    alert('Administrador $popup com sucesso!');
                     </script>";
 
                     $success = true;
@@ -246,7 +253,8 @@
             }
             if($success)
             {
-                $append = "Usuário \"$login\" excluiu o administrador id $id.<br>";
+                if($bloq) $word = "desbloqueou"; else $word = "bloqueou";
+                $append = "Usuário \"$login\" $word o administrador id $id.<br>";
                 $file = 'log.html';
                 date_default_timezone_set("America/Sao_Paulo");
 
@@ -257,15 +265,16 @@
 
                 file_put_contents($file, $append);
             }
-
-            header("Location: main.php?sel=a");
+            header("Location: ?id=$id");  
         }
         else
         {
-            header("Location: ?id=$id");   
+            header("Location: ?id=$id");  
         }
 
     }
+
+    $popup = ($bloq) ? "desbloquear" : "bloquear";
 ?>
 
 <!DOCTYPE html>
@@ -382,7 +391,7 @@
                 <button onclick="<?php 
                 echo "swal({
                     title: 'Atenção!',
-                    text:'Deseja realmente excluir o administrador $nome?',
+                    text:'Deseja realmente $popup o administrador $nome?',
                     icon: 'warning',
                     buttons: true,
                     dangerMode: true,
@@ -390,8 +399,8 @@
                     if(willDelete){
                         window.location.href = '?id=$id&exc=true';
                     }
-                });"; ?>" class="btnExcluir" <?php if($count == 1) echo 'disabled title="Você não pode excluir este administrador, pois ele é o único cadastrado!"'; ?>>
-                    Excluir
+                });"; ?>" class="btnExcluir" <?php if($count == 1) echo 'disabled title="Você não pode bloquear este administrador, pois ele é o único cadastrado!"'; ?>>
+                    <?php echo ($bloq) ? "Desbloquear" : "Bloquear"; ?>
                 </button>
             </div>
         </div>

@@ -11,7 +11,3 @@ CREATE TABLE user (
     telefone VARCHAR(15),
     bloqueado BOOLEAN NOT NULL DEFAULT FALSE
 );
-
-INSERT INTO user VALUES (DEFAULT, 'Estevão Pereira Rolim', '1757075', 'ETVO', '952388fda169f9d66a929b6c95ca7c53', 3, 'Aluno', '14981743304', DEFAULT);
-
-SELECT * FROM user;

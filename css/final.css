@@ -125,7 +125,7 @@ box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.15);
 
 
 .infoTable {
-	width: 50%;
+	width: 60%;
 	margin: auto;
 	padding: 20px;
 	padding-top: 0;
@@ -134,13 +134,13 @@ box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.15);
 .infoTable th {
 	font-weight: normal;
 	text-align: left;
-	width: 33%;
+	width: 25%;
 }
 
 .infoTable td {
 	padding: 0;
 	margin: auto;
-	width: 50%;
+	width: 33%;
 }
 
 .infoTable td h4 {

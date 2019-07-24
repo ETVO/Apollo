@@ -838,8 +838,8 @@
                     
                     $cw_0 = 6; // Id
                     $cw_1 = 32; // Livro
-                    $cw_2 = 27; // Usuário
-                    $cw_3 = 32; // Autorizado por 
+                    $cw_2 = 35; // Usuário
+                    $cw_3 = 20; // Turma 
                     $cw_4 = 28; // Emprestado em 
                     $cw_5 = 30; // Devolução prevista
                     $cw_6 = 20; // Devolvido 
@@ -861,7 +861,7 @@
             
                     $pdf->SetXY($current_x + $cw_2, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Autorizado por');
+                    $text = utf8_decode('Turma');
                     $pdf->MultiCell($cw_3, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_3, $current_y);
@@ -888,10 +888,10 @@
                 //------------------------------------------------------------------- END OF HEADER
                     $pdf->Ln(1);
                     
-                    $sql = "SELECT id_emprestimo, l.titulo, e.nome, e.telefone, a.nome AS admin, data_emp, 
+                    $sql = "SELECT id_emprestimo, l.titulo, e.nome, e.telefone, e.turma, data_emp, 
                     data_prev_dev, devolvido, data_dev FROM emprestimo AS e 
-                    INNER JOIN livro AS l ON e.id_livro = l.id_livro 
-                    INNER JOIN user AS a ON e.id_admin = a.id_user OR e.id_admin = 0 ORDER BY e.devolvido ASC WHERE '$hoje' > data_prev_dev AND devolvido = 0";
+                    INNER JOIN livro AS l ON e.id_livro = l.id_livro
+                    WHERE '$hoje' > data_prev_dev AND devolvido = 0";
                     
                     $res = mysqli_query($conn, $sql);
 
@@ -903,17 +903,18 @@
                             $nome = utf8_encode($row['nome']);
                             $nome = flname($nome, ' ');  
                             $telefone = utf8_encode($row['telefone']);
-                            $admin = utf8_encode($row['admin']);
-                            $admin = flname($admin, ' ');
+                            $turma = utf8_encode($row['turma']);
+                            // $admin = utf8_encode($row['admin']);
+                            // $admin = flname($admin, ' ');
                             $data_emp = utf8_encode($row['data_emp']); $data_emp = date('d/m/Y', strtotime($data_emp));
                             $data_prev_dev = utf8_encode($row['data_prev_dev']); $data_prev_dev = date('d/m/Y', strtotime($data_prev_dev));
                             $devolvido = utf8_encode($row['devolvido']);
                             if($devolvido == '1') $devolvido = 'Sim'; else $devolvido = 'Não';
                             $data_dev = utf8_encode($row['data_dev']); if($data_dev == null) $data_dev = '-'; else $data_dev = date('d/m/Y', strtotime($data_dev));
 
-                            $atrasado = false;
+                            $atrasado = true;
 
-                            if(strtotime(date('Y-m-d')) > strtotime($data_prev_dev) && !$devolvido) $atrasado = true;
+                            // if(strtotime(date('Y-m-d')) > strtotime($data_prev_dev) && !$devolvido) $atrasado = true;
 
                             if($atrasado)
                             {
@@ -977,7 +978,7 @@
 
                                 $pdf->SetXY($current_x + $cw_2, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($admin);
+                                $text = utf8_decode($turma);
                                 $pdf->MultiCell($cw_3, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_3, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -1037,6 +1038,7 @@
             
             
             case 'log':
+                $pdf->SetAutoPageBreak(true, 20);
 
                 $selected = 'adm_weblog';
                 $pdf->SetFont($doc_font,'',18);
@@ -1060,11 +1062,17 @@
 
                 $file = str_replace('<br>', "\n", $file);
 
+                $current_y = $pdf->GetY();
+                $current_x = $pdf->GetX();
+
                 $cw_row = 190;
                 $ch_row = 4;
                 $cb_row = '';
                 $ca_row = 'L';
                 $cf_row = false;
+
+                $sub = 0;
+                $len = 3000;
 
                 $text = utf8_decode($file);
                 $pdf->MultiCell($cw_row, $ch_row, $text, $cb_row, $ca_row, $cf_row);

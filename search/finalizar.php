@@ -150,6 +150,36 @@
                 <input type="text" name="telefone" id="telefone" minlength="8" required>
             </div>
             <div class="infoField">
+                <label for="telefone">Turma</label>
+                <select name="turma" id="turma" required>
+                    <option value="" disabled selected>-- Selecione uma opção --</option>
+                    <option value="N/A">N/A</option>
+                    <option value="" disabled>Diurno</option>
+                    <option value="11A">11A</option>
+                    <option value="12A">12A</option>
+                    <option value="13A">13A</option>
+                    <option value="51A">51A</option>
+                    <option value="52A">52A</option>
+                    <option value="53A">53A</option>
+                    <option value="71A">71A</option>
+                    <option value="72A">72A</option>
+                    <option value="73A">73A</option>
+                    <option value="71B">71B</option>
+                    <option value="72B">72B</option>
+                    <option value="73B">73B</option>
+                    <option value="" disabled>Noturno</option>
+                    <option value="11B">11B</option>
+                    <option value="12B">12B</option>
+                    <option value="13B">13B</option>
+                    <option value="51B">51B</option>
+                    <option value="52B">52B</option>
+                    <option value="53B">53B</option>
+                    <option value="71C">71C</option>
+                    <option value="72C">72C</option>
+                    <option value="73C">73C</option>
+                </select>
+            </div>
+            <div class="infoField">
                 <label for="data_dev"><b>Data de devolução</b></label>
                 <input type="date" name="" id="data_dev" disabled value="<?php echo $data_dev; ?>">
             </div>

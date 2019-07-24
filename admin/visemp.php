@@ -58,7 +58,7 @@
         try {
             include "../config/php/connect.php";
 
-            $sql = "SELECT l.id_livro, l.titulo, e.nome, e.telefone, a.nome AS admin, data_emp, 
+            $sql = "SELECT l.id_livro, l.titulo, e.nome, e.telefone, e.turma, a.nome AS admin, data_emp, 
             data_prev_dev, devolvido, data_dev, e.obs FROM emprestimo AS e 
             INNER JOIN livro AS l ON e.id_livro = l.id_livro 
             INNER JOIN user AS a ON e.id_admin = a.id_user OR e.id_admin = 0 WHERE id_emprestimo = $id_emp";
@@ -73,6 +73,7 @@
                 $id_livro = $row['id_livro'];
                 $nome = utf8_encode($row['nome']);
                 $telefone = utf8_encode($row['telefone']);
+                $turma = utf8_encode($row['turma']);
                 $admin = utf8_encode($row['admin']);
                 $data_emp = utf8_encode($row['data_emp']);
                 $data_prev_dev = utf8_encode($row['data_prev_dev']);
@@ -635,6 +636,11 @@
                 <label for="">Contato (telefone)</label>
                 <h3><?php echo $telefone; ?></h3>
             </div>   
+            
+            <div class="visualizarInfo">
+                <label for="">Turma</label>
+                <h3><?php echo $turma; ?></h3>
+            </div>  
             
             <div class="visualizarInfo">
                 <label for="">Autorizado por</label>

@@ -35,7 +35,7 @@ session_start();
                 <h2>Sistema para Biblioteca - CTI Bauru</h2>
                 <div class="sobreDesc">
                 <p>
-                    Focado na simplificação dos processos. Priorizando as classificações essenciais, propõe a utilização de estruturas mais práticas para otimizar a experiência de usuário e a eficiência do sistema.
+                    Experimentando a simplificação dos processos. Priorizando as classificações essenciais, propõe a utilização de estruturas mais práticas para otimizar a experiência de usuário e a eficiência do sistema.
                 </p>
                 <p class="opensource">
                     Open Source:<br>pensado para melhorar, não para restringir.

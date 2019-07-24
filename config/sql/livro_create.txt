@@ -11,7 +11,3 @@ CREATE TABLE livro (
     disponivel BOOLEAN NOT NULL DEFAULT TRUE,
     obs TEXT DEFAULT NULL
 );
-
-INSERT INTO livro VALUES (DEFAULT, 'Memórias Póstumas de Brás Cubas', 'Literatura Brasileira', 'Machado de Assis', 'Companhia das Letras', 1998, 1, DEFAULT, DEFAULT);
-
-SELECT * FROM livro;

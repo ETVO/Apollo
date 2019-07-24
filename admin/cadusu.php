@@ -155,8 +155,16 @@
     
     <div class="cadastro">
         <form action="" method="post" class="cadastroFrm">
+            <label for="tipo">Tipo</label><br>
+            <select name="tipo" id="tipo" required onchange="verAluno()" autofocus>
+                <option value="" disabled selected>-- Selecione uma opção --</option>
+                <option value="Aluno">Aluno</option>
+                <option value="Professor">Professor</option>
+                <option value="Funcionário">Funcionário</option>
+            </select>
+            <br><br>
             <label for="nome">Nome</label><br>
-            <input type="text" name="nome" id="nome" required autofocus maxlenght="70">
+            <input type="text" name="nome" id="nome" required maxlenght="70">
             <br><br>
             <label for="ra" id="lblRa">RA</label><br>
             <input type="number" name="ra" id="ra" maxlenght="7" min="1000000">
@@ -166,14 +174,6 @@
             <br><br>
             <label for="senha">Senha</label><br>
             <input type="password" name="senha" id="senha" required maxlenght="16">
-            <br><br>
-            <label for="tipo">Tipo</label><br>
-            <select name="tipo" id="tipo" required onchange="verAluno()">
-                <option value="" disabled selected>-- Selecione uma opção --</option>
-                <option value="Aluno">Aluno</option>
-                <option value="Professor">Professor</option>
-                <option value="Funcionário">Funcionário</option>
-            </select>
             <br><br>
             <label for="ano" id="lblAno">Série</label><br>
             <input type="number" name="ano" id="ano" maxlenght="1" min="1" max="5" placeholder="1 a 3">

@@ -50,49 +50,150 @@
         $success = false;
         $onscript = "";
         $ontext = "";
-        $exc = $_GET['exc'];
-        switch ($selected) {
-            case 'l':
-                $onscript = "livro";
-                $ontext = "Livro";
-                break;
-
-            case 'a';
-                $onscript = "user";
-                $ontext = "Administrador";
-                break;
-        }
-        try {
-            include "../config/php/connect.php";
-
-            $sql = "DELETE FROM $onscript WHERE id_$onscript = $exc";
-
-            $res = mysqli_query($conn, $sql);
+        $id = $_GET['exc'];
+        if($selected == 'a')//block de admin
+        {
+            try {
+                include "../config/php/connect.php";
+                $sql = "SELECT bloqueado FROM user WHERE id_user=$id";
+                
+                $res = mysqli_query($conn, $sql);
+                
+                $bloq = false;
             
-            if(mysqli_affected_rows($conn) > 0){
-                echo "<script>
-                alert('$ontext excluído com sucesso!');
-                </script>";
+                if(mysqli_affected_rows($conn) > 0)
+                {
+                    $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+                    $bloq = utf8_encode($row['bloqueado']);
+                }
+                else
+                {
+                    echo "<script>
+                    alert('Não foi possível realizar a operação!');
+                    </script>";
+                    header("Location: ?sel=$selected");
+                }
+
+                if($bloq == 1) $newbloq = 0; else $newbloq = 1;
+
+                $sql = "UPDATE user SET bloqueado = $newbloq WHERE id_user = $id";
+
+                $res = mysqli_query($conn, $sql);
+
+                if($newbloq == 1) $popup = "bloqueado"; else $popup = "desbloqueado";
+                
+                if(mysqli_affected_rows($conn) > 0){
+                    echo "<script>
+                    alert('Administrador $popup com sucesso!');
+                    </script>";
+
+                    $success = true;
+                } 
+                else {
+                }
+            } catch(Exception $e) {
+
+            }
+            if($success)
+            {
+                if($bloq) $word = "desbloqueou"; else $word = "bloqueou";
+                $append = "Usuário \"$login\" $word o administrador id $id.<br>";
+                $file = 'log.html';
+                date_default_timezone_set("America/Sao_Paulo");
+
+                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                
+                if(file_get_contents($file) != '')
+                    $append = file_get_contents($file).$append;
+
+                file_put_contents($file, $append);
+            }
+        }
+        else // exclusão de livro
+        {
+            try {
+                include "../config/php/connect.php";
+
+                $sql = "SELECT COUNT(1) FROM emprestimo WHERE id_livro = $id";
+                
+                $res = mysqli_query($conn, $sql);
+                
+                if(mysqli_affected_rows($conn) > 0)
+                {
+                    $row = mysqli_fetch_array($res, MYSQLI_NUM);
+                    $qtde_emp = utf8_encode($row[0]);
+                }
+                else
+                {
+                    echo "<script>
+                    alert('Não foi possível realizar a operação!');
+                    </script>";
+                    header("Location: ?sel=$selected");
+                }
+
+                $sql = "DELETE FROM emprestimo WHERE id_livro=$id";
+                
+                $res = mysqli_query($conn, $sql);
+                
+                if(mysqli_affected_rows($conn) > 0)
+                {
+                    echo "<script>
+                    alert('$qtde_emp empréstimo(s) excluído(s)');
+                    </script>";
+                }
+                else
+                {
+                    echo "<script>
+                    alert('Não foi possível realizar a operação!');
+                    </script>";
+                    header("Location: ?sel=$selected");
+                }
+
+                $sql = "SELECT titulo FROM livro WHERE id_livro = $id";
+                
+                $res = mysqli_query($conn, $sql);
+                
+                if(mysqli_affected_rows($conn) > 0)
+                {
+                    $row = mysqli_fetch_array($res, MYSQLI_NUM);
+                    $titulo = utf8_encode($row[0]);
+                }
+
+                $sql = "DELETE FROM livro WHERE id_livro=$id";
+                
+                $res = mysqli_query($conn, $sql);
+                
+                if(mysqli_affected_rows($conn) > 0)
+                {
+                    echo "<script>
+                    alert('Livro excluído com sucesso');
+                    </script>";
+                }
+                else
+                {
+                    echo "<script>
+                    alert('Não foi possível realizar a operação!');
+                    </script>";
+                    header("Location: ?sel=$selected");
+                }
 
                 $success = true;
-            } 
-        } catch(Exception $e) {
+            } catch(Exception $e) {
 
-        }
-        
-        if($success)
-        {
-            if($onscript == 'user') $onscript = 'administrador';
-            $append = "Usuário \"$login\" excluiu o $onscript id $exc.<br>";
-            $file = 'log.html';
-            date_default_timezone_set("America/Sao_Paulo");
+            }
+            if($success)
+            {
+                $append = "Usuário \"$login\" excluiu o livro id $id ('$titulo') e todos os empréstimos relacionados.<br>";
+                $file = 'log.html';
+                date_default_timezone_set("America/Sao_Paulo");
 
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
-            
-            if(file_get_contents($file) != '')
-                $append = file_get_contents($file).$append;
+                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                
+                if(file_get_contents($file) != '')
+                    $append = file_get_contents($file).$append;
 
-            file_put_contents($file, $append);
+                file_put_contents($file, $append);
+            }
         }
 
         header("Location: ?sel=$selected");
@@ -273,7 +374,7 @@
                         }
                         ?>
                         <h2 class="textcenter dashboardTitle" ><a href="?sel=<?php echo $selected; ?>" class="a">Empréstimos</a></h2>
-                        <script>
+                        <!-- <script>
                             const el = document.createElement('div');
                             el.innerHTML = "Para realizar um novo empréstimo, vá para a <a href='..' target='_self'>página inicial</a>!";
 
@@ -284,7 +385,7 @@
                             title: 'Adicionar novo empréstimo',
                             content: el,
                             icon: 'info',
-                            });" class="addNew textcenter a">Adicionar novo</a>
+                            });" class="addNew textcenter a">Adicionar novo</a> -->
 
                         <div class="admSearch">
                             <form action="" method="get" class="frmSearch">
@@ -314,9 +415,9 @@
                                     include "../config/php/connect.php";
                                     
 
-                                    $sql = "SELECT id_emprestimo, l.id_livro, l.titulo, e.nome, e.telefone, a.nome AS admin, data_emp, 
-                                    data_prev_dev, devolvido, data_dev FROM emprestimo AS e 
-                                    INNER JOIN livro AS l ON e.id_livro = l.id_livro 
+                                    $sql = "SELECT id_emprestimo, l.id_livro, l.titulo, e.nome, e.telefone, 
+                                    a.nome AS admin, data_emp, data_prev_dev, devolvido, data_dev 
+                                    FROM emprestimo AS e INNER JOIN livro AS l ON e.id_livro = l.id_livro 
                                     INNER JOIN user AS a ON e.id_admin = a.id_user OR e.id_admin = 0";
 
                                     $sql_count = "SELECT COUNT(*) FROM emprestimo AS e 
@@ -391,7 +492,7 @@
                                                 <td <?php if($devolvido) echo 'class="green"'; else echo ''; ?>><?php if($devolvido) echo 'Sim'; else echo 'Não'; ?></td>
                                                 <td><?php if($data_dev == null) echo '-'; else echo date('d/m/Y', strtotime($data_dev)); ?></td>
                                                 <td class=""><a href="visemp.php?id=<?php echo $id ?>" target="_blank" class="admVisualizar">Visualizar</a></td>
-                                                <td class=""><a onclick="<?php
+                                                <td class=""><a onclick="<?php if(!($atrasado || $devolvido))
                                                 echo "swal({
                                                     title: 'Atenção!',
                                                     text:'Deseja realmente devolver o livro \'$titulo\'?',
@@ -630,10 +731,16 @@
                                                 <td><?php echo $edicao."ᵃ"; ?></td>
                                                 <td <?php echo ($disp) ? 'class="green"' : 'class="red"' ;?>><?php echo ($disp) ? 'Sim' : 'Não'; ?></td>
                                                 <td class=""><a href="visliv.php?id=<?php echo $id ?>" target="_blank" class="admVisualizar">Visualizar</a></td>
+                                                <script>
+                                                const el = document.createElement('div');
+                                                el.innerHTML = 'Deseja realmente excluir o livro "<?php echo $titulo; ?>"?<br><br><b>TODOS OS EMPRÉSTIMOS VINCULADOS AO LIVRO TAMBÉM SERÃO EXCLUÍDOS!</b>';
+                                                
+                                                </script>
+
                                                 <td class=""><a onclick="<?php 
                                                 echo "swal({
                                                     title: 'Atenção!',
-                                                    text:'Deseja realmente excluir o livro \'$titulo\'?',
+                                                    content: el,
                                                     icon: 'warning',
                                                     buttons: true,
                                                     dangerMode: true,
@@ -800,6 +907,8 @@
                                     FROM user";
 
                                     $sql_count = "SELECT COUNT(*) FROM user";
+
+                                    $sql_bloq = "SELECT COUNT(*) FROM user WHERE bloqueado = 0";
                                     
                                     $search = '';
                                     
@@ -819,6 +928,13 @@
                                     $row = mysqli_fetch_array($res, MYSQLI_NUM);
 
                                     $count = $row[0];
+                                    
+                                    // qtde de admins bloqueados 
+                                    $res = mysqli_query($conn, $sql_bloq);
+
+                                    $row = mysqli_fetch_array($res, MYSQLI_NUM);
+
+                                    $bloqs = $row[0];
 
                                     $limit = 20;
 
@@ -844,8 +960,13 @@
                                             $ano = utf8_encode($row['ano']);
                                             $bloq = utf8_encode($row['bloqueado']);
 
+                                            $popup = "bloquear";
+
                                             if($bloq)
+                                            {
+                                                $popup = "desbloquear";
                                                 $bloq = 'Sim';
+                                            }
                                             else
                                                 $bloq = 'Não';
 
@@ -859,18 +980,18 @@
                                                 <td><?php if($ano != null) echo $ano."º"; else echo '-'; ?></td>
                                                 <td><?php echo $bloq; ?></td>
                                                 <td class=""><a href="visusu.php?id=<?php echo $id ?>" target="_blank" class="admVisualizar">Visualizar</a></td>
-                                                <td class=""><a <?php if($count <= 1) echo 'style="display:none"';?> onclick="<?php if($count > 1)
+                                                <td class=""><a <?php if($count <= 1 || ($bloqs == 1 && $bloq == 'Não')) echo 'disabled';?> onclick="<?php if($count > 1)
                                                 echo "swal({
                                                     title: 'Atenção!',
-                                                    text:'Deseja realmente excluir o administrador \'$nome\'?',
+                                                    text:'Deseja realmente $popup o administrador \'$nome\'?',
                                                     icon: 'warning',
                                                     buttons: true,
                                                     dangerMode: true,
                                                 }).then((willDelete) =>{
                                                     if(willDelete){
-                                                        window.location.href = '?sel=$selected&page=$page&search=$search&exc=$id';
+                                                        window.location.href = '?sel=$selected&exc=$id';
                                                     }
-                                                });"; ?>" class="admExcluir">Excluir</a></td>
+                                                });"; ?>" class="admExcluir"><?php echo ucfirst($popup)?></a></td>
                                             </tr>
                                             <?php
                                         }

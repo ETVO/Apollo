@@ -26,6 +26,7 @@
 
         $_SESSION['nome'] = $_POST['nome'];
         $_SESSION['telefone'] = $_POST['telefone'];
+        $_SESSION['turma'] = $_POST['turma'];
         $_SESSION['data_dev'] = $_POST['data_dev'];
         
         // $data_dev = strtotime($data_dev);
@@ -39,6 +40,7 @@
 
         $nome = $_SESSION['nome'];
         $contato = $_SESSION['telefone'];
+        $turma = $_SESSION['turma'];
         $data_dev = $_SESSION['data_dev'];
 
         $data_dev = date('d/m/Y', strtotime($data_dev));
@@ -66,15 +68,7 @@
             $md5 = md5($senha);
 
             if($login == 'root'){
-                if($md5 == '632f4902f2afb597923c18ea897eefa7'){
-                    $fb = 3;
-                    $id_user = 0;
-                    $_SESSION['id_user'] = $id_user;
-                    $_SESSION['login'] = $login;
-                }
-                else {
-                    $fb = 2;
-                }
+                $fb = 5;
             }
             else {
                 $sql = "SELECT id_user,senha FROM user WHERE login = '$login' AND bloqueado = 0";
@@ -163,9 +157,10 @@
 
                 $nome = utf8_decode($nome);
                 $contato = utf8_decode($contato);
+                $turma = utf8_decode($turma);
 
                 foreach($rol as &$id_livro){
-                    $sql = "INSERT INTO emprestimo VALUES (DEFAULT, $id_livro, $id_user, '$nome', '$contato', '$hoje', '$data_dev', null, null, DEFAULT);";
+                    $sql = "INSERT INTO emprestimo VALUES (DEFAULT, $id_livro, $id_user, '$nome', '$contato', '$turma', '$hoje', '$data_dev', null, null, DEFAULT);";
                     
                     if($res = mysqli_query($conn, $sql))
                     {
@@ -225,7 +220,18 @@
     $error_msg = array("Login incorreto!", "Senha incorreta!");
 
     if($fb == 5){
-        
+        ?>
+            <script>
+                const el = document.createElement('div');
+                el.innerHTML = 'Você <b>NÃO</b> pode utilizar o admin "root" para autorizar empréstimos!';
+                                                
+                swal({
+                    title: "Erro!",
+                    content: el,
+                    icon: "error",
+                });
+            </script>
+        <?php
     }
 
     // echo $fb;
@@ -298,6 +304,9 @@
                     Contato:
                 </th>
                 <th>
+                    Turma:
+                </th>
+                <th>
                     Devolução:
                 </th>
             </tr>
@@ -307,6 +316,9 @@
                 </td>
                 <td>    
                     <h4><?php echo $contato; ?></h4>
+                </td>
+                <td>    
+                    <h4><?php echo $turma; ?></h4>
                 </td>
                 <td>
                     <h4><?php echo $data_dev; ?></h4>

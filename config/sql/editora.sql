@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS editora;
+
+CREATE TABLE editora (
+    id_editora SERIAL PRIMARY KEY NOT NULL,
+    nome TEXT NOT NULL,
+    ano INT,
+    excluido BOOLEAN NOT NULL DEFAULT FALSE
+);

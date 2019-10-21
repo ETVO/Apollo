@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS emprestimo;
+
+CREATE TABLE emprestimo (
+    id_emprestimo SERIAL PRIMARY KEY NOT NULL,
+    id_livro BIGINT REFERENCES livro(id_livro) ON UPDATE CASCADE ON DELETE CASCADE,
+    id_admin BIGINT REFERENCES user(id_user) ON UPDATE CASCADE ON DELETE CASCADE,
+    id_user BIGINT REFERENCES user(id_user) ON UPDATE CASCADE ON DELETE CASCADE,
+    data_emp DATE NOT NULL,
+    data_prev_dev DATE NOT NULL,
+    data_dev DATE,
+    obs TEXT,
+    devolvido BOOLEAN NOT NULL DEFAULT FALSE,
+    excluido BOOLEAN NOT NULL DEFAULT FALSE
+);

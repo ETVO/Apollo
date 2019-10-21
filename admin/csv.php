@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    session_start();    
 
     $login = $_SESSION['login'];
     $senha = $_SESSION['senha'];

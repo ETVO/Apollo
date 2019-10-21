@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS livro;
+
+CREATE TABLE livro (
+    id_livro SERIAL PRIMARY KEY NOT NULL,
+    codigo VARCHAR(10) UNIQUE NOT NULL,
+    titulo TEXT NOT NULL,
+    id_generos TEXT NOT NULL,
+    id_autor BIGINT NOT NULL REFERENCES autor(id_autor) ON UPDATE CASCADE ON DELETE CASCADE,
+    id_editora BIGINT NOT NULL REFERENCES editora(id_editora) ON UPDATE CASCADE ON DELETE CASCADE,
+    ano INT,
+    edicao INT,
+    disponivel BOOLEAN NOT NULL DEFAULT TRUE,
+    qtde INT NOT NULL DEFAULT 1,
+    obs TEXT DEFAULT NULL,
+    excluido BOOLEAN NOT NULL DEFAULT FALSE
+);

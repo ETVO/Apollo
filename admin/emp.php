@@ -1,6 +1,7 @@
 
 <?php
     include "head.php";
+    include "login.php";
     $sel_title = "empréstimos";
 
     $page = 1;
@@ -17,7 +18,7 @@
     }
     ?>
     <h2 class="textcenter dashboardTitle" >
-        <a onclick="changeParentLocation('main.php?sel=e')" class="a">
+        <a onclick="changeParentLocation('main.php?sel=e')" class="a" title="Recarregar">
             Empréstimos
         </a>
     </h2>
@@ -39,7 +40,21 @@
             <th>Autorizado por</th>
             <th>Emprestado em</th>
             <th>Devolução prevista</th>
-            <th><a href="<?php $echo_filter_dev = $filter_dev + 1; if($echo_filter_dev > 3) $echo_filter_dev = 1; echo "?sel=$selected&search=$search&page=1&filter_dev=$echo_filter_dev";?>" class="a<?php if($filter_dev==1) echo ' b1'; else if($filter_dev==2) echo ' b2'; else echo ' b3';?>" title="<?php if($filter_dev == 1) echo 'Mostrando apenas empréstimos não devolvidos.'; else if($filter_dev == 2) echo 'Mostrando apenas empréstimos devolvidos.'; else echo 'Mostrando todos os empréstimos'; ?>">Devolvido</a></th>
+            <th><a href="<?php 
+            $echo_filter_dev = $filter_dev + 1; 
+            if($echo_filter_dev > 3) 
+                $echo_filter_dev = 1; 
+            echo "?sel=$selected&search=$search&page=1&filter_dev=$echo_filter_dev";?>"
+            
+            class="a <?php 
+            if($filter_dev==1) echo 'b1'; 
+            else if($filter_dev==2) echo 'b2'; 
+            else echo 'b3';?>" 
+            
+            title="<?php 
+            if($filter_dev == 1) echo 'Mostrando apenas empréstimos não devolvidos.'; 
+            else if($filter_dev == 2) echo 'Mostrando apenas empréstimos devolvidos.'; 
+            else echo 'Mostrando todos os empréstimos'; ?>">Devolvido</a></th>
             <th>Devolução</th>
             <th></th>
             <th></th>
@@ -79,7 +94,7 @@
                     $search_str = " WHERE (lower(livro) LIKE '%$search%' OR lower(usuario) LIKE '%$search%' 
                     OR lower(contato) LIKE '%$search%' OR lower(admin) LIKE '%$search%' 
                     OR data_emp LIKE '%$search%' OR data_prev_dev LIKE '%$search%' 
-                    OR data_dev LIKE '%$search%') AND$filter";
+                    OR data_dev LIKE '%$search%') AND $filter";
                 }
                 else {
                     $search_str = " WHERE $filter";

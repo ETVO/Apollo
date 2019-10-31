@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS usuario;
+DROP TABLE IF EXISTS user;
 
-CREATE TABLE usuario (
+CREATE TABLE user (
     id_user SERIAL PRIMARY KEY,
     nome VARCHAR(70) NOT NULL,
     ra VARCHAR(7) UNIQUE,
@@ -15,4 +15,4 @@ CREATE TABLE usuario (
     excluido BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-INSERT INTO usuario VALUES (DEFAULT, 'Admin', null, 'admin', '5eb30e9a4d77fc4e9edd9859ff0f5782', null, 'admin', '', null, TRUE, DEFAULT, DEFAULT);
+INSERT INTO user VALUES (DEFAULT, 'Admin', null, 'admin', '5eb30e9a4d77fc4e9edd9859ff0f5782', null, 'admin', '', null, TRUE, DEFAULT, DEFAULT);

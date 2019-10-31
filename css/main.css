@@ -253,3 +253,9 @@ a:disabled, a:disabled:hover, a:disabled:focus {
 .green {
 	color: #00b90f;
 }
+
+#footer iframe {
+	width: 100%;
+	overflow: hidden;
+	height: auto;
+}

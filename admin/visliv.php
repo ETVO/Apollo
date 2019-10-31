@@ -1,43 +1,10 @@
 <?php
-    session_start();
-
-    $login = $_SESSION['login'];
-    $senha = $_SESSION['senha'];
-    $nome = '';
 
     $edit = false;
     $exc = false;
     
-    if(!isset($_SESSION['login']) || !isset($_SESSION['senha'])) {
-        session_destroy();
-        header("Location: index.php");
-    }
-    else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
-    }
-    else {
-        try 
-        {
-            include "../config/php/connect.php";
-
-            $sql = "SELECT nome FROM user WHERE login = '$login' AND bloqueado = 0";
-
-            $res = mysqli_query($conn, $sql);
-            
-            if(mysqli_affected_rows($conn) > 0){
-                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-                $nome = utf8_encode($row['nome']);
-                $nome = explode(" ", $nome)[0];
-            } 
-            else {
-                session_destroy();
-                header("Location: index.php");
-            }
-
-            mysqli_close($conn);
-        } catch (Exception $e){
-
-        }
-    }
+    include 'head.php';
+    include 'login.php';
 
     if(isset($_GET['id'])){
         $id = $_GET['id'];
@@ -45,7 +12,7 @@
         try {
             include "../config/php/connect.php";
 
-            $sql = "SELECT id_livro, titulo, genero, autor, editora, ano, edicao, obs, disponivel
+            $sql = "SELECT id_livro, titulo, genero, autor, editora, ano, edicao, qtde, obs, disponivel, excluido
             FROM livro WHERE id_livro=$id";
 
             $res = mysqli_query($conn, $sql);
@@ -70,6 +37,8 @@
                 $edicao = utf8_encode($row['edicao']);
                 $obs = utf8_encode($row['obs']);
                 $disp = utf8_encode($row['disponivel']);
+                $exc = utf8_encode($row['excluido']);
+                $qtde = utf8_encode($row['qtde']);
             }
             else {
                 header("Location: main.php");
@@ -109,14 +78,18 @@
             $ano = utf8_decode(mysqli_real_escape_string($conn, $_POST['ano']));
             $edicao = utf8_decode(mysqli_real_escape_string($conn, $_POST['edicao']));
             $obs = utf8_decode(mysqli_real_escape_string($conn, $_POST['obs']));
+            $disp = utf8_decode(mysqli_real_escape_string($conn, $_POST['disp']));
+            $qtde = utf8_decode(mysqli_real_escape_string($conn, $_POST['qtde']));
             
             $sql = "UPDATE livro SET
             titulo = '$titulo', genero = '$genero',
             autor = '$autor', editora = '$editora',
-            ano = $ano, edicao = $edicao, obs = '$obs'
+            ano = $ano, edicao = $edicao, obs = '$obs', qtde = $qtde 
             WHERE id_livro=$id;";
 
             $res = mysqli_query($conn, $sql);
+
+            echo $sql;
 
             $titulo = utf8_encode($titulo);
             if(mysqli_affected_rows($conn) > 0)
@@ -156,43 +129,17 @@
 
     if(isset($_GET['exc']))
     {
-        $exc = $_GET['exc'];
-        $success = false;
-        try {
-            include "../config/php/connect.php";
+        $nexc = $_GET['exc'];
 
-            $sql = "DELETE FROM livro WHERE id_livro = $id";
+        if($nexc == 0) $nexc = 1; else $nexc = 0;
 
-            $res = mysqli_query($conn, $sql);
-            
-            if(mysqli_affected_rows($conn) > 0){
-                echo "<script>
-                alert('Livro excluído com sucesso!');
-                </script>";
+        include '../config/php/connect.php';
+        
+        $sql = "UPDATE livro SET excluido = $nexc WHERE id_livro = $id";
 
-                $success = true;
-            } 
-            else {
-            }
-        } catch(Exception $e) {
+        $res = mysqli_query($conn, $sql);
 
-        }
-        if($success)
-        {
-            $append = "Usuário \"$login\" excluiu o livro id $id.<br>";
-            $file = 'log.html';
-            date_default_timezone_set("America/Sao_Paulo");
-
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
-            
-            if(file_get_contents($file) != '')
-                $append = file_get_contents($file).$append;
-
-            file_put_contents($file, $append);
-        }
-
-        header("Location: main.php?sel=l");
-
+        header("Location: ?id=$id");
     }
 ?>
 
@@ -249,6 +196,9 @@
             <label for="edicao">Edição</label><br>
             <input type="number" name="edicao" id="edicao" required min="1" max="500" value="<?php echo $edicao; ?>">
             <br><br>
+            <label for="qtde">Quantidade</label><br>
+            <input type="number" name="qtde" id="qtde" required min="0" max="100" value="<?php echo $qtde; ?>">
+            <br><br>
             <label for="obs">Obs.</label><br>
             <textarea type="text" name="obs" id="obs" class="resize_v"><?php echo $obs; ?></textarea>
             <br><br>
@@ -289,6 +239,11 @@
             </div>   
             
             <div class="visualizarInfo">
+                <label for="">Quantidade</label>
+                <h3><?php echo $qtde; ?></h3>
+            </div>   
+            
+            <div class="visualizarInfo">
                 <label for="">Observação</label>
                 <p>
                 <?php if($obs != '') echo $obs; else echo "-"; ?>
@@ -301,23 +256,12 @@
             </div>
 
             <div class="visualizarOptions">
-                <button onclick="<?php echo "window.location.href = '?id=$id&edit=true';" ?>" class="btnEditar">
+                <button onclick="<?php echo "window.location.href = '?id=$id&edit=true';" ?>" class="btnEditar" <?php echo ($exc) ? 'disabled' : ''; ?>>
                     Editar
                 </button>
 
-                <button onclick="<?php 
-                echo "swal({
-                    title: 'Atenção!',
-                    text:'Deseja realmente excluir o livro $titulo?',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willDelete) =>{
-                    if(willDelete){
-                        window.location.href = '?id=$id&exc=true';
-                    }
-                });"; ?>" class="btnExcluir">
-                    Excluir
+                <button onclick="<?php echo "window.location.href = '?id=$id&exc=$exc';" ?>" class="btnExcluir">
+                    <?php echo ($exc) ? 'Restaurar' : 'Excluir';?>
                 </button>
             </div>
         </div>

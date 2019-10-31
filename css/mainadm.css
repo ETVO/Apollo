@@ -105,6 +105,10 @@ body {
 	background: rgba(255, 0, 0, 0.1);
 }
 
+.admTable tr.exc{
+	background: rgba(255, 0, 0, 0.1);
+}
+
 .admTable th {
 	font-weight: normal;
 	text-align: left;
@@ -112,9 +116,15 @@ body {
 }
 
 .admTable td{
+	max-width: 110px;
 	padding: 10px;
 	font-weight: bold;
 	word-wrap: break-word;
+}
+
+.admTable td.action a{
+	font-weight: normal;
+    color: #0349fc;
 }
 
 .header {
@@ -292,4 +302,11 @@ body {
 .b2 {
 	font-weight: bold;
 	/* color: #e20000; */
+}
+
+label[for='f_exc'], #f_exc {
+	font-size: 0.9em;
+	color: #242424;
+	margin: auto;
+	cursor: pointer;
 }

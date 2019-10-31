@@ -1,40 +1,6 @@
 <?php
-    session_start();
-
-    $login = $_SESSION['login'];
-    $senha = $_SESSION['senha'];
-    $nome = '';
-    
-    if(!isset($_SESSION['login']) || !isset($_SESSION['senha'])) {
-        session_destroy();
-        header("Location: index.php");
-    }
-    else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
-    }
-    else {
-        try 
-        {
-            include "../config/php/connect.php";
-
-            $sql = "SELECT nome FROM user WHERE login = '$login' AND bloqueado = 0";
-
-            $res = mysqli_query($conn, $sql);
-            
-            if(mysqli_affected_rows($conn) > 0){
-                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-                $nome = utf8_encode($row['nome']);
-                $nome = explode(" ", $nome)[0];
-            } 
-            else {
-                session_destroy();
-                header("Location: index.php");
-            }
-
-            mysqli_close($conn);
-        } catch (Exception $e){
-
-        }
-    }
+    include 'head.php';
+    include 'login.php';
 
     if(isset($_POST['subCadLivro'])) {
         try 
@@ -56,10 +22,14 @@
             $editora = utf8_decode(mysqli_real_escape_string($conn, $_POST['editora']));            
             $ano = utf8_decode(mysqli_real_escape_string($conn, $_POST['ano']));
             $edicao = utf8_decode(mysqli_real_escape_string($conn, $_POST['edicao']));
+            $qtde = utf8_decode(mysqli_real_escape_string($conn, $_POST['qtde']));
             $obs = utf8_decode(mysqli_real_escape_string($conn, $_POST['obs']));
 
+            if($qtde <= 0) $disp = false;
+            else $disp = true;
+
             $sql = "INSERT INTO livro VALUES
-            (DEFAULT, '$titulo', '$genero', '$autor', '$editora', $ano, $edicao, DEFAULT, '$obs');";
+            (DEFAULT, '$titulo', '$genero', '$autor', '$editora', $ano, $edicao, $disp, $qtde, '$obs', DEFAULT);";
 
             // echo $sql;            
 
@@ -107,7 +77,6 @@
 </head>
 
 <body>    
-    <a href="" onclick="window.close();" class="a voltaInicio">Fechar</a><br>
     <a href="main.php?sel=l" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
         <h3>Cadastro de <a href="main.php?sel=l" class="a">Livro</a></h3>
@@ -115,17 +84,6 @@
     
     <div class="cadastro">
         <form action="" method="post" class="cadastroFrm">
-            <!-- <div class="cadastroField">
-                <label for="">Título</label>
-                <input type="text" name="titulo">
-            </div>
-            <div class="cadastroField">
-                <label for="genero">Gênero</label>
-                <select name="genero" id="genero">
-                    <option value=""></option>
-                </select>
-            </div> -->
-
             <label for="titulo">Título</label><br>
             <input type="text" name="titulo" id="titulo" required autofocus>
             <br><br>
@@ -151,6 +109,9 @@
             <br><br>
             <label for="edicao">Edição</label><br>
             <input type="number" name="edicao" id="edicao" required min="1" max="500">
+            <br><br>
+            <label for="qtde">Quantidade</label><br>
+            <input type="number" name="qtde" id="qtde" required min="0" max="100">
             <br><br>
             <label for="obs">Observação</label><br>
             <textarea type="text" name="obs" id="obs" class="resize_v"></textarea>

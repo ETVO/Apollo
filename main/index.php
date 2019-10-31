@@ -19,7 +19,6 @@
         <script src="../config/js/sweetalert.min.js"></script>
         <link rel="shortcut icon" href="../favicon.ico"> 
     </head>
-
     <body>
         <div class="index">
             <div class="indexContent">
@@ -48,18 +47,19 @@
                 </div>
             </div>
         </div>
+    
         <div class="footer">
             <div class="footerDesc">
-                © 2019 <b><a href="../main" title="Início">Apolo</a></b> - Sistema da Biblioteca CTI
+                © 2019 <b><a href="../" title="Início">Apolo</a></b> - Sistema da Biblioteca CTI
             </div>
             <div class="footerItems">
                 <ul>
-                    <li><a href="../admin" target="_blank" class="footerOpt" title="Funções administrativas">Administração</a></li>
+                    <li><a href="../admin" class="footerOpt" title="Funções administrativas">Administração</a></li>
                     <li><a href="../sobre" class="footerOpt"  title="Sobre o sistema">Sobre</a></li>
                 </ul>
             </div>
         </div>
     </body>
 
-<script src="../js/main.js"></script>
+    <script src="../js/main.js"></script>
 </html>

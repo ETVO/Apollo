@@ -55,6 +55,7 @@ session_start();
             <ul>
                 <li><a href="../admin" class="footerOpt" title="Funções administrativas">Administração</a></li>
                 <li><a href="../sobre" class="footerOpt"  title="Sobre o sistema">Sobre</a></li>
+                <li><a href="../" class="footerOpt"  title="Página inicial">Início</a></li>
             </ul>
         </div>
     </div>

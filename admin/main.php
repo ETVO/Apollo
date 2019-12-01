@@ -40,7 +40,7 @@
                     <a href="?sel=l" class="a <?php if($selected == 'l') echo "selected"; ?>">Livros</a>
                 </li>
                 <li>
-                    <a href="?sel=u" class="a <?php if($selected == 'u') echo "selected"; ?>">Administradores</a>
+                    <a href="?sel=u" class="a <?php if($selected == 'u') echo "selected"; ?>">Usuários</a>
                 </li>
             </ul>
         </div>
@@ -51,7 +51,11 @@
                     {
                         ?>
                         <h2 class="textcenter dashboardTitle" ><a href="?sel=" class="a">Painel</a></h2>
-                        <a href="config.php" target="_blank" class="addNew textcenter a">Configurações do Sistema</a>
+                        <div class="contentaddnew">
+                            <a onclick="changeParentLocation('config.php')" class="addNew textcenter a">
+                                Configurações
+                            </a>
+                        </div>
 
                         <div class="grid_3">
                             <table class="painelTable">

@@ -1,42 +1,5 @@
 <?php
-    session_start();
-
-    $login = $_SESSION['login'];
-    $senha = $_SESSION['senha'];
-    $nome = '';
-
-    $edit = false;
-
-    if(!isset($_SESSION['login']) || !isset($_SESSION['senha'])) {
-        session_destroy();
-        header("Location: index.php");
-    }
-    else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
-    }
-    else {
-        try 
-        {
-            include "../config/php/connect.php";
-
-            $sql = "SELECT nome FROM user WHERE login = '$login' AND bloqueado = 0 AND bloqueado = FALSE";
-
-            $res = mysqli_query($conn, $sql);
-            
-            if(mysqli_affected_rows($conn) > 0){
-                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-                $nome = utf8_encode($row['nome']);
-                $nome = explode(" ", $nome)[0];
-            } 
-            else {
-                session_destroy();
-                header("Location: index.php");
-            }
-
-            mysqli_close($conn);
-        } catch (Exception $e){
-
-        }
-    }
+    include 'login.php';
 
     if(isset($_GET['red']))
     {

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/mainadm.css">
     <script src="../config/js/sweetalert.min.js"></script>
+    <script src="../config/js/jquery.min.js"></script>
     <script src="../js/admin.js"></script>
     <link rel="shortcut icon" href="../favicon.ico"> 
 </head>

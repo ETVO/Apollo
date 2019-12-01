@@ -43,13 +43,15 @@ if(isset($_GET['f_exc']))
             Livros
         </a>
     </h2>
-    <a onclick="changeParentLocation('cadliv.php')" class="addNew textcenter a">
-        Adicionar novo
-    </a>
+    <div class="contentaddnew">
+        <a onclick="changeParentLocation('cadliv.php')" class="addNew textcenter a">
+            Adicionar novo
+        </a>
+    </div>
 
     <div class="admSearch">
         <form action="" method="get" class="frmSearch" id="frmSearch">
-            <label for="f_exc">Ocultar livros excluídos?</label>&nbsp;
+            <label for="f_exc" id="lbl_f_exc">Ocultar livros excluídos?</label>&nbsp;
             <input type="checkbox" name="f_exc" id="f_exc" onChange="this.form.submit()" <?php if($f_exc) echo "checked"; ?>>
             &nbsp;&nbsp;
             <input type="hidden" name="sel" value="<?php echo $selected; ?>">

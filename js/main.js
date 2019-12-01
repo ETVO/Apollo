@@ -45,7 +45,7 @@ function verAluno() {
             ano.removeAttribute("disabled");
             ano.setAttribute("required", "true");
             var label = document.getElementById("lblAno");
-            label.innerHTML = 'Série <b class="requiredField">*</b>';
+            label.innerHTML = 'Turma <b class="requiredField">*</b>';
             label.setAttribute("title", "Campo obrigatório!");
     
             ra.removeAttribute("disabled");
@@ -58,7 +58,7 @@ function verAluno() {
             ano.removeAttribute("required");
             ano.setAttribute("disabled", true);
             var label = document.getElementById("lblAno");
-            label.innerHTML = 'Série';
+            label.innerHTML = 'Turma';
             label.setAttribute("title", "Apenas para alunos");
             
             ra.removeAttribute("required");

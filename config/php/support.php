@@ -17,12 +17,12 @@
             $bd = $row['senha'];
             
             if($md5 == $bd){
-                return true;
+                return 1;
             }
 
         } 
         
-        return false;  
+        return 0;  
     }
 
 ?>

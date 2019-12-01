@@ -1,40 +1,6 @@
 <?php
-    session_start();
-
-    $login = $_SESSION['login'];
-    $senha = $_SESSION['senha'];
-    $nome = '';
-    
-    if(!isset($_SESSION['login']) || !isset($_SESSION['senha'])) {
-        session_destroy();
-        header("Location: index.php");
-    }
-    else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
-    }
-    else {
-        try 
-        {
-            include "../config/php/connect.php";
-
-            $sql = "SELECT nome FROM user WHERE login = '$login' AND bloqueado = 0";
-
-            $res = mysqli_query($conn, $sql);
-            
-            if(mysqli_affected_rows($conn) > 0){
-                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-                $nome = utf8_encode($row['nome']);
-                $nome = explode(" ", $nome)[0];
-            } 
-            else {
-                session_destroy();
-                header("Location: index.php");
-            }
-
-            mysqli_close($conn);
-        } catch (Exception $e){
-
-        }
-    }
+    include 'head.php';
+    include 'login.php';
 
     if(isset($_POST['subCadUser'])) {
         $id_user = 0;
@@ -43,34 +9,28 @@
         {
             include "../config/php/connect.php";
 
-
-            // $a = substr($titulo, 0, 2);
-            // $as = substr($titulo, 0, 3);
-
-            // if(strtolower($as) == 'as ' || strtolower($as) == 'os ')
-            //     $titulo = substr($titulo, 3).", $as";
-            // else if(strtolower($a) == 'a ' || strtolower($a) == 'o ')
-            //     $titulo = substr($titulo, 2).", $a";
-
-
             $nome = utf8_decode(mysqli_real_escape_string($conn, $_POST['nome']));
-            $ra  = "null";if(isset($_POST['ano'])){
-                $ra = "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'";
-            }
+            $ra  = (isset($_POST['turma'])) ? "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "null";
             $newlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
+            $newsenha = utf8_decode(mysqli_real_escape_string($conn, $_POST['senha']));
+            $newsenha = md5($newsenha);
+            $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
+            $turma = (isset($_POST['turma'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['turma'])) : "null";
+            $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
+            $email = utf8_decode(mysqli_real_escape_string($conn, $_POST['email']));
+            $admin = (isset($_POST['admin'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['admin'])) : "false";
             
-            if($newlogin != 'root'){
-                $newsenha = utf8_decode(mysqli_real_escape_string($conn, $_POST['senha']));
-                $newsenha = md5($newsenha);
-                $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
-                $ano = "null";
-                if(isset($_POST['ano'])){
-                    $ano = utf8_decode(mysqli_real_escape_string($conn, $_POST['ano']));
-                }
-                $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
-                
+            $sql = "SELECT * FROM user WHER login = '$newlogin'";
+            $res = mysqli_query($conn, $sql);
+            if(mysqli_affected_rows($conn) > 0){
+                echo '<script>
+                    alert("O login '.$newlogin.' já está sendo utilizado.");
+                    </script>';
+            }
+            else
+            {
                 $sql = "INSERT INTO user VALUES
-                (DEFAULT, '$nome', $ra, '$newlogin', '$newsenha', $ano, '$tipo', '$telefone', DEFAULT);";
+                (DEFAULT, '$nome', $ra, '$newlogin', '$newsenha', '$turma', '$tipo', '$email', '$telefone', $admin, DEFAULT);";
 
                 $res = mysqli_query($conn, $sql);
                 
@@ -78,7 +38,8 @@
                 if(mysqli_affected_rows($conn) > 0){
                     // echo 'a';
                     echo '<script>
-                    alert("Administrador \"'.$nome.'\" inserido com sucesso!");
+                    alert("Usuário \"'.$nome.'\" inserido com sucesso!");
+                    window.location.href = "prg.php?url=main.php?sel=u";
                     </script>';
 
                     
@@ -99,11 +60,6 @@
                     alert("Falha ao inserir administrador \"'.$nome.'\"!\nMais detalhes: '.$erro.'");
                     </script>';
                 }
-            }   
-            else {
-                echo '<script>
-                    alert("Você não pode utilizar este login.");
-                    </script>';
             }
             
             if($success)
@@ -146,9 +102,8 @@
     <link rel="shortcut icon" href="../favicon.ico"> 
 </head>
 
-<body>    
-    <a href="" onclick="window.close();" class="a voltaInicio">Fechar</a><br>
-    <a href="main.php?sel=a" class="a voltaInicio">Voltar à Administração</a>
+<body>
+    <a href="main.php?sel=u" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
         <h3>Cadastro de <a href="main.php?sel=a" class="a">Administrador</a></h3>
     </div>
@@ -175,11 +130,17 @@
             <label for="senha">Senha</label><br>
             <input type="password" name="senha" id="senha" required maxlenght="16">
             <br><br>
-            <label for="ano" id="lblAno">Série</label><br>
-            <input type="number" name="ano" id="ano" maxlenght="1" min="1" max="5" placeholder="1 a 3">
+            <label for="ano" id="lblAno">Turma</label><br>
+            <input type="text" name="turma" id="ano" maxlenght="3" placeholder="Ex.: 73A">
             <br><br>
             <label for="telefone">Telefone</label><br>
             <input type="text" name="telefone" id="telefone" maxlenght="15" placeholder="Ex.: 14987654321">
+            <br><br>
+            <label for="email">Email</label><br>
+            <input type="email" name="email" id="email" maxlenght="255" required>
+            <br><br>
+            <input type="checkbox" name="admin" id="admin" value="true">
+            <label for="admin">Administrador?</label>
             <br><br>
             <button type="submit" name="subCadUser" class="cadBtn">Salvar</button>
             <button type="reset" class="cadBtn reset">Limpar</button>

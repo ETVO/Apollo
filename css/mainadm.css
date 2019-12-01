@@ -77,16 +77,18 @@ body {
 	margin-bottom: 0;
 }
 
+.contentaddnew
+{
+	display: flex;
+}
+
 .addNew {
-	text-decoration: none;
-	display: block;
-	padding: 5px;
-	color: #525252;
+	margin: auto;
+	color: #0349fc;
 }
 
 .addNew:hover {
 	text-decoration: underline;
-	color: black;
 }
 
 .admTable {
@@ -116,7 +118,7 @@ body {
 }
 
 .admTable td{
-	max-width: 110px;
+	max-width: 120px;
 	padding: 10px;
 	font-weight: bold;
 	word-wrap: break-word;
@@ -304,7 +306,7 @@ body {
 	/* color: #e20000; */
 }
 
-label[for='f_exc'], #f_exc {
+#lbl_f_exc, #f_exc {
 	font-size: 0.9em;
 	color: #242424;
 	margin: auto;

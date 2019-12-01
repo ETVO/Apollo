@@ -3,7 +3,7 @@
     session_destroy();
     session_start();
 
-    $fb = 0; // inicio
+    $fb = -1; // inicio
 
     $login = '';
     $pass = '';    
@@ -76,25 +76,27 @@
     $login = utf8_encode($login);
 
     // echo $fb;
-    if($fb == true){
+    if($fb == 1){
         successful($login, $pass);
         ?>
             <script>
+                var delay = 1000;
                 swal({
-                    title: "Conexão bem sucedida!",
                     icon: "success",
-                }).then((value) =>{
-                    window.location.href="main.php";
+                    title: "Conexão bem sucedida!",
+                    text: "Entrando...",
+                    buttons: false,
+                    timer: delay,
                 });
+                setTimeout(function() { window.location.href="main.php"; }, delay);       
             </script>
         <?php
     }
-    else if($fb != 0){
+    else if($fb == 0){
         ?>
             <script>
                 swal({
                     title: "Senha incorreta ou usuário indisponível!",
-                    text: "Contate um administrador ou entre com o administrador padrão.",
                     icon: "error",
                 });
             </script>
@@ -137,6 +139,7 @@
             <ul>
                 <li><a href="../admin" class="footerOpt" title="Funções administrativas">Administração</a></li>
                 <li><a href="../sobre" class="footerOpt"  title="Sobre o sistema">Sobre</a></li>
+                <li><a href="../" class="footerOpt"  title="Página inicial">Início</a></li>
             </ul>
         </div>
     </div>

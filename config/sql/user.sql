@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE user (
     id_user SERIAL PRIMARY KEY,
     nome VARCHAR(70) NOT NULL,
-    ra VARCHAR(7) UNIQUE,
+    ra VARCHAR(7),
     login VARCHAR(20) UNIQUE NOT NULL,
     senha TEXT NOT NULL,
     turma VARCHAR(7),

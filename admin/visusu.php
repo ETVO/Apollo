@@ -1,48 +1,11 @@
 <?php
-    session_start();
+    $edit = false;
+    $bloq = false;
+    
+    include 'head.php';
+    include 'login.php';
 
     $login = $_SESSION['login'];
-    $senha = $_SESSION['senha'];
-    $nome = '';
-
-    $newsenha = '';
-
-    $edit = false;
-    $exc = false;
-    
-    if(!isset($_SESSION['login']) || !isset($_SESSION['senha'])) {
-        session_destroy();
-        echo "a";
-        exit;
-        header("Location: index.php");
-        
-    }
-    else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
-    }
-    else {
-        try 
-        {
-            include "../config/php/connect.php";
-
-            $sql = "SELECT nome FROM user WHERE login = '$login' AND bloqueado = 0 AND bloqueado = FALSE";
-
-            $res = mysqli_query($conn, $sql);
-            
-            if(mysqli_affected_rows($conn) > 0){
-                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-                $nome = utf8_encode($row['nome']);
-                $nome = explode(" ", $nome)[0];
-            } 
-            else {
-                session_destroy();
-                header("Location: index.php");
-            }
-
-            mysqli_close($conn);
-        } catch (Exception $e){
-
-        }
-    }
 
     if(isset($_GET['id'])){
         $id = $_GET['id'];
@@ -50,7 +13,7 @@
         try {
             include "../config/php/connect.php";
 
-            $sql = "SELECT id_user, nome, ra, login, senha, tipo, ano, bloqueado, telefone
+            $sql = "SELECT id_user, nome, ra, login, senha, turma, tipo, telefone, email, bloqueado, admin
             FROM user WHERE id_user=$id";
             
             $res = mysqli_query($conn, $sql);
@@ -61,21 +24,25 @@
                 
                 $nome = utf8_encode($row['nome']);
                 $ra = utf8_encode($row['ra']);
-                $newlogin = utf8_encode($row['login']);
-                $newsenha = utf8_encode($row['senha']);
+                $vislogin = utf8_encode($row['login']);
+                $senha = utf8_encode($row['senha']);
                 $tipo = utf8_encode($row['tipo']);
-                $ano = utf8_encode($row['ano']);
-                $bloq = utf8_encode($row['bloqueado']);
+                $turma = utf8_encode($row['turma']);
                 $telefone = utf8_encode($row['telefone']);
+                $email = utf8_encode($row['email']);
+                $bloq = utf8_encode($row['bloqueado']);
+                $admin = utf8_encode($row['admin']);
             }
             else {
-                header("Location: main.php");
+                // header("Location: main.php");
             }
 
         } catch (Exception $e) {
 
         }
     }
+
+    $self = $login == $vislogin; 
 
     if(isset($_GET['edit']))
     {
@@ -101,73 +68,43 @@
             include "../config/php/connect.php";
 
 
-            // $a = substr($titulo, 0, 2);
-            // $as = substr($titulo, 0, 3);
-
-            // if(strtolower($as) == 'as ' || strtolower($as) == 'os ')
-            //     $titulo = substr($titulo, 3).", $as";
-            // else if(strtolower($a) == 'a ' || strtolower($a) == 'o ')
-            //     $titulo = substr($titulo, 2).", $a";
-
-
             $nome = utf8_decode(mysqli_real_escape_string($conn, $_POST['nome']));
-            $newra  = "null";
-            if(isset($_POST['ano'])){
-                $newra = "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'";
-            }
+            $newra  = (isset($_POST['turma'])) ? "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "null";
             $newlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
+            $oldlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login_atual']));
+            $newsenha = (isset($_POST['senha'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['senha'])) : "null";
+            $newsenha = md5($newsenha);
+            $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
+            $turma = utf8_decode(mysqli_real_escape_string($conn, $_POST['turma']));
+            $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
+            $email = utf8_decode(mysqli_real_escape_string($conn, $_POST['email']));
+            $admin = (isset($_POST['admin'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['admin'])) : "false";
             
-            if($newlogin != 'root'){
-
-                if(isset($_POST['senha']))
-                {
-                    $newsenha = utf8_decode(mysqli_real_escape_string($conn, $_POST['senha']));
-                    $newsenha = md5($newsenha);
-                }
-                $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
-                $ano = "null";
-                if(isset($_POST['ano'])){
-                    $ano = utf8_decode(mysqli_real_escape_string($conn, $_POST['ano']));
-                }
-                $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
-
-                if(!isset($_POST['bloq']))
-                    $bloq = '0';
-                else
-                    $bloq = '1';
-
-                if($tipo != 'Aluno'){
-                    $newra = 'null';
-                    $ano = 'null';
-                }
-                
-                
+            $samelogin = $newlogin == $oldlogin;
+            
+            $sql = "SELECT * FROM user WHER login = '$newlogin'";
+            $res = mysqli_query($conn, $sql);
+            if(mysqli_affected_rows($conn) > 0 && !$samelogin){
+                echo '<script>
+                    alert("O login '.$newlogin.' já está sendo utilizado.");
+                    </script>';
+            }
+            else
+            {
+                $strnewsenha = (isset($_POST['senha'])) ? " senha = '$newsenha'," : "";
                 $sql = "UPDATE user SET
                 nome = '$nome', ra = $newra,
-                login = '$newlogin', senha = '$newsenha',
-                ano = $ano, tipo = '$tipo', telefone = '$telefone',
-                bloqueado = $bloq
+                login = '$newlogin', $strnewsenha
+                turma = '$turma', tipo = '$tipo', telefone = '$telefone', email = '$email', admin = $admin
                 WHERE id_user=$id;";
-
-                echo $sql;
                 
                 $res = mysqli_query($conn, $sql);
                 
-                $nome = utf8_encode($nome);
                 if(mysqli_affected_rows($conn) > 0){
                     // echo 'a';
                     echo '<script>
                     alert("Registro do administrador \"'.$nome.'\" alterado com sucesso!");
                     </script>';
-
-                    
-                    $id_sql = "SELECT LAST_INSERT_ID()";
-
-                    $res = mysqli_query($conn, $id_sql);
-
-                    $row = mysqli_fetch_array($res, MYSQLI_NUM);
-        
-                    $id_user = $row[0];
 
                     $success = true;
                 } 
@@ -178,17 +115,12 @@
                     alert("Falha ao alterar o registro do administrador \"'.$nome.'\"!\nMais detalhes: '.$erro.'");
                     </script>';
                 }
-            }   
-            else {
-                echo '<script>
-                    alert("Você não pode utilizar este login.");
-                    </script>';
             }
-            
-            mysqli_close($conn);
             if($success)
             {
                 $append = "Usuário \"$login\" alterou o registro do administrador id $id.<br>";
+                if($self)
+                    $append = "Usuário id \"$id\" alterou o seu próprio registro, utilizando agora o login $newlogin.<br>";
                 $file = 'log.html';
                 date_default_timezone_set("America/Sao_Paulo");
 
@@ -199,7 +131,21 @@
 
                 file_put_contents($file, $append);
             }
-            header("Location: ?id=$id");
+            
+            mysqli_close($conn);
+            if($self)
+            {
+                echo "<script>
+                    alert('Você alterou seu próprio registro, $newlogin. Por isso, você será redirecionado novamente à página de login.');
+                    window.location.href = 'prg.php?url=index.php';
+                </script>";
+            }
+            else
+            {
+                echo "<script>
+                   window.location.href = 'prg.php?url=visusu.php?id=$id';
+                </script>";
+            }
         } catch (Exception $e){
 
         }
@@ -222,31 +168,28 @@
 
     }
 
-    if(isset($_GET['exc']))
+    if(isset($_GET['bloq']))
     {
         if($count > 1)
         {
-            $exc = $_GET['exc'];
+            $bloq = $_GET['bloq'];
             $success = false;
             try {
                 include "../config/php/connect.php";
 
-                if($bloq == 1) $newbloq = 0; else $newbloq = 1;
-
-                $sql = "UPDATE user SET bloqueado = $newbloq WHERE id_user = $id";
-
-                $res = mysqli_query($conn, $sql);
-
-                if($newbloq == 1) $popup = "bloqueado"; else $popup = "desbloqueado";
-                
-                if(mysqli_affected_rows($conn) > 0){
+                if($vislogin == $login)
+                {
                     echo "<script>
-                    alert('Administrador $popup com sucesso!');
+                    alert('Você não pode bloquear seu próprio usuário, $login.');
                     </script>";
+                }
+                else
+                {
+                    if($bloq == 0) $nbloq = 1; else $nbloq = 0;
 
-                    $success = true;
-                } 
-                else {
+                    $sql = "UPDATE user SET bloqueado = $nbloq WHERE id_user = $id";
+
+                    $res = mysqli_query($conn, $sql);
                 }
             } catch(Exception $e) {
 
@@ -295,10 +238,9 @@
 </head>
 
 <body>    
-    <a href="" onclick="window.close();" class="a voltaInicio">Fechar</a><br>
-    <a href="main.php?sel=a" class="a voltaInicio">Voltar à Administração</a>
+    <a href="main.php?sel=u" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
-        <h3>Visualizar <a href="main.php?sel=a" class="a">Usuário</a></h3>
+        <h3>Visualizar <a href="main.php?sel=u" class="a">Usuário</a></h3>
     </div>
     
     <div class="visualizar">
@@ -307,14 +249,14 @@
             <input type="text" name="nome" id="nome" required autofocus maxlenght="70" value="<?php echo $nome; ?>">
             <br><br>
             <label for="ra" id="lblRa">RA</label><br>
-            <input type="number" name="ra" id="ra" maxlenght="7" min="1000000" value="<?php echo $ra; ?>">
+            <input type="number" name="ra" id="ra" maxlenght="7" min="1000000" max="9999999" value="<?php echo $ra; ?>">
             <br><br>
             <label for="login">Login</label><br>
-            <input type="text" name="login" id="login" required maxlenght="20" value="<?php echo $newlogin; ?>">
+            <input type="text" name="login" id="login" required maxlenght="20" value="<?php echo $vislogin; ?>">
             <br><br>
-            <div <?php if($login != 'root') echo 'style="display:none"'; ?>>
+            <div <?php if($login != 'admin') echo 'style="display:none"'; ?>>
                 <label for="senha">Senha</label><br>
-                <input type="password" name="senha" id="senha" maxlenght="16" <?php if($login != 'root') echo 'disabled'; ?>>
+                <input type="password" name="senha" id="senha" maxlenght="16" <?php if($login != 'admin') echo 'disabled'; ?>>
                 <br><br>
             </div>
             <label for="tipo">Tipo</label><br>
@@ -325,18 +267,22 @@
                 <option value="Funcionário" <?php if($tipo == 'Funcionário') echo 'selected'; ?>>Funcionário</option>
             </select>
             <br><br>
-            <label for="ano" id="lblAno">Série</label><br>
-            <input type="number" name="ano" id="ano" maxlenght="1" value="<?php echo $ano; ?>">
+            <label for="turma" id="lblAno">Turma</label><br>
+            <input type="text" name="turma" id="turma" maxlenght="6" value="<?php echo $turma; ?>">
             <br><br>
             <label for="telefone">Telefone</label><br>
             <input type="text" name="telefone" id="telefone" maxlenght="15" placeholder="Ex.: 14987654321" value="<?php echo $telefone; ?>">
             <br><br>
-            <div <?php if($count == 1) echo 'style="display:none"'; ?>>
-                <label for="telefone">Bloqueado</label>
-                <input type="checkbox" name="bloq" id="bloq" <?php if($bloq) echo 'checked'; ?>>
-                <br><br>
-            </div>
-            <input type="hidden" name="newsenha" value="<?php echo $newsenha; ?>">
+            <label for="email">Email</label><br>
+            <input type="email" name="email" id="email" maxlenght="255" required value="<?php echo $email; ?>">
+            <br><br>
+            <input type="checkbox" name="admin" id="admin" value="true" <?php echo ($admin) ? "checked" : ""; ?>>
+            <label for="admin">Administrador?</label>
+            <br><br>
+            <input type="hidden" name="senha_atual" value="<?php echo ($self) ? $senha : $vissenha; ?>">
+            <input type="hidden" name="login_atual" value="<?php echo ($self) ? $login : $vislogin; ?>">
+            <input type="hidden" name="ra_atual" value="<?php echo $ra; ?>">
+            <input type="hidden" name="self_edit" value="<?php echo $self; ?>">
             <button type="submit" name="subUpUser" class="cadBtn">Salvar</button>
             <button type="submit" name="cancelEdit" class="cadBtn reset" formnovalidate>Cancelar Edição</button>
         </form>
@@ -355,13 +301,13 @@
             
             <div class="visualizarInfo">
                 <label for="">Login</label>
-                <h3><?php echo $newlogin; ?></h3>
-            </div>   
-            
+                <h3><?php echo $vislogin; ?></h3>
+            </div>    
+                
             <div class="visualizarInfo">
-                <label for="" title="Só pode ser alterada com o administrador padrão (root).">Senha</label>
+                <label for="" title="Só pode ser alterada com o administrador padrão ('admin').">Senha</label>
                 <h3><?php echo '*******' ?></h3>
-            </div>   
+            </div>  
             
             <div class="visualizarInfo">
                 <label for="">Tipo</label>
@@ -369,38 +315,39 @@
             </div>   
             
             <div class="visualizarInfo">
-                <label for="">Série</label>
-                <h3><?php if($ano != null) echo $ano."º"; else echo '-'; ?></h3>
+                <label for="">Turma</label>
+                <h3><?php if($turma != null) echo $turma; else echo '-'; ?></h3>
             </div>   
 
             <div class="visualizarInfo">
                 <label for="">Telefone</label>
-                <h3><?php echo $telefone; ?></h3>
+                <h3><?php echo ($telefone != "") ? $telefone : "-"; ?></h3>
             </div>   
-            
+
             <div class="visualizarInfo">
-                <label for="">Bloqueado</label>
-                <h3><?php if($bloq) echo 'Sim'; else echo 'Não';?></h3>
+                <label for="">Email</label>
+                <h3><?php echo $email; ?></h3>
+            </div>   
+
+            <div class="cad_2grid">
+                <div class="visualizarInfo">
+                    <label for="">Bloqueado?</label>
+                    <h3><?php if($bloq) echo 'Sim'; else echo 'Não';?></h3>
+                </div>    
+                
+                <div class="visualizarInfo">
+                    <label for="">Administrador?</label>
+                    <h3><?php if($admin) echo 'Sim'; else echo 'Não';?></h3>
+                </div> 
             </div>   
 
             <div class="visualizarOptions">
-                <button onclick="<?php echo "window.location.href = '?id=$id&edit=true';" ?>" class="btnEditar">
+                <button onclick="<?php echo "window.location.href = '?id=$id&edit=true';" ?>" class="btnEditar" <?php echo ($bloq) ? 'disabled' : ''; ?>>
                     Editar
                 </button>
 
-                <button onclick="<?php 
-                echo "swal({
-                    title: 'Atenção!',
-                    text:'Deseja realmente $popup o administrador $nome?',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willDelete) =>{
-                    if(willDelete){
-                        window.location.href = '?id=$id&exc=true';
-                    }
-                });"; ?>" class="btnExcluir" <?php if($count == 1) echo 'disabled title="Você não pode bloquear este administrador, pois ele é o único cadastrado!"'; ?>>
-                    <?php echo ($bloq) ? "Desbloquear" : "Bloquear"; ?>
+                <button onclick="<?php echo "window.location.href = '?id=$id&bloq=$bloq';" ?>" class="btnExcluir">
+                    <?php echo ($bloq) ? 'Desbloquear' : 'Bloquear';?>
                 </button>
             </div>
         </div>

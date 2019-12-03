@@ -312,3 +312,10 @@ body {
 	margin: auto;
 	cursor: pointer;
 }
+
+.cad_2grid {
+	display: grid;
+	grid-template-columns: 1fr 3fr;
+	grid-column-gap: 10px;
+	grid-template-rows: 1fr;
+}

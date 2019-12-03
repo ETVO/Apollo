@@ -89,7 +89,7 @@ html {
 [type="email"],
 select,
 textarea {
-	padding: 8px;
+	padding: 5px;
 	border: solid 1px rgba(0, 0, 0, 0.4);
 	border-radius: 2px;
 	width: 100%;

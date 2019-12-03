@@ -76,7 +76,7 @@
 }
 
 .visualizarInfo label::after {
-    content: ":";
+    /* content: ":"; */
 }
 
 .visualizarInfo h3 {

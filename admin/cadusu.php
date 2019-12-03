@@ -33,10 +33,7 @@
                 (DEFAULT, '$nome', $ra, '$newlogin', '$newsenha', '$turma', '$tipo', '$email', '$telefone', $admin, DEFAULT);";
 
                 $res = mysqli_query($conn, $sql);
-                
-                $nome = utf8_encode($nome);
                 if(mysqli_affected_rows($conn) > 0){
-                    // echo 'a';
                     echo '<script>
                     alert("Usuário \"'.$nome.'\" inserido com sucesso!");
                     window.location.href = "prg.php?url=main.php?sel=u";
@@ -54,7 +51,6 @@
                     $success = true;
                 } 
                 else {
-                    // echo 'b';
                     $erro = mysqli_error($conn);
                     echo '<script>
                     alert("Falha ao inserir administrador \"'.$nome.'\"!\nMais detalhes: '.$erro.'");

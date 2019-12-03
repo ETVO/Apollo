@@ -161,7 +161,6 @@
 </head>
 
 <body>    
-    <a href="" onclick="window.close();" class="a voltaInicio">Fechar</a><br>
     <a href="main.php?sel=l" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
         <h3>Visualizar <a href="main.php?sel=l" class="a">Livro</a></h3>

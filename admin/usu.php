@@ -94,8 +94,8 @@
             <th>RA</th>
             <th>Login</th>
             <th>Tipo</th>
-            <th>Admin</th>
-            <th>Bloqueado</th>
+            <th>Admin?</th>
+            <th>Bloqueado?</th>
             <th>Ações</th>
         </tr>
         
@@ -161,8 +161,7 @@
                         $ra = ($row['ra'] != null) ? utf8_encode($row['ra']) : "-";
                         $login = utf8_encode($row['login']);
                         $tipo = utf8_encode($row['tipo']);
-                        $admin = ($row['admin']) ? "Sim" : "Não";
-                        $admin = ($row['admin']) ? "Sim" : "Não";
+                        $admin = $row['admin'];
                         $bloq = utf8_encode($row['bloqueado']);
                         
                         $status = ($bloq) ? "Sim" : "Não";
@@ -173,8 +172,8 @@
                             <td><?php echo $ra; ?></td>
                             <td><?php echo $login; ?></td>
                             <td><?php echo $tipo; ?></td>
-                            <td><?php echo $admin; ?></td>
-                            <td><?php echo $status; ?></td>
+                            <td><?php echo ($admin) ? "Sim" : "Não"; ?></td>
+                            <td class="<?php echo ($bloq) ? "red" : "green"; ?>"><?php echo $status; ?></td>
                             <td class="action">
                                 <a onclick="changeParentLocation('visusu.php?id=<?php echo $id ?>')" target="_blank" class="a">Visualizar</a>
                                 |
@@ -212,8 +211,8 @@
             <th>RA</th>
             <th>Login</th>
             <th>Tipo</th>
-            <th>Admin</th>
-            <th>Bloqueado</th>
+            <th>Admin?</th>
+            <th>Bloqueado?</th>
             <th>Ações</th>
         </tr>
     </table>

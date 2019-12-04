@@ -1,6 +1,12 @@
 <?php
-    include 'head.php';
-    include 'login.php';
+    session_start();
+
+    $search = "";
+    
+    if(isset($_GET['s']))
+    {
+        $search = $_GET['s'];
+    }
 
     if(isset($_POST['subCadUser'])) {
         $id_user = 0;
@@ -8,17 +14,18 @@
         try 
         {
             include "../config/php/connect.php";
+            include "../config/php/presets.php";
 
             $nome = utf8_decode(mysqli_real_escape_string($conn, $_POST['nome']));
-            $ra  = (isset($_POST['turma'])) ? "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "null";
+            $ra  = (isset($_POST['turma'])) ? "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "";
             $newlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
-            $newsenha = utf8_decode(mysqli_real_escape_string($conn, $_POST['senha']));
+            $newsenha = $std_pass;
             $newsenha = md5($newsenha);
             $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
-            $turma = (isset($_POST['turma'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['turma'])) : "null";
+            $turma = (isset($_POST['turma'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['turma'])) : "";
             $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
             $email = utf8_decode(mysqli_real_escape_string($conn, $_POST['email']));
-            $admin = (isset($_POST['admin'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['admin'])) : "false";
+            $admin = "false";
             
             $sql = "SELECT * FROM user WHER login = '$newlogin'";
             $res = mysqli_query($conn, $sql);
@@ -34,10 +41,9 @@
 
                 $res = mysqli_query($conn, $sql);
                 if(mysqli_affected_rows($conn) > 0){
-                    echo '<script>
-                    alert("Usuário \"'.$nome.'\" inserido com sucesso!");
-                    window.location.href = "prg.php?url=main.php?sel=u";
-                    </script>';
+                    echo "<script>
+                    window.location.href = 'finalizar.php?s=$search';
+                    </script>";
 
                     
                     $id_sql = "SELECT LAST_INSERT_ID()";
@@ -60,8 +66,8 @@
             
             if($success)
             {
-                $append = "Usuário \"$login\" criou o usuário id $id_user.<br>";
-                $file = 'log.html';
+                $append = "Para finalizar empréstimo, foi criado o usuário id $id_user.<br>";
+                $file = '../admin/log.html';
                 date_default_timezone_set("America/Sao_Paulo");
 
                 $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
@@ -74,7 +80,7 @@
 
             mysqli_close($conn);
             echo "<script>
-            window.location.href = 'prg.php?url=cadusu.php';
+            window.location.href = 'finalizar.php?s=$search';
             </script>";
         } catch (Exception $e){
 
@@ -93,16 +99,20 @@
     <title>Administração - Apolo</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/mainadm.css">
+    <link rel="stylesheet" href="../css/final.css">
+    <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/cadastro.css">
     <script src="../config/js/sweetalert.min.js"></script>
     <link rel="shortcut icon" href="../favicon.ico"> 
 </head>
 
 <body>
-    <a href="main.php?sel=u" class="a voltaInicio">Voltar à Administração</a>
+<a href="finalizar.php?s=<?php echo $search; ?>" class="a voltaInicio">Voltar a Finalizar</a>
     <div class="textcenter">
-        <h3>Cadastro de <a href="main.php?sel=a" class="a">Usuário</a></h3>
+        <h4><a href=".." style="text-decoration:none">Apolo</a></h4>
+        <h2>Adicionar usuário</h2>
     </div>
+    <hr>
     
     <div class="cadastro">
         <form action="" method="post" class="cadastroFrm">
@@ -123,9 +133,6 @@
             <label for="login">Login</label><br>
             <input type="text" name="login" id="login" required maxlenght="20">
             <br><br>
-            <label for="senha">Senha</label><br>
-            <input type="password" name="senha" id="senha" required maxlenght="16">
-            <br><br>
             <label for="ano" id="lblAno">Turma</label><br>
             <input type="text" name="turma" id="ano" maxlenght="3" placeholder="Ex.: 73A">
             <br><br>
@@ -135,14 +142,23 @@
             <label for="email">Email</label><br>
             <input type="email" name="email" id="email" maxlenght="255">
             <br><br>
-            <input type="checkbox" name="admin" id="admin" value="true">
-            <label for="admin">Administrador?</label>
-            <br><br>
             <button type="submit" name="subCadUser" class="cadBtn">Salvar</button>
             <button type="reset" class="cadBtn reset">Limpar</button>
         </form>
     </div>
-    
+    <div class="footer">
+        <div class="footerDesc">
+            © 2019 <b><a href="../main" title="Início">Apolo</a></b> - Sistema da Biblioteca CTI
+        </div>
+        <div class="footerItems">
+            <ul>
+                <li><a href="../admin" class="footerOpt" title="Funções administrativas">Administração</a></li>
+                <li><a href="../sobre" class="footerOpt"  title="Sobre o sistema">Sobre</a></li>
+                <li><a href="../faq" class="footerOpt"  title="Ajuda">Ajuda</a></li>
+                <li><a href="../" class="footerOpt"  title="Página inicial">Início</a></li>
+            </ul>
+        </div>
+    </div>
 </body>
 
 <script src="../js/main.js"></script>

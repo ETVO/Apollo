@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS livro;
 
 CREATE TABLE livro (
     id_livro SERIAL PRIMARY KEY NOT NULL,
+    codigo TEXT,
     titulo TEXT NOT NULL,
     genero TEXT NOT NULL,
     autor TEXT NOT NULL,

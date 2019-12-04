@@ -10,4 +10,3 @@ CREATE TABLE config (
 
 INSERT INTO config VALUES (DEFAULT, 'multa', '1.00', 'float', NOW());
 INSERT INTO config VALUES (DEFAULT, 'dias_dev', '10', 'int', NOW());
-INSERT INTO config VALUES (DEFAULT, 'usar_codigo', 'true', 'bool', NOW());

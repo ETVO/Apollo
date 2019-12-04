@@ -1,6 +1,8 @@
 <?php
     include 'login.php';
 
+    $edit = false;
+
     if(isset($_GET['red']))
     {
         $success = false;
@@ -10,19 +12,27 @@
         {
             try{
                 include "../config/php/connect.php";
+                include "../config/php/presets.php";
 
                 $sql = "UPDATE config SET
-                valor = '1.00' WHERE nome = 'multa'";
+                valor = '$multa' WHERE nome = 'multa'";
 
                 if(!($res = mysqli_query($conn, $sql)))
                     echo "<script>window.close();</script>";
             
                 
                 $sql = "UPDATE config SET
-                valor = '7' WHERE nome = 'dias_dev'";
+                valor = '$dias_dev' WHERE nome = 'dias_dev'";
 
                 if(!($res = mysqli_query($conn, $sql)))
                     echo "<script>window.close();</script>";
+                
+            
+                $sql = "UPDATE config SET
+                valor = '$std_pass' WHERE nome = 'std_pass'";
+    
+                if(!($res = mysqli_query($conn, $sql)))
+                    echo '<script>window.location.href="?"</script>';
                 
 
                 $success = true;
@@ -67,6 +77,7 @@
 
             $multa = $_POST['multa'];
             $dias_dev = $_POST['dias_dev'];
+            $std_pass = $_POST['std_pass'];
 
             $sql = "UPDATE config SET
             valor = '$multa' WHERE nome = 'multa'";
@@ -81,6 +92,13 @@
             if(!($res = mysqli_query($conn, $sql)))
                 echo '<script>window.location.href="?"</script>';
 
+            
+            $sql = "UPDATE config SET
+            valor = '$std_pass' WHERE nome = 'std_pass'";
+
+            if(!($res = mysqli_query($conn, $sql)))
+                echo '<script>window.location.href="?"</script>';
+
             $success = true;
 
             mysqli_close($conn);
@@ -89,7 +107,7 @@
         }
         if($success)
         {
-            $append = "Usuário \"$login\" alterou as configurações para: MULTA para $multa e DIAS_DEV para $dias_dev.<br>";
+            $append = "Usuário \"$login\" alterou as configurações para: MULTA para $multa, DIAS_DEV para $dias_dev E STD_PASS para '$std_pass'.<br>";
             $file = 'log.html';
             date_default_timezone_set("America/Sao_Paulo");
 
@@ -107,6 +125,7 @@
 
     $multa = 0;
     $dias_dev = 0;
+    $std_pass = "";
 
     try{
         include '../config/php/connect.php';
@@ -128,6 +147,10 @@
                 {
                     $dias_dev = $row['valor'];
                     $dias_dev = (int) $dias_dev;
+                }
+                else if($row['nome'] == 'std_pass')
+                {
+                    $std_pass = utf8_encode($row['valor']);
                 }
             }
         }
@@ -165,11 +188,14 @@
     
     <div class="config">
         <form action="" method="post" class="configFrm" <?php if($edit) echo 'style="display:block"'; ?>>
-            <label for="multa" title="Multa paga por dia de atraso.">Multa <b>(por dia)</b></label><br>
+            <label for="multa" title="Multa que deve ser paga por dia de atraso.">Multa <b>(por dia atrasado)</b></label><br>
             <input type="number" name="multa" id="multa" autofocus min="0.1" step="0.1" value="<?php echo $multa; ?>">
             <br><br>
             <label for="dias_dev" title="Prazo de dias para devolução de livros emprestados.">Prazo de Devolução</label><br>
             <input type="number" name="dias_dev" id="dias_dev" min="1" max="30" value="<?php echo $dias_dev; ?>">
+            <br><br>
+            <label for="std_pass" title="Senha utilizada por padrão quando um usuário é criado na tela 'Finalizar Empréstimo'">Senha padrão</label><br>
+            <input type="text" name="std_pass" id="std_pass" value="<?php echo $std_pass; ?>">
             <br><br>
             <button type="submit" name="subConfig" class="configBtn">Salvar Alterações</button>
             <button type="submit" name="cancelEdit" class="configBtn reset" formnovalidate>Cancelar</button>
@@ -177,13 +203,18 @@
 
         <div class="configContent" <?php if($edit) echo 'style="display:none"'; ?>>
             <div class="configInfo">
-                <label for="" title="Multa paga por dia de atraso.">Multa <b>(por dia)</b></label>
+                <label for="" title="Multa que deve ser paga por dia de atraso.">Multa <b>(por dia atrasado)</b></label>
                 <h3>R$ <?php echo number_format((float)$multa, 2, ',', ''); ?></h3>
             </div>
             
             <div class="configInfo">
                 <label for="" title="Prazo de dias para devolução de livros emprestados.">Prazo de Devolução</label>
                 <h3><?php echo $dias_dev." dia"; if($dias_dev > 1) echo 's'; ?></h3>
+            </div>  
+            
+            <div class="configInfo">
+                <label for="" title="Senha utilizada por padrão quando um usuário é criado na tela 'Finalizar Empréstimo'">Senha padrão</label>
+                <h3>"<?php echo $std_pass?>"</h3>
             </div>  
 
             <div class="configOptions">

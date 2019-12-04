@@ -8,7 +8,7 @@
         $pass = utf8_decode(mysqli_real_escape_string($conn, $pass));
         $md5 = md5($pass);
 
-        $sql = "SELECT senha FROM user WHERE login = '$login' AND bloqueado = 0";
+        $sql = "SELECT senha FROM user WHERE login = '$login' AND bloqueado = 0 AND admin = 1";
 
         $res = mysqli_query($conn, $sql);
         

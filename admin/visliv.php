@@ -6,13 +6,15 @@
     include 'head.php';
     include 'login.php';
 
+    include "../config/php/util.php";
+
     if(isset($_GET['id'])){
         $id = $_GET['id'];
 
         try {
             include "../config/php/connect.php";
 
-            $sql = "SELECT id_livro, titulo, genero, autor, editora, ano, edicao, qtde, obs, disponivel, excluido
+            $sql = "SELECT id_livro, codigo, titulo, genero, autor, editora, ano, edicao, qtde, obs, disponivel, excluido
             FROM livro WHERE id_livro=$id";
 
             $res = mysqli_query($conn, $sql);
@@ -21,6 +23,7 @@
             {
                 $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
                 
+                $codigo = utf8_encode($row['codigo']);
                 $titulo = utf8_encode($row['titulo']);
                 $genero = utf8_encode($row['genero']);
                 $autor = utf8_encode($row['autor']);
@@ -72,7 +75,8 @@
             include "../config/php/connect.php";
 
             $titulo = utf8_decode(mysqli_real_escape_string($conn, $_POST['titulo']));
-            $genero = utf8_decode(mysqli_real_escape_string($conn, $_POST['genero']));
+            $abrev = utf8_decode(mysqli_real_escape_string($conn, $_POST['genero']));
+            $genero = getGenero($abrev);
             $autor = utf8_decode(mysqli_real_escape_string($conn, $_POST['autor']));
             $editora = utf8_decode(mysqli_real_escape_string($conn, $_POST['editora']));            
             $ano = utf8_decode(mysqli_real_escape_string($conn, $_POST['ano']));
@@ -80,9 +84,11 @@
             $obs = utf8_decode(mysqli_real_escape_string($conn, $_POST['obs']));
             $disp = utf8_decode(mysqli_real_escape_string($conn, $_POST['disp']));
             $qtde = utf8_decode(mysqli_real_escape_string($conn, $_POST['qtde']));
+
+            $codigo = getCodigo($abrev, $id);
             
             $sql = "UPDATE livro SET
-            titulo = '$titulo', genero = '$genero',
+            codigo = '$codigo', titulo = '$titulo', genero = '$genero',
             autor = '$autor', editora = '$editora',
             ano = $ano, edicao = $edicao, obs = '$obs', qtde = $qtde 
             WHERE id_livro=$id;";
@@ -163,7 +169,7 @@
 <body>    
     <a href="main.php?sel=l" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
-        <h3>Visualizar <a href="main.php?sel=l" class="a">Livro</a></h3>
+        <h3>Visualizar <a href="main.php?sel=l" class="a">Livro</a> (<b id="codigo"><?php echo $codigo; ?></b>)</h3>
     </div>
     
     <div class="visualizar">
@@ -175,12 +181,12 @@
             <label for="genero">Gênero</label><br>
             <select name="genero" id="genero" required>
                 <option value="" selected disabled>-- Selecione uma opção --</option>
-                <option value="Literatura Estrangeira" <?php if($genero == "Literatura Estrangeira") echo 'selected';?>>Literatura Estrangeira</option>
-                <option value="Literatura Brasileira" <?php if($genero == "Literatura Brasileira") echo 'selected';?>>Literatura Brasileira</option>
-                <option value="História em Quadrinhos" <?php if($genero == "História em Quadrinhos") echo 'selected';?>>História em Quadrinhos</option>
-                <option value="Literatura de Ciências Naturais" <?php if($genero == "Literatura de Ciências Naturais") echo 'selected';?>>Literatura de Ciências Naturais</option>
-                <option value="Literatura de Ciências Sociais" <?php if($genero == "Literatura de Ciências Sociais") echo 'selected';?>>Literatura de Ciências Sociais</option>
-                <option value="Literatura Didática" <?php if($genero == "Literatura Didática") echo 'selected';?>>Literatura Didática</option>
+                <option value="LE" <?php if($id != 0) if(getAbrev($genero) == 'LE') echo "selected"; ?>>Literatura Estrangeira</option>
+                <option value="LB" <?php if($id != 0) if(getAbrev($genero) == 'LB') echo "selected"; ?>>Literatura Brasileira</option>
+                <option value="HQ" <?php if($id != 0) if(getAbrev($genero) == 'HQ') echo "selected"; ?>>História em Quadrinhos</option>
+                <option value="CN" <?php if($id != 0) if(getAbrev($genero) == 'CN') echo "selected"; ?>>Ciências Naturais</option>
+                <option value="CS" <?php if($id != 0) if(getAbrev($genero) == 'CS') echo "selected"; ?>>Ciências Sociais</option>
+                <option value="LD" <?php if($id != 0) if(getAbrev($genero) == 'LD') echo "selected"; ?>>Literatura Didática</option>
             </select>
             <br><br>
             <label for="autor">Autor</label><br>

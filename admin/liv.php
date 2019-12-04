@@ -5,7 +5,21 @@ include "login.php";
 $sel_title = "livros";
 
 $filter = '1 ';
-$f_exc = false;
+    
+$f_exc = true;
+$first = 1;
+
+if(isset($_GET['first']))
+{   
+    $first = 0;
+}
+
+$f_exc = (!isset($_GET['f_exc']) && $first == 0) ? false : true;
+
+if($f_exc)
+{
+    $filter = 'excluido = 0';
+}
 
 if(isset($_GET['exc']))
 {
@@ -31,12 +45,6 @@ if(isset($_GET['exc']))
     $res = mysqli_query($conn, $sql);
 }
 
-if(isset($_GET['f_exc']))
-{
-    $f_exc = true;
-    $filter = 'excluido = 0 ';
-}
-
 ?>
     <h2 class="textcenter dashboardTitle" >
         <a onclick="changeParentLocation('main.php?sel=l')" class="a">
@@ -55,6 +63,7 @@ if(isset($_GET['f_exc']))
             <input type="checkbox" name="f_exc" id="f_exc" onChange="this.form.submit()" <?php if($f_exc) echo "checked"; ?>>
             &nbsp;&nbsp;
             <input type="hidden" name="sel" value="<?php echo $selected; ?>">
+            <input type="hidden" name="first" value="0">
             <input type="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
             <input type="submit"  value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
         </form>
@@ -63,8 +72,8 @@ if(isset($_GET['f_exc']))
     <table class="admTable">
         <tr class="header">
             <!-- <th>Id</th> -->
+            <th>Código</th>
             <th>Título</th>
-            <th>Gênero</th>
             <th>Autor(es)</th>
             <th>Editora</th>
             <th>Ano</th>
@@ -84,8 +93,9 @@ if(isset($_GET['f_exc']))
 
 
                 $sql = "SELECT id_livro, 
+                                codigo, 
                                 titulo, 
-                                genero, 
+                                genero,
                                 autor, 
                                 editora, 
                                 qtde, 
@@ -97,16 +107,20 @@ if(isset($_GET['f_exc']))
 
                 $sql_count = "SELECT COUNT(*) FROM livro";
                 
-                $search = '';
+                $search = (isset($_GET['search'])) ? ($_GET['search']) : '';
 
-                if(isset($_GET['search'])){        
+                if($search != ''){       
                     $search = utf8_decode($_GET['search']);
                     $search = strtolower($search);  
-                    $search_str = " WHERE (lower(titulo) LIKE '%$search%' OR lower(genero) LIKE '%$search%' 
-                    OR lower(autor) LIKE '%$search%' OR lower(editora) LIKE '%$search%' OR ano LIKE '%$search%' OR edicao LIKE '%$search%') AND $filter";
-                    $sql .= $search_str;
-                    $sql_count .= $search_str;
+                    $search_str = " WHERE (lower(codigo) LIKE '%$search%'
+                    OR lower(titulo) LIKE '%$search%' OR lower(genero) LIKE '%$search%' OR lower(autor) LIKE '%$search%' OR lower(editora) LIKE '%$search%' OR ano LIKE '%$search%' OR edicao LIKE '%$search%') AND $filter";
                 }
+                else {
+                    $search_str = " WHERE $filter";
+                }
+                
+                $sql .= $search_str;
+                $sql_count .= $search_str;
 
                 $sql .= " ORDER BY titulo ASC";
 
@@ -132,6 +146,7 @@ if(isset($_GET['f_exc']))
                     while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                     {
                         $id = $row['id_livro'];
+                        $codigo = utf8_encode($row['codigo']);
                         $titulo = utf8_encode($row['titulo']);
                         $genero = utf8_encode($row['genero']);
                         $autor = utf8_encode($row['autor']);
@@ -157,8 +172,8 @@ if(isset($_GET['f_exc']))
 
                         ?>
                         <tr <?php if($exc) echo 'class = "exc"'; ?>>
+                            <td title="<?php echo $genero; ?>"><?php echo $codigo; ?></td>
                             <td><?php echo $titulo; ?></td>
-                            <td><?php echo $genero; ?></td>
                             <td><?php echo $autor; ?></td>
                             <td><?php echo $editora; ?></td>
                             <td><?php echo $ano; ?></td>
@@ -198,8 +213,8 @@ if(isset($_GET['f_exc']))
 
         <tr class="footer">
             <!-- <th>Id</th> -->
+            <th>Código</th>
             <th>Título</th>
-            <th>Gênero</th>
             <th>Autor(es)</th>
             <th>Editora</th>
             <th>Ano</th>

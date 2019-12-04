@@ -108,234 +108,250 @@
             }
         }
         ?>
-        <div class="searchHead">
-            <div class="presentContent">
-                <div class="presentTitle">
-                    <h2><a href=".." class="homeLink" title="Voltar ao Início">Apolo</a></h2>
-                </div>
-            </div>
-            <div class="search">
-                <div class="searchBar">
-                    <form action="" class="frmSearch">
-                        <input type="search" name="search" value="<?php echo $search; ?>"  class="searchField" required>
-                        <input type="submit" value="Pesquisar" class="searchBtn">
-                    </form>
-                </div>
-            </div>
-            <div class="emprestimo">
-                <div class="emprestimoContent">
-                    <a <?php if($rolcount >= 1) echo 'href="finalizar.php?s='.$search.'" class="emprestimoFinalizar" title="Clique aqui para finalizar o empréstimo com os livros selecionados"'; else echo 'class="emprestimoFinalizar empDisabled" title="Selecione algum livro para finalizar o empréstimo!"'; ?>>Finalizar Empréstimo</a>
-                    <a <?php if($rolcount >= 1) echo 'href="finalizar.php?s='.$search.'" class="a" title="Clique para ver os livros selecionados"'; else echo 'style="cursor: default"'; ?>><?php echo "$rolcount livro(s) selecionado(s)"; ?></a>
-                </div>
-            </div>              
-        </div>
-
-        <div class="content">
-            
-        </div>
         
-        <div class="searchResults">
-            <div class="searchContent">
-                <table class="searchTable">
+        <div class="generalSearch">
+            <div class="searchHead">
+                <div class="presentContent">
+                    <div class="presentTitle">
+                        <h2><a href=".." class="homeLink" title="Voltar ao Início">Apolo</a></h2>
+                    </div>
+                </div>
+                <div class="search">
+                    <div class="searchBar">
+                        <form action="" class="frmSearch">
+                            <input type="search" name="search" value="<?php echo $search; ?>"  class="searchField" required>
+                            <input type="submit" value="Pesquisar" class="searchBtn">
+                        </form>
+                    </div>
+                </div>
+                <div class="emprestimo">
+                    <div class="emprestimoContent">
+                        <a <?php if($rolcount >= 1) echo 'href="finalizar.php?s='.$search.'" class="emprestimoFinalizar" title="Clique aqui para finalizar o empréstimo com os livros selecionados"'; else echo 'class="emprestimoFinalizar empDisabled" title="Selecione algum livro para finalizar o empréstimo!"'; ?>>Finalizar Empréstimo</a>
+                        <a <?php if($rolcount >= 1) echo 'href="finalizar.php?s='.$search.'" class="a" title="Clique para ver os livros selecionados"'; else echo 'style="cursor: default"'; ?>><?php echo "$rolcount livro(s) selecionado(s)"; ?></a>
+                    </div>
+                </div>              
+            </div>
 
-                    <?php
-                    if(isset($_GET['search']))
-                    {
-                        $search = utf8_decode($_GET['search']);
-                        $or_search = $search;
-                        try {
-                            include "../config/php/connect.php";
+            <div class="content">
+                
+            </div>
+            
+            <div class="searchResults">
+                <div class="searchContent">
+                    <table class="searchTable">
 
-                            $search = strtolower($search);
+                        <?php
+                        if(isset($_GET['search']))
+                        {
+                            $search = utf8_decode($_GET['search']);
+                            $or_search = $search;
+                            try {
+                                include "../config/php/connect.php";
 
-                            $page = 1;
-                            
-                            if(isset($_GET['page']))
-                                $page = $_GET['page'];
+                                $search = strtolower($search);
 
-                            $sql = "SELECT id_livro, titulo, genero, autor, editora, ano, edicao, disponivel FROM livro";
-                            $sql_count = "SELECT COUNT(*) FROM livro";
-                            
-                            $search_str = " WHERE (lower(titulo) LIKE '%$search%' OR lower(genero) LIKE '%$search%' 
-                            OR lower(autor) LIKE '%$search%' OR lower(editora) LIKE '%$search%' 
-                            OR ano LIKE '%$search%' OR edicao LIKE '%$search%') ORDER BY titulo ASC";
+                                $page = 1;
+                                
+                                if(isset($_GET['page']))
+                                    $page = $_GET['page'];
 
-                            $sql .= $search_str;
+                                $sql = "SELECT id_livro, codigo, titulo, genero, autor, editora, ano, edicao, disponivel, excluido FROM livro";
+                                $sql_count = "SELECT COUNT(*) FROM livro";
+                                
+                                $search_str = " WHERE (lower(codigo) LIKE '%$search%' OR lower(titulo) LIKE '%$search%' OR lower(genero) LIKE '%$search%' 
+                                OR lower(autor) LIKE '%$search%' OR lower(editora) LIKE '%$search%' 
+                                OR ano LIKE '%$search%' OR edicao LIKE '%$search%') AND excluido = 0 ORDER BY titulo ASC";
 
-                            $sql_count .= $search_str;
+                                $sql .= $search_str;
 
-                            $res = mysqli_query($conn, $sql_count);
+                                $sql_count .= $search_str;
 
-                            $row = mysqli_fetch_array($res, MYSQLI_NUM);
+                                $res = mysqli_query($conn, $sql_count);
 
-                            $count = $row[0];
+                                $row = mysqli_fetch_array($res, MYSQLI_NUM);
 
-                            $limit = 20;
+                                $count = $row[0];
 
-                            $sql .= " LIMIT $limit";
+                                $limit = 20;
 
-                            if($page > 1){
-                                $offset = $page-1;
-                                $offset = $offset * $limit;
-                                $sql .= " OFFSET $offset";
-                            }
+                                $sql .= " LIMIT $limit";
 
-                            $res = mysqli_query($conn, $sql);
+                                if($page > 1){
+                                    $offset = $page-1;
+                                    $offset = $offset * $limit;
+                                    $sql .= " OFFSET $offset";
+                                }
 
-                            if(mysqli_affected_rows($conn) > 0){
-                                ?>
-                                <tr>
-                                    <th>Livro</th>
-                                    <th>Gênero</th>
-                                    <th>Editora</th>
-                                    <th>Ano</th>
-                                    <th>Edição</th>
-                                    <th>Disponível</th>
-                                    <th></th>
-                                </tr>
-                                <?php
-                                while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
-                                {
-                                    $id = $row['id_livro'];
-                                    $titulo = utf8_encode($row['titulo']);
-                                    $genero = utf8_encode($row['genero']);
-                                    $autor = utf8_encode($row['autor']);
+                                $res = mysqli_query($conn, $sql);
 
-                                    $a_autor = explode("; ", $autor);
-
-                                    if(sizeof($a_autor) > 2)
+                                if(mysqli_affected_rows($conn) > 0){
+                                    ?>
+                                    <tr>
+                                        <th></th>
+                                        <th>Código</th>
+                                        <th>Livro</th>
+                                        <th>Editora</th>
+                                        <th>Ano</th>
+                                        <th>Edição</th>
+                                        <th>Disponível</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                    <?php
+                                    while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                                     {
-                                        $autor = $a_autor[0]."; ".$a_autor[1]."; et al.";
+                                        $id = $row['id_livro'];
+                                        $codigo = utf8_encode($row['codigo']);
+                                        $titulo = utf8_encode($row['titulo']);
+                                        $genero = utf8_encode($row['genero']);
+                                        $autor = utf8_encode($row['autor']);
+
+                                        $a_autor = explode("; ", $autor);
+
+                                        if(sizeof($a_autor) > 2)
+                                        {
+                                            $autor = $a_autor[0]."; ".$a_autor[1]."; et al.";
+                                        }
+
+                                        $editora = utf8_encode($row['editora']);
+                                        $ano = utf8_encode($row['ano']);
+                                        $edicao = utf8_encode($row['edicao']);
+                                        $disp = utf8_encode($row['disponivel']);
+                                        $exc = utf8_encode($row['excluido']);
+
+                                        if($exc) $disp = false;
+
+                                        // if($disp)
+                                        //     $disp = 'Sim';
+                                        // else
+                                        //     $disp = 'Não';
+
+                                        ?>
+                                        <tr>
+                                            <td><div class="<?php if(!$disp) echo 'trIndisp'; if(in_array($id, $rol)) echo ' trSelecionado'; else echo 'trNormal';?>"><div class="symb"></div></div></td>
+                                            <td title="<?php echo $genero; ?>"><?php echo $codigo; ?></td>
+                                            <td>
+                                                <div class="doubletd">
+                                                    <?php echo $titulo; ?>
+                                                    <br>
+                                                    <b><?php echo $autor; ?></b>
+                                                </div>
+                                            </td>
+                                            <td><?php echo $editora; ?></td>
+                                            <td><?php echo $ano; ?></td>
+                                            <td><?php echo $edicao."ᵃ"; ?></td>
+                                            <td class="<?php echo ($disp) ? 'green' : 'red'; ?>"><?php if($disp) echo 'Sim'; else echo 'Não';?></td>
+                                            <td class="searchEmprestar <?php if(!$disp) echo 'empIndisp'; if(in_array($id, $rol)) echo ' empSelecionado';?>" >
+                                                <a href="<?php if($disp){ if(in_array($id, $rol)) echo "?exc=$id&search=$search&page=$page"; else echo "?emp=$id&search=$search&page=$page"; } else echo ""; ?>" class="<?php if(!$disp) echo 'empIndispA'; else if(in_array($id, $rol)) echo ' empSelecionadoA';?>" <?php if(!$disp) echo 'disabled';?> title="<?php if($disp) echo "Emprestar '$titulo'"; else echo 'Livro indisponível!'?>">Emprestar</a>
+                                            </td>
+                                        </tr>
+                                        <?php
                                     }
 
-                                    $editora = utf8_encode($row['editora']);
-                                    $ano = utf8_encode($row['ano']);
-                                    $edicao = utf8_encode($row['edicao']);
-                                    $disp = utf8_encode($row['disponivel']);
-
-                                    // if($disp)
-                                    //     $disp = 'Sim';
-                                    // else
-                                    //     $disp = 'Não';
-
                                     ?>
-                                    <tr class="<?php if(!$disp) echo 'trIndisp'; if(in_array($id, $rol)) echo ' trSelecionado';?>">
-                                        <td class="main"><?php echo $titulo; ?><br><b><?php echo $autor; ?></b></td>
-                                        <td><?php echo $genero; ?></td>
-                                        <td><?php echo $editora; ?></td>
-                                        <td><?php echo $ano; ?></td>
-                                        <td><?php echo $edicao."ᵃ"; ?></td>
-                                        <td class="<?php echo ($disp) ? 'green' : 'red'; ?>"><?php if($disp) echo 'Sim'; else echo 'Não';?></td>
-                                        <td class="searchEmprestar <?php if(!$disp) echo 'empIndisp'; if(in_array($id, $rol)) echo ' empSelecionado';?>" >
-                                            <a href="<?php if($disp){ if(in_array($id, $rol)) echo "?exc=$id&search=$search&page=$page"; else echo "?emp=$id&search=$search&page=$page"; } else echo ""; ?>" class="<?php if(!$disp) echo 'empIndispA'; if(in_array($id, $rol)) echo ' empSelecionadoA';?>" <?php if(!$disp) echo 'disabled';?> title="<?php if($disp) echo "Emprestar '$titulo'"; else echo 'Livro indisponível!'?>">Emprestar</a>
-                                        </td>
+                                    
+                                    <tr class="searchTableFooter">
+                                        <th></th>
+                                        <th>Código</th>
+                                        <th>Livro</th>
+                                        <th>Editora</th>
+                                        <th>Ano</th>
+                                        <th>Edição</th>
+                                        <th>Disponível</th>
+                                        <th>Ações</th>
                                     </tr>
                                     <?php
                                 }
+                                else {
+                                    ?>
+                                        <tr>
+                                            <td colspan="9" class="textcenter">
+                                                Nenhum resultado para "<?php echo $or_search; ?>"!
+                                            </td>
+                                        </tr>
+                                    <?php
+                                }
 
-                                ?>
-                                
-                                <tr class="searchTableFooter">
-                                    <th>Livro</th>
-                                    <th>Gênero</th>
-                                    <th>Editora</th>
-                                    <th>Ano</th>
-                                    <th>Edição</th>
-                                    <th>Disponível</th>
-                                    <th></th>
-                                </tr>
-                                <?php
+                                                            
                             }
-                            else {
+                            catch (Exception $e) {
                                 ?>
                                     <tr>
                                         <td colspan="9" class="textcenter">
-                                            Nenhum resultado para "<?php echo $or_search; ?>"!
+                                                Nenhum resultado para "<?php echo $or_search; ?>"!
                                         </td>
                                     </tr>
                                 <?php
                             }
-
-                                                        
                         }
-                        catch (Exception $e) {
-                            ?>
-                                <tr>
-                                    <td colspan="9" class="textcenter">
-                                            Nenhum resultado para "<?php echo $or_search; ?>"!
-                                    </td>
-                                </tr>
-                            <?php
-                        }
-                    }
-                    ?>
-                </table>
-            </div>
+                        ?>
+                    </table>
+                </div>
 
-            <?php
-                if($count > $limit)
-                {
-                    $page_count = ceil($count/$limit);
-            ?>
-            <div class="pagination">
-                <ul class="paginationUl">
-                    <?php
-                    if($page > 1) {
-                        if($page > 6){
+                <?php
+                    if($count > $limit)
+                    {
+                        $page_count = ceil($count/$limit);
+                ?>
+                <div class="pagination">
+                    <ul class="paginationUl">
+                        <?php
+                        if($page > 1) {
+                            if($page > 6){
+                                ?>
+                                <li class="paginationLi">
+                                    <a href="<?php echo "?page=1&search=$search"?>" class="a">Primeiro</a>    
+                                </li>
+                                <?php
+                            }
+                            $anterior = $page - 1;
                             ?>
                             <li class="paginationLi">
-                                <a href="<?php echo "?page=1&search=$search"?>" class="a">Primeiro</a>    
+                                <a href="<?php echo "?page=$anterior&search=$search"; ?>" class="a">Anterior</a>    
                             </li>
                             <?php
                         }
-                        $anterior = $page - 1;
                         ?>
-                        <li class="paginationLi">
-                            <a href="<?php echo "?page=$anterior&search=$search"; ?>" class="a">Anterior</a>    
-                        </li>
                         <?php
-                    }
-                    ?>
-                    <?php
-                    if($page > 6) {
-                        $init = $page - 5;
-                    }
-                    else 
-                        $init = 0;
-                    
-                    if($page_count >= $init + 10){
-                        $end = $init + 10;
-                    }
-                    else {
-                        $end = $page_count;
-                    }
-                    for($i = $init; $i < $end; $i++){
-                        $ival = $i +1;
-                        echo '<li class="paginationLi"><a href="?page='.$ival.'&search='.$search.'" class="a';
-                        if($ival == $page)
-                            echo ' pageSelected '; 
-                        echo '">'.$ival.'</a></li>';
-                    }
-                    ?>
-                    <?php
-                    if($page < $page_count) {
-                        $proximo = $page + 1;
+                        if($page > 6) {
+                            $init = $page - 5;
+                        }
+                        else 
+                            $init = 0;
+                        
+                        if($page_count >= $init + 10){
+                            $end = $init + 10;
+                        }
+                        else {
+                            $end = $page_count;
+                        }
+                        for($i = $init; $i < $end; $i++){
+                            $ival = $i +1;
+                            echo '<li class="paginationLi"><a href="?page='.$ival.'&search='.$search.'" class="a';
+                            if($ival == $page)
+                                echo ' pageSelected '; 
+                            echo '">'.$ival.'</a></li>';
+                        }
                         ?>
-                        <li class="paginationLi">
-                            <a href="<?php echo "?page=$proximo&search=$search"?>" class="a">Próximo</a>    
-                        </li>
                         <?php
-                        if($page_count >= $init + 11){
+                        if($page < $page_count) {
+                            $proximo = $page + 1;
                             ?>
                             <li class="paginationLi">
-                                <a href="<?php echo "?page=$page_count&search=$search"?>" class="a">Último</a>    
+                                <a href="<?php echo "?page=$proximo&search=$search"?>" class="a">Próximo</a>    
                             </li>
                             <?php
+                            if($page_count >= $init + 11){
+                                ?>
+                                <li class="paginationLi">
+                                    <a href="<?php echo "?page=$page_count&search=$search"?>" class="a">Último</a>    
+                                </li>
+                                <?php
+                            }
                         }
                     }
-                }
-            ?>
-                </ul>
+                ?>
+                    </ul>
+                </div>
             </div>
         </div>
         

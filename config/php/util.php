@@ -108,4 +108,43 @@
         return $name;
     }
 
+    
+
+    function getAbrev($genero)
+    {
+        if($genero == "Literatura Brasileira") return "LB";
+        if($genero == "Literatura Estrangeira") return "LE";
+        if($genero == "História em Quadrinhos") return "HQ";
+        if($genero == "Ciências Sociais") return "CS";
+        if($genero == "Ciências Naturais") return "CN";
+        if($genero == "Literatura Didática") return "LD";
+    }
+
+    function getGenero($abrev)
+    {
+        if($abrev == "LB") return "Literatura Brasileira";
+        if($abrev == "LE") return "Literatura Estrangeira";
+        if($abrev == "HQ") return "História em Quadrinhos";
+        if($abrev == "CS") return "Ciências Sociais";
+        if($abrev == "CN") return "Ciências Naturais";
+        if($abrev == "LD") return "Literatura Didática";
+    }
+
+    function getCodigo($abrev, $id)
+    {
+        if($id < 10)
+        {
+            $strid = "00$id";
+        }
+        else if($id < 100)
+        {
+            $strid = "0$id";
+        }
+        else
+        {
+            $strid = $id;
+        }
+        return $abrev.'-'.$strid;
+    }
+
 ?>

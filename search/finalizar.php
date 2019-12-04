@@ -135,53 +135,47 @@
         </div>
             
     </div>
+    <br>
     
     <div class="info">
         <div class="infoTitle">
-            <h3>Informações</h3>
+            <h3>Qual usuário fará o empréstimo?</h3>
         </div>
         <form action="autorizar.php" method="post" class="infoFrm">
             <div class="infoField">
-                <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome" required>
-            </div>
-            <div class="infoField">
-                <label for="telefone">Celular para contato</label>
-                <input type="text" name="telefone" id="telefone" minlength="8" required>
-            </div>
-            <div class="infoField">
-                <label for="telefone">Turma</label>
-                <select name="turma" id="turma" required>
-                    <option value="" disabled selected>-- Selecione uma opção --</option>
-                    <option value="N/A">N/A</option>
-                    <option value="" disabled>Diurno</option>
-                    <option value="11A">11A</option>
-                    <option value="12A">12A</option>
-                    <option value="13A">13A</option>
-                    <option value="51A">51A</option>
-                    <option value="52A">52A</option>
-                    <option value="53A">53A</option>
-                    <option value="71A">71A</option>
-                    <option value="72A">72A</option>
-                    <option value="73A">73A</option>
-                    <option value="71B">71B</option>
-                    <option value="72B">72B</option>
-                    <option value="73B">73B</option>
-                    <option value="" disabled>Noturno</option>
-                    <option value="11B">11B</option>
-                    <option value="12B">12B</option>
-                    <option value="13B">13B</option>
-                    <option value="51B">51B</option>
-                    <option value="52B">52B</option>
-                    <option value="53B">53B</option>
-                    <option value="71C">71C</option>
-                    <option value="72C">72C</option>
-                    <option value="73C">73C</option>
+                <label for="users">Selecione o usuário</label>
+                <select name="id_emp" id="users" required>
+                    <!-- <option value="" disabled selected>-- Selecione uma opção --</option> -->
+                    <?php
+
+                    $sql = "SELECT id_user, nome, ra, tipo, login FROM user WHERE bloqueado = 0 AND login != 'admin'";
+
+                    $res = mysqli_query($conn, $sql);
+
+                    if(mysqli_affected_rows($conn) > 0){
+                        while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
+                        {
+                            $id_emp = utf8_encode($row['id_user']);
+                            $nome = utf8_encode($row['nome']);
+                            $ra = utf8_encode($row['ra']);
+                            $tipo = utf8_encode($row['tipo']);
+                            $rastr = ($tipo == "Aluno") ? "(RA $ra)" : "";
+                            $login = utf8_encode($row['login']);
+
+                            ?>
+                            <option value="<?php echo $id_emp ?>"><?php echo "$nome ($login) - $tipo $rastr"; ?></option>
+                            <?php
+                        }
+                    }
+                    ?>
                 </select>
+                <div class="newuser">
+                    <a href="newuser.php?s=<?php echo $search; ?>" class="a">Adicionar novo</a>
+                </div>
             </div>
             <div class="infoField">
-                <label for="data_dev"><b>Data de devolução</b></label>
-                <input type="date" name="" id="data_dev" disabled value="<?php echo $data_dev; ?>">
+                <label for="data_dev">Data de devolução</label>
+                <input type="date" name="" id="data_dev" disabled value="<?php echo $data_dev; ?>" title="Apenas um administrador pode editar o prazo de devolução. (Painel > Configurações)">
             </div>
             <div class="infoBtns">
                 <input type="hidden" name='s' value='<?php echo $search; ?>'>
@@ -199,8 +193,10 @@
         </div>
         <div class="footerItems">
             <ul>
-                <li><a href="../admin" target="_blank" class="footerOpt" title="Funções administrativas">Administração</a></li>
+                <li><a href="../admin" class="footerOpt" title="Funções administrativas">Administração</a></li>
                 <li><a href="../sobre" class="footerOpt"  title="Sobre o sistema">Sobre</a></li>
+                <li><a href="../faq" class="footerOpt"  title="Ajuda">Ajuda</a></li>
+                <li><a href="../" class="footerOpt"  title="Página inicial">Início</a></li>
             </ul>
         </div>
     </div>

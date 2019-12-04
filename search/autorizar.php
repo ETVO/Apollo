@@ -5,8 +5,9 @@
 
     $login_adm = false;
 
+    $id_emp = 0;
     $nome = ''; 
-    $contato = '';
+    $email = '';
     $data_dev = '';
 
     $fb = 0;
@@ -24,12 +25,8 @@
     {
         $_SESSION['s'] = $_POST['s'];
 
-        $_SESSION['nome'] = $_POST['nome'];
-        $_SESSION['telefone'] = $_POST['telefone'];
-        $_SESSION['turma'] = $_POST['turma'];
+        $_SESSION['id_emp'] = $_POST['id_emp'];
         $_SESSION['data_dev'] = $_POST['data_dev'];
-        
-        // $data_dev = strtotime($data_dev);
 
         header("Location: ?");
     }
@@ -38,9 +35,7 @@
     {
         $search = $_SESSION['s'];
 
-        $nome = $_SESSION['nome'];
-        $contato = $_SESSION['telefone'];
-        $turma = $_SESSION['turma'];
+        $id_emp = $_SESSION['id_emp'];
         $data_dev = $_SESSION['data_dev'];
 
         $data_dev = date('d/m/Y', strtotime($data_dev));
@@ -52,6 +47,25 @@
             header("Location: index.php?search=$search");
         else
             header("Location: index.php");
+    }
+
+    if($id_emp != 0)
+    {
+        include "../config/php/connect.php";
+
+        $sql = "SELECT nome, email, turma, telefone, login FROM user WHERE id_user = $id_emp";
+
+        $res = mysqli_query($conn, $sql);
+
+        if(mysqli_affected_rows($conn) > 0){
+            $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+            $nome = utf8_encode($row['nome']);
+            $email = utf8_encode($row['email']);
+            $telefone = utf8_encode($row['telefone']);
+            $turma = utf8_encode($row['turma']);
+            if($turma == 'null' || $turma == '' ) $turma = "-";
+        }
     }
 
 
@@ -71,7 +85,7 @@
                 $fb = 5;
             }
             else {
-                $sql = "SELECT id_user,senha FROM user WHERE login = '$login' AND bloqueado = 0";
+                $sql = "SELECT id_user,senha FROM user WHERE login = '$login' AND bloqueado = 0 AND admin = 1";
 
                 $res = mysqli_query($conn, $sql);
                 
@@ -117,23 +131,35 @@
             $append = file_get_contents($file).$append;
 
         file_put_contents($file, $append);
-
-        echo '<script>window.location.href = ""</script>';
     }
 
-    function livroIndisp($id_livro) {
+    function updateLivro($id_livro) {
         try {
             include '../config/php/connect.php';
 
-            $sql = "UPDATE livro SET
-            disponivel = 0 WHERE id_livro = $id_livro";
-
+            $sql = "SELECT qtde FROM livro WHERE id_livro = $id_livro";
+            
             $res = mysqli_query($conn, $sql);
 
-            if(mysqli_affected_rows($conn) > 0)
+            $row = mysqli_fetch_array($res, MYSQLI_NUM);
+
+            $qtde = $row[0];
+
+            if($qtde > 1) $newqtde = $qtde - 1;
+            else $newqtde = 0;
+
+            if($newqtde > 0)
             {
-                echo $sql;
+                $sql = "UPDATE livro SET
+                qtde = $newqtde WHERE id_livro = $id_livro";
             }
+            else 
+            {
+                $sql = "UPDATE livro SET
+                qtde = $newqtde, disponivel = 0 WHERE id_livro = $id_livro";
+            }
+
+            $res = mysqli_query($conn, $sql);
 
             mysqli_close();
         } catch (Exception $e) {
@@ -155,12 +181,8 @@
                 $data_dev = date('Y-m-d', strtotime($data_dev));
                 $id_user = $_SESSION['id_user'];
 
-                $nome = utf8_decode($nome);
-                $contato = utf8_decode($contato);
-                $turma = utf8_decode($turma);
-
                 foreach($rol as &$id_livro){
-                    $sql = "INSERT INTO emprestimo VALUES (DEFAULT, $id_livro, $id_user, '$nome', '$contato', '$turma', '$hoje', '$data_dev', null, null, DEFAULT);";
+                    $sql = "INSERT INTO emprestimo VALUES (DEFAULT, $id_livro, $id_user, $id_emp, NOW(), '$data_dev', null, '', DEFAULT, DEFAULT);";
                     
                     if($res = mysqli_query($conn, $sql))
                     {
@@ -171,19 +193,17 @@
     
                         $row = mysqli_fetch_array($res, MYSQLI_NUM);
             
-                        $id_emp = $row[0];
+                        $id_emprestimo = $row[0];
 
                         $success = true;
-                        successful($id_emp);
-                        livroIndisp($id_livro);
-                    }
-                    else{
-                        // echo mysqli_error($conn);
-                        // echo $sql;
+                        successful($id_emprestimo);
+                        updateLivro($id_livro);
                     }
                 }
 
                 mysqli_close($conn);
+
+                echo "<script> window.location.href = '..'";
             } catch (Exception $e) {
 
             }
@@ -268,12 +288,13 @@
     <div class="centerLogin">
         <div class="centerLoginContent">     
             <div class="autoriza">
-                <h3 class="autorizaApolo">Administrador</h3>
-                <h1 class="autorizaTitle">Autorizar Empréstimo</h1>
+                <h3 class="autorizaApolo">Apolo</h3>
+                <h1 class="autorizaTitle">Autorização de Empréstimo</h1>
             </div>
             <div class="login">
                 <div class="loginContent">
                     <form action="" class="loginFrm" method="post">
+                        <h3>Login de Administrador</h3>
                         <div class="loginField">
                             <div><label for="login">Login</label></div>
                             <input type="text" name="login" id="login" maxlength="20" <?php if($fb == 1) echo 'style="border-color:red"'; else if($fb == 2) echo 'value = "'.$login.'"'; ?>>
@@ -301,7 +322,10 @@
                     Nome:
                 </th>
                 <th>
-                    Contato:
+                    Email:
+                </th>
+                <th>
+                    Telefone:
                 </th>
                 <th>
                     Turma:
@@ -311,16 +335,23 @@
                 </th>
             </tr>
             <tr>
-                <td>
+                <td id="nome">
                     <h4><?php echo $nome; ?></h4>
                 </td>
-                <td>    
-                    <h4><?php echo $contato; ?></h4>
+                <td id="email">    
+                    <h4>
+                        <?php echo $email; ?>
+                    </h4>
                 </td>
-                <td>    
+                <td id="telefone">    
+                    <h4>
+                        <?php echo $telefone; ?>
+                    </h4>
+                </td>
+                <td id="turma">    
                     <h4><?php echo $turma; ?></h4>
                 </td>
-                <td>
+                <td id="data_dev">
                     <h4><?php echo $data_dev; ?></h4>
                 </td>
             </tr>
@@ -401,8 +432,10 @@
         </div>
         <div class="footerItems">
             <ul>
-                <li><a href="../admin" target="_blank" class="footerOpt" title="Funções administrativas">Administração</a></li>
+                <li><a href="../admin" class="footerOpt" title="Funções administrativas">Administração</a></li>
                 <li><a href="../sobre" class="footerOpt"  title="Sobre o sistema">Sobre</a></li>
+                <li><a href="../faq" class="footerOpt"  title="Ajuda">Ajuda</a></li>
+                <li><a href="../" class="footerOpt"  title="Página inicial">Início</a></li>
             </ul>
         </div>
     </div>

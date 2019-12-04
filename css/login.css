@@ -17,6 +17,11 @@
     box-sizing: border-box;
 }
 
+.loginContent h3 {
+    font-weight: normal;
+    text-align: center;
+}
+
 .loginFrm {
     margin: auto;
     width: 100%;

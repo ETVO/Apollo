@@ -13,7 +13,20 @@
     $sel_title = "usuários";
 
     $filter = '1 ';
-    $f_exc = false;
+    $f_exc = true;
+    $first = 1;
+
+    if(isset($_GET['first']))
+    {   
+        $first = 0;
+    }
+
+    $f_exc = (!isset($_GET['f_exc']) && $first == 0) ? false : true;
+
+    if($f_exc)
+    {
+        $filter = 'bloqueado = 0';
+    }
 
     if(isset($_GET['bloq']))
     {
@@ -63,12 +76,6 @@
 
         }
     }
-
-    if(isset($_GET['f_exc']))
-    {
-        $f_exc = true;
-        $filter = 'bloqueado = 0 ';
-    }
 ?>
     <h2 class="textcenter dashboardTitle" ><a href="?sel=<?php echo $selected; ?>" class="a">Usuários</a></h2>
     <div class="contentaddnew">
@@ -83,6 +90,7 @@
             <input type="checkbox" name="f_exc" id="f_exc" onChange="this.form.submit()" <?php if($f_exc) echo "checked"; ?>>
             &nbsp;&nbsp;
             <input type="hidden" name="sel" value="<?php echo $selected; ?>">
+            <input type="hidden" name="first" value="0">
             <input type="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
             <input type="submit"  value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
         </form>
@@ -115,16 +123,20 @@
 
                 $sql_bloq = "SELECT COUNT(*) FROM user WHERE bloqueado = 0";
                 
-                $search = '';
-                
-                if(isset($_GET['search'])){   
+                $search = (isset($_GET['search'])) ? ($_GET['search']) : '';
+
+                if($search != ''){  
                     $search = utf8_decode($_GET['search']);
                     $search = strtolower($search);
                     $search_str = " WHERE (lower(nome) LIKE '%$search%' OR lower(login) LIKE '%$search%' 
                     OR lower(tipo) LIKE '%$search%' OR ra LIKE '%$search%') AND $filter";
-                    $sql .= $search_str;
-                    $sql_count .= $search_str;
                 }
+                else {
+                    $search_str = " WHERE $filter";
+                }
+
+                $sql .= $search_str;
+                $sql_count .= $search_str;
 
                 $sql .= " ORDER BY nome ASC";
 

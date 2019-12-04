@@ -25,7 +25,7 @@ body {
 
 .double_grid {
 	display: grid;
-	grid-template-columns: 1fr 5fr;
+	grid-template-columns: 1fr 6fr;
 	grid-template-rows: 1fr;
 	height: 100vh;
 }
@@ -307,6 +307,13 @@ body {
 }
 
 #lbl_f_exc, #f_exc {
+	font-size: 0.9em;
+	color: #242424;
+	margin: auto;
+	cursor: pointer;
+}
+
+#lbl_f_dev, #f_dev {
 	font-size: 0.9em;
 	color: #242424;
 	margin: auto;

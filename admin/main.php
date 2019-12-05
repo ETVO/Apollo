@@ -86,7 +86,7 @@
 
 <body> 
     <a href="" onclick="" class="a voltaInicio"></a><br>
-    <a href="index.php" class="a voltaInicio">Voltar ao Início</a>
+    <a href=".." class="a voltaInicio">Voltar ao Início</a>
     <div class="textcenter">
         <h4>Apolo</h4>
         <h2><a href="?sel=" style="text-decoration:none">Administração</a></h2>

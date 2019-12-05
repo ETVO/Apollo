@@ -13,10 +13,14 @@
     ];
 
     $items = 
-    ['Do magna pariatur voluptate ullamco sint aute cupidatat sunt aliqua eiusmod fugiat enim.',
-    ' Eu nulla in ea qui labore esse in culpa excepteur eiusmod.',
-    ' Esse irure culpa duis nulla ut esse voluptate elit consectetur ullamco nulla laboris aliqua. ',
-    'Quis eu sint esse tempor mollit anim irure ea quis elit ad fugiat mollit. Adipisicing quis dolor ullamco anim aliquip amet enim.']
+    ['Vá para a página Início e digite os termos de busca do livro que você quer encontrar. Logo em seguida, você será redirecionado para uma página com os resultados da sua pesquisa.',
+    'Para acessar a Administração, basta clicar na opção Administração, do rodapé do site. Ali, você pode configurar diversos aspectos do Apolo e dos livros, empréstimos e usuários registrados.',
+    'Após encontrar o livro ou os livros que queria, na página de resultados, basta clicar em "Emprestar" e depois em "Finalizar Empréstimo". Ao fazer isso, você será enviado para uma página em que pode revisar a(s) obra(s) escolhidas e ali deve escolher o usuário para quem esses livros serão emprestados. Depois disso, um administrador deve utilizar seu Login e Senha para autorizar o empréstimo.',
+    'Um empréstimo pode ser devolvido apenas no painel administrativo. Por isso, sempre que quiser devolver um empréstimo, peça a um administrador que encontre o registro do seu empréstimo e realize as operações necessárias.',
+    'O sistema Apolo foi criado para facilitar o dia a dia da organização da Biblioteca do CTI. No painel administrativo, os usuários administradores podem adicionar livros, usuários e até monitorar as movimentações do caixa da biblioteca.<br>
+    Pensado para simplificar, os formulários são padronizados e seguem uma sequência intuitiva ao longo das diferentes páginas.',
+    'Sim! Algumas das páginas seguem a paleta minimalista do Google, e a própria página inicial do sistema é inspirada na famosa página de pesquisa do Google.<br>
+    Apesar de ser inspirado, todas as páginas foram feitas inteiramente para o sistema, ou seja, sem nenhuma cópia de código ou formulário: tudo feito à medida, à mão e com carinho.']
 
 
 ?>
@@ -28,8 +32,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <title>Sobre - Apolo</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/ajuda.css">
@@ -42,15 +44,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="https://kit.fontawesome.com/085f790a05.js"></script>
-
-    <title>Ajuda</title>
+    <title>Ajuda - Apolo</title>
 </head>
 
 <body>
-    <div class="ajuda">
+    <div class="ajuda" id="principal">
         <div class="ajudaContent">
-            <h1>Ajuda</h1>
+            <h1 id="title">Ajuda</h1>
+            <div class="contentaddnew" id="optionsContent">
+                <div id="options">
+                    <a onclick="imprime()" class="a">Imprimir</a>
+                </div>
+            </div>
             <div class="tabs">
                 <?php 
                     for($i = 0; $i < sizeof($titles); $i++)
@@ -70,7 +75,7 @@
         </div>
     </div>
     
-    <div class="footer">
+    <div class="footer" id="footer">
         <div class="footerDesc">
             © 2019 <b><a href="../main" title="Início">Apolo</a></b> - Sistema da Biblioteca CTI
         </div>

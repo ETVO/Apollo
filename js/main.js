@@ -82,3 +82,5 @@ for(var i = 0; i < empSelec.length; i++) {
     empSelec[i].innerText = "Remover";
     empSelec[i].setAttribute("title", "Clique para remover dos livros selecionados");
 }
+
+var showpass = document.getElementById("showpass");

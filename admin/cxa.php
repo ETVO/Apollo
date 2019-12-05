@@ -52,7 +52,7 @@
         include "../config/php/connect.php";
         
         $sql = "SELECT SUM(valor) AS soma
-                FROM caixa WHERE tipo = 'e'";
+                FROM caixa WHERE tipo = 'e' AND excluido = 0";
 
         $res = mysqli_query($conn, $sql);
         
@@ -61,7 +61,7 @@
         $e = $row['soma'];
 
         $sql = "SELECT SUM(valor) AS soma
-                FROM caixa WHERE tipo = 's'";
+                FROM caixa WHERE tipo = 's' AND excluido = 0";
 
         $res = mysqli_query($conn, $sql);
         
@@ -69,9 +69,10 @@
 
         $s = $row['soma'];
 
-        $total = $e - $s;
+        $total = $e + $s;   
 
         if($total > 0) $symb = "+";
+        else $symb = "";
             
     } catch (Exception $e)
     {
@@ -85,11 +86,13 @@
     }
 
     $url = $_SERVER['REQUEST_URI'];
+    $current_url = $url;
 
     $query = parse_url($url, PHP_URL_QUERY);
 
     if($query)
     {
+        $current_url = $url;
         $printurl = $url."&print=true";
     }
     else
@@ -106,6 +109,8 @@
         <div id="options">
             <a href="<?php echo $printurl ?>" class="a">Imprimir</a>
             |
+            <a href="csv.php?ent=c" class="a">Baixar planilha</a>
+            |
             <a onclick="changeParentLocation('cadcxa.php')" class="a">Adicionar novo</a>
         </div>
     </div>
@@ -119,14 +124,14 @@
     </div>
 
     <div class="admSearch">
-        <form action="" method="get" class="frmSearch" id="frmSearch">
+        <form action="" method="get" class="frmSearch" id="searchForm" id="frmSearch">
             <label for="f_exc" id="lbl_f_exc">Ocultar registros excluídos?</label>&nbsp;
-            <input type="checkbox" name="f_exc" id="f_exc" onChange="this.form.submit()" <?php if($f_exc) echo "checked"; ?>>
+            <input type="checkbox" name="f_exc" id="f_exc" onChange="submitForm('searchForm')" <?php if($f_exc) echo "checked"; ?>>
             &nbsp;&nbsp;
             <input type="hidden" name="sel" value="<?php echo $selected; ?>">
             <input type="hidden" name="first" value="0">
             <input type="search" id="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
-            <input type="submit" id="submit" value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
+            <input type="submit" id="submitBtn" value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
         </form>
     </div>
 
@@ -153,7 +158,7 @@
                                 tipo,
                                 valor, 
                                 descricao, 
-                                data, 
+                                DATE_FORMAT(data, '%d/%m/%Y') AS data, 
                                 excluido
                         FROM caixa";
 
@@ -175,7 +180,7 @@
                 $sql .= $search_str;
                 $sql_count .= $search_str;
 
-                $sql .= " ORDER BY data ASC";
+                $sql .= " ORDER BY data DESC";
 
                 $res = mysqli_query($conn, $sql_count);
 
@@ -226,7 +231,7 @@
                             <td class="ellipsis"><?php echo $descricao; ?></td>
                             <td><?php echo $data; ?></td>
                             <td class="action">
-                                <a href="?exc=<?php echo $id ?>" class="a"><?php echo ($exc) ? 'Restaurar' : 'Excluir'; ?></a>
+                                <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; ?>exc=<?php echo $id ?>" class="a"><?php echo ($exc) ? 'Restaurar' : 'Excluir'; ?></a>
                             </td>
                         </tr>
                         <?php
@@ -278,14 +283,14 @@
                 if($page > 6){
                     ?>
                     <li class="paginationLi">
-                        <a href="<?php echo "?sel=$selected&page=1&search=$search"?>" class="a">Primeiro</a>    
+                        <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; echo "page=$anterior"; ?>" class="a">Primeiro</a>    
                     </li>
                     <?php
                 }
                 $anterior = $page - 1;
                 ?>
                 <li class="paginationLi">
-                    <a href="<?php echo "?sel=$selected&page=$anterior&search=$search"; ?>" class="a">Anterior</a>    
+                    <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; echo "page=$anterior"; ?>" class="a">Anterior</a>    
                 </li>
                 <?php
             }
@@ -306,7 +311,7 @@
             for($i = $init; $i < $end; $i++){
                 $ival = $i +1;
                 // if($ival == $page){
-                    echo '<li class="paginationLi"><a href="?sel='.$selected.'&page='.$ival.'&search='.$search.'" class="a';
+                    echo '<li class="paginationLi"><a href="'.$current_url.'&page='.$ival.'" class="a';
                     if($ival == $page)
                         echo ' pageSelected '; 
                     echo '">'.$ival.'</a></li>';
@@ -324,13 +329,13 @@
                 $proximo = $page + 1;
                 ?>
                 <li class="paginationLi">
-                    <a href="<?php echo "?sel=$selected&page=$proximo&search=$search"?>" class="a">Próximo</a>    
+                    <a href="<?php echo "$current_url&page=$proximo";?>" class="a">Próximo</a>    
                 </li>
                 <?php
                 if($page_count >= $init + 11){
                     ?>
                     <li class="paginationLi">
-                        <a href="<?php echo "?sel=$selected&page=$page_count&search=$search"?>" class="a">Último</a>    
+                        <a href="<?php echo "$current_url&page=$page_count"?>" class="a">Último</a>    
                     </li>
                     <?php
                 }

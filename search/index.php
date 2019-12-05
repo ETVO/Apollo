@@ -118,7 +118,7 @@
                 </div>
                 <div class="search">
                     <div class="searchBar">
-                        <form action="" class="frmSearch">
+                        <form action="" class="frmSearch" id="searchForm">
                             <input type="search" name="search" value="<?php echo $search; ?>"  class="searchField" required>
                             <input type="submit" value="Pesquisar" class="searchBtn">
                         </form>

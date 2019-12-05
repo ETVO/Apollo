@@ -1,0 +1,65 @@
+.passchange {
+    padding-top: 30px;
+    margin: auto;
+    width: 20%;
+    box-sizing: border-box;
+}
+
+.cadBtn {
+    float: right;
+    margin: auto; 
+    background: #1b7af7;
+    color: #fefefe;
+    border: solid 1px #f4f4f4;
+    padding: 10px 20px 10px 20px;
+	font-weight: bold;
+	font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.cadBtn:hover, .cadBtn:focus {
+    background: linear-gradient(#3689f5, #1b7af7);
+    border: solid 1px rgba(0, 0, 0, 0.17);
+    cursor: pointer;
+	outline: none;
+}
+
+.reset {
+    background: #fafafa;
+    color: #777;
+    border: solid 1px #888;
+}
+
+.reset:hover, .reset:focus {
+    background: linear-gradient( #fafafa, #f2f2f2);
+    color: #000;
+    border: solid 1px #000;
+    cursor: pointer;
+	outline: none;
+}
+
+.resize_v { 
+	resize: vertical;
+}
+
+.requiredField {
+	color: red;
+	font-weight: normal;
+}
+
+.field-icon {
+    float: right;
+    margin-right: 5px;
+    margin-top: -25px;
+    position: relative;
+    /* z-index: 2; */
+}
+
+.field-icon::after {
+    content: "\1F441";
+}
+  
+.container{
+    padding-top:50px;
+    margin: auto;
+}

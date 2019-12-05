@@ -138,6 +138,11 @@ body {
     color: #0349fc;
 }
 
+.admTable td b {
+	font-weight: normal;
+	font-size: 0.8em;
+}
+
 .header {
 	border-bottom: solid 1px #ddd;
 }
@@ -323,6 +328,13 @@ body {
 }
 
 #lbl_f_dev, #f_dev {
+	font-size: 0.9em;
+	color: #242424;
+	margin: auto;
+	cursor: pointer;
+}
+
+#lbl_f_dia, #f_dia {
 	font-size: 0.9em;
 	color: #242424;
 	margin: auto;

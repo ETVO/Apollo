@@ -14,12 +14,12 @@
         try 
         {
             include "../config/php/connect.php";
-            include "../config/php/presets.php";
+            include "../config/php/util.php";
 
             $nome = utf8_decode(mysqli_real_escape_string($conn, $_POST['nome']));
             $ra  = (isset($_POST['turma'])) ? "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "";
             $newlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
-            $newsenha = $std_pass;
+            $newsenha = getStdPass();
             $newsenha = md5($newsenha);
             $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
             $turma = (isset($_POST['turma'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['turma'])) : "";

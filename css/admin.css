@@ -33,3 +33,24 @@
     list-style: none;
     text-align: center;
 }
+
+.content 
+{
+    margin: auto;
+    width: 90%;
+}
+
+.sys_status_title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.sys_status {
+    /* font-weight: bold; */
+    /* font-weight: normal; */
+}
+
+.sys_status span{
+    font-size: 1.1em;
+    /* font-weight: bold; */
+}

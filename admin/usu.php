@@ -38,6 +38,7 @@
         {
             echo "<script>
             alert('Você não pode bloquear usuário admin, pois ele é o usuário raíz do sistema.');
+            changeParentLocation('main.php?sel=u');
             </script>";
         }
         else
@@ -63,6 +64,7 @@
                 {
                     echo "<script>
                     alert('Você não pode bloquear seu próprio usuário, $activelogin.');
+                    changeParentLocation('main.php?sel=u');
                     </script>";
                 }
                 else
@@ -86,6 +88,7 @@
     }
 
     $url = $_SERVER['REQUEST_URI'];
+    $current_url = $url;
 
     $query = parse_url($url, PHP_URL_QUERY);
 
@@ -104,6 +107,8 @@
         <div id="options">
             <a href="<?php echo $printurl ?>" class="a">Imprimir</a>
             |
+            <a href="csv.php?ent=u" class="a">Baixar planilha</a>
+            |
             <a onclick="changeParentLocation('cadusu.php')" class="a">Adicionar novo</a>
         </div>
     </div>
@@ -120,14 +125,14 @@
     </script>
 
     <div class="admSearch">
-        <form action="" method="get" class="frmSearch">
+        <form action="" method="get" class="frmSearch" id="searchForm">
             <label for="f_exc" id="lbl_f_exc">Ocultar usuários bloqueados?</label>&nbsp;
-            <input type="checkbox" name="f_exc" id="f_exc" onChange="this.form.submit()" <?php if($f_exc) echo "checked"; ?>>
+            <input type="checkbox" name="f_exc" id="f_exc" onChange="submitForm('searchForm')" <?php if($f_exc) echo "checked"; ?>>
             &nbsp;&nbsp;
             <input type="hidden" name="sel" value="<?php echo $selected; ?>">
             <input type="hidden" name="first" value="0">
             <input type="search" id="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
-            <input type="submit" id="submit" value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
+            <input type="submit" id="submitBtn" value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
         </form>
     </div>
 
@@ -219,7 +224,7 @@
                             <td class="<?php echo ($bloq) ? "red" : "green"; ?>"><?php echo $status; ?></td>
                             <td class="action">
                                 <a onclick="changeParentLocation('visusu.php?id=<?php echo $id ?>')" target="_blank" class="a">Visualizar</a> |
-                                <a href="?bloq=<?php if($login != 'admin') echo $id; else echo '0'; ?>" class="a"><?php echo ($bloq) ? 'Desbloquear' : 'Bloquear'; ?></a>
+                                <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; ?>bloq=<?php if($login != 'admin') echo $id; else echo '0'; ?>" class="a"><?php echo ($bloq) ? 'Desbloquear' : 'Bloquear'; ?></a>
                             </td>
                         </tr>
                         <?php
@@ -273,14 +278,14 @@
                 if($page > 6){
                     ?>
                     <li class="paginationLi">
-                        <a href="<?php echo "?sel=$selected&page=1&search=$search"?>" class="a">Primeiro</a>    
+                        <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; echo "page=$anterior"; ?>" class="a">Primeiro</a>    
                     </li>
                     <?php
                 }
                 $anterior = $page - 1;
                 ?>
                 <li class="paginationLi">
-                    <a href="<?php echo "?sel=$selected&page=$anterior&search=$search"; ?>" class="a">Anterior</a>    
+                    <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; echo "page=$anterior"; ?>" class="a">Anterior</a>    
                 </li>
                 <?php
             }
@@ -301,7 +306,7 @@
             for($i = $init; $i < $end; $i++){
                 $ival = $i +1;
                 // if($ival == $page){
-                    echo '<li class="paginationLi"><a href="?sel='.$selected.'&page='.$ival.'&search='.$search.'" class="a';
+                    echo '<li class="paginationLi"><a href="'.$current_url.'&page='.$ival.'" class="a';
                     if($ival == $page)
                         echo ' pageSelected '; 
                     echo '">'.$ival.'</a></li>';
@@ -319,13 +324,13 @@
                 $proximo = $page + 1;
                 ?>
                 <li class="paginationLi">
-                    <a href="<?php echo "?sel=$selected&page=$proximo&search=$search"?>" class="a">Próximo</a>    
+                    <a href="<?php echo "$current_url&page=$proximo";?>" class="a">Próximo</a>    
                 </li>
                 <?php
                 if($page_count >= $init + 11){
                     ?>
                     <li class="paginationLi">
-                        <a href="<?php echo "?sel=$selected&page=$page_count&search=$search"?>" class="a">Último</a>    
+                        <a href="<?php echo "$current_url&page=$page_count"?>" class="a">Último</a>    
                     </li>
                     <?php
                 }

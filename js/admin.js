@@ -20,12 +20,13 @@ window.addEventListener("afterprint", afterPrint);
 
 function imprimir()
 {
+    var titleprint = document.getElementsByClassName("titleprint");
     var d = document.getElementsByClassName("action");
     var options = document.getElementById("optionsContent");
     var h = document.getElementById("actions_h");
     var f = document.getElementById("actions_f");
     var input = document.getElementById("search");
-    var submit = document.getElementById("submit");
+    var submit = document.getElementById("submitBtn");
     
     input.style.display = "none";
     submit.style.display = "none";
@@ -40,10 +41,37 @@ function imprimir()
         d[i].style.display = "none";
     }
 
+    for(var i = 0; i < titleprint.length; i++)
+    {
+        value = titleprint[i].getAttribute("title");
+        titleprint[i].innerHTML += "<br><b>(" + value + ")</b>";
+    }
+
     print();
 }
 
 function afterPrint()
 {
     window.location.href = "?after=true";
+}
+
+function submitForm(formId)
+{
+    var form = document.getElementById(formId);
+
+    if(form)
+    {
+        form.submit();
+    }
+}
+
+
+function atualizaNumEmp()
+{
+    var lblNum = document.getElementById("numero");
+    var count = document.getElementsByTagName("tr");
+    count = count.length - 2;
+    // if(count == NaN) count = 0;  
+
+    lblNum.innerText = count + '';
 }

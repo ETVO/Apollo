@@ -1,4 +1,8 @@
-
+.generalSearch {
+    min-height: 92vh;
+    padding-bottom: 15px;
+    box-sizing: border-box;
+}
 
 .searchHead { 
     box-sizing: border-box;

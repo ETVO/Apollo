@@ -179,8 +179,7 @@
 </head>
 
 <body>    
-    <a href="" onclick="window.close();" class="a voltaInicio">Fechar</a><br>
-    <a href="main.php" class="a voltaInicio">Voltar ao Início</a>
+    <a href="main.php" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
         <h4>Apolo</h4>
         <h2>Configurações</h2>

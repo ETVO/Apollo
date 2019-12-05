@@ -41,7 +41,7 @@ session_start();
                     Open Source:<br>pensado para melhorar, não para restringir.
                 </p>
                 <p>
-                    Em <b>2019</b> por <b>Estevão Rolim</b>
+                    <b>2019</b><br>por <b>Estevão Rolim</b><br><small>(Presidente do Grêmio 2018-2019)</small>
                 </p>
                 </div>
             </div>

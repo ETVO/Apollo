@@ -6,6 +6,7 @@
 
     $page = 1;
     $f_dev = false;
+    $f_dia = false;
     $filter = '1 ';
 
     $f_exc = true;
@@ -49,6 +50,8 @@
             $filter = 'e.devolvido = 0';
         }
     }
+    
+    $f_dia = (isset($_GET['f_dia']) && $first == 0) ? true : false;
 
     function updateLivro($id_livro) {
         try {
@@ -157,6 +160,7 @@
     }
 
     $url = $_SERVER['REQUEST_URI'];
+    $current_url = $url;
 
     $query = parse_url($url, PHP_URL_QUERY);
 
@@ -177,6 +181,8 @@
     <div class="contentaddnew" id="optionsContent">
         <div id="options">
             <a href="<?php echo $printurl ?>" class="a">Imprimir</a>
+            |
+            <a href="csv.php?ent=e" class="a">Baixar planilha</a>
         </div>
     </div>
     <div class="contentaddnew">
@@ -192,17 +198,20 @@
     </script>
 
     <div class="admSearch">
-        <form action="" method="get" class="frmSearch" id="frmSearch">
-            <label for="f_dev" id="lbl_f_dev">Ocultar empréstimos devolvidos?</label>&nbsp;
-            <input type="checkbox" name="f_dev" id="f_dev" onChange="this.form.submit()" <?php if($f_dev) echo "checked"; ?>>
-            &nbsp;&nbsp;&nbsp;
-            <label for="f_exc" id="lbl_f_exc">Ocultar registros excluídos?</label>&nbsp;
-            <input type="checkbox" name="f_exc" id="f_exc" onChange="this.form.submit()" <?php if($f_exc) echo "checked"; ?>>
+        <form action="" method="get" class="frmSearch" id="searchForm" id="frmSearch">
+            <label for="f_dia" id="lbl_f_dia">Ocultar empréstimos em dia</label>&nbsp;
+            <input type="checkbox" name="f_dia" id="f_dia" onChange="submitForm('searchForm')" <?php if($f_dia) echo "checked"; ?>>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label for="f_dev" id="lbl_f_dev">Ocultar empréstimos devolvidos</label>&nbsp;
+            <input type="checkbox" name="f_dev" id="f_dev" onchange="submitForm('searchForm')" <?php if($f_dev) echo "checked"; ?>>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label for="f_exc" id="lbl_f_exc">Ocultar registros excluídos</label>&nbsp;
+            <input type="checkbox" name="f_exc" id="f_exc" onchange="submitForm('searchForm')" <?php if($f_exc) echo "checked"; ?>>
             &nbsp;&nbsp;
             <input type="hidden" name="sel" value="<?php echo $selected; ?>">
             <input type="hidden" name="first" value="0">
             <input type="search" id="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
-            <input type="submit" id="submit" value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
+            <input type="submit" id="submitBtn" value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
         </form>
     </div>
 
@@ -242,17 +251,14 @@
                     INNER JOIN user AS a ON e.id_admin = a.id_user
                     INNER JOIN user AS u ON e.id_user = u.id_user ";
 
-                $sql_count = "SELECT COUNT(*) FROM emprestimo AS e ";
+                $sql_count = "SELECT COUNT(*), id_emprestimo, l.id_livro AS id_livro, l.codigo AS codigo, l.titulo AS titulo, u.nome AS usuario, u.email AS email, u.telefone AS telefone, u.turma AS turma, a.nome AS admin, data_emp, data_prev_dev, devolvido, data_dev, e.excluido FROM emprestimo AS e INNER JOIN livro AS l ON e.id_livro = l.id_livro INNER JOIN user AS a ON e.id_admin = a.id_user INNER JOIN user AS u ON e.id_user = u.id_user";
                 
                 $search = (isset($_GET['search'])) ? ($_GET['search']) : '';
 
                 if($search != ''){   
                     $search = utf8_decode($_GET['search']);
                     $search = strtolower($search);
-                    $search_str = " WHERE (lower(codigo) LIKE '%$search%' OR lower(titulo) LIKE '%$search%' OR lower(usuario) LIKE '%$search%' 
-                    OR lower(contato) LIKE '%$search%' OR lower(admin) LIKE '%$search%' 
-                    OR data_emp LIKE '%$search%' OR data_prev_dev LIKE '%$search%' 
-                    OR data_dev LIKE '%$search%') AND $filter";
+                    $search_str = " WHERE (lower(codigo) LIKE '%$search%' OR lower(titulo) LIKE '%$search%' OR lower(u.nome) LIKE '%$search%' OR lower(u.email) LIKE '%$search%' OR lower(u.telefone) LIKE '%$search%' OR lower(a.nome) LIKE '%$search%' OR data_emp LIKE '%$search%' OR data_prev_dev LIKE '%$search%' OR data_dev LIKE '%$search%') AND $filter";
                 }
                 else {
                     $search_str = " WHERE $filter";
@@ -266,6 +272,8 @@
                 $res = mysqli_query($conn, $sql_count);
 
                 $row = mysqli_fetch_array($res, MYSQLI_NUM);
+
+                // echo $sql_count;
 
                 $count = $row[0];
 
@@ -286,7 +294,6 @@
 
                 $res = mysqli_query($conn, $sql);
                 
-                // echo $sql;
 
                 if(mysqli_affected_rows($conn) > 0){
                     while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
@@ -319,29 +326,34 @@
 
                         if(strtotime(date('Y-m-d')) > strtotime($data_prev_dev) && !$dev) $atrasado = true;
 
-                        ?>
-                        <tr <?php if($atrasado) echo 'title="Este empréstimo está atrasado!"'; else if($exc) echo 'title="Este empréstimo foi excluído, pois o livro emprestado foi excluído!"';  else if($dev) echo 'title="Este empréstimo já foi devolvido!"'; ?>>
-                            <td title='"<?php echo $titulo; ?>"'><?php echo $codigo; ?></td>
-                            <td title="<?php 
-                                if($turma != '') echo 'Telefone: '.$telefone.'; Turma: '.$turma;
-                                else echo 'Email: '.$email.'; Telefone: '.$telefone;
-                             ?>"><?php echo $nome; ?></td>
-                            <td><?php echo $admin; ?></td>
-                            <td><?php echo date('d/m/Y', strtotime($data_emp)); ?></td>
-                            <td <?php if($atrasado) echo 'class="red"'; ?>><?php echo date('d/m/Y', strtotime($data_prev_dev));?></td>
-                            <td class="<?php if($dev) echo 'green'; else echo 'red'; ?>">
-                                <?php if($dev) echo 'Sim'; else echo 'Não';
-                                if($data_dev == null) echo ''; else echo ' ('.date('d/m/Y', strtotime($data_dev)).')'; ?>
-                            </td>
-                            <td class="action">
-                                <a onclick="changeParentLocation('visemp.php?id=<?php echo $id ?>')" target="_blank" class="a">Visualizar</a>
-                                <span <?php if($dev || $exc || $atrasado) echo "style='display: none'"; ?>>|</span>
-                                <a href="?dev=<?php echo $id ?>" class="a" <?php if($dev || $exc || $atrasado) echo "style='display: none'"; ?>>Devolver</a>
-                                |
-                                <a href="?exc=<?php echo $id ?>" class="a"><?php echo ($exc) ? 'Restaurar' : 'Excluir'; ?></a>
-                            </td>
-                        </tr>
-                        <?php
+                        if(!$atrasado && $f_dia && !$dev)
+                        {}
+                        else
+                        {
+                            ?>
+                            <tr <?php if($exc) echo 'title="Este empréstimo foi excluído!" class="exc"'; else if($atrasado) echo 'title="Este empréstimo está atrasado!"'; else if($dev) echo 'title="Este empréstimo já foi devolvido!"'; ?>>
+                                <td title='"<?php echo $titulo; ?>"' class="titleprint ellipsis"><?php echo $codigo; ?></td>
+                                <td title="<?php 
+                                    if($turma != '') echo 'Turma: '.$turma;
+                                    else echo 'Tel.: '.$telefone;
+                                ?>" class="titleprint"><?php echo $nome; ?></td>
+                                <td><?php echo $admin; ?></td>
+                                <td><?php echo date('d/m/Y', strtotime($data_emp)); ?></td>
+                                <td <?php if($atrasado) echo 'class="red"'; ?>><?php echo date('d/m/Y', strtotime($data_prev_dev));?></td>
+                                <td class="<?php if($dev) echo 'green'; else echo 'red'; ?>">
+                                    <?php if($dev) echo 'Sim'; else echo 'Não';
+                                    if($data_dev == null) echo ''; else echo ' ('.date('d/m/Y', strtotime($data_dev)).')'; ?>
+                                </td>
+                                <td class="action">
+                                    <a onclick="changeParentLocation('visemp.php?id=<?php echo $id ?>')" target="_blank" class="a">Visualizar</a>
+                                    <span <?php if($dev || $exc || $atrasado) echo "style='display: none'"; ?>>|</span>
+                                    <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; ?>dev=<?php echo $id ?>" class="a" <?php if($dev || $exc || $atrasado) echo "style='display: none'"; ?>>Devolver</a>
+                                    |
+                                    <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; ?>exc=<?php echo $id ?>" class="a"><?php echo ($exc) ? 'Restaurar' : 'Excluir'; ?></a>
+                                </td>
+                            </tr>
+                            <?php
+                        }
                     }
                 } 
                 else {
@@ -369,7 +381,7 @@
 
         <tr class="footer">
             <th>Livro</th>
-            <th>Usuário/Contato</th>
+            <th>Emprestado para</th>
             <th>Autorizado por</th>
             <th>Emprestado em</th>
             <th>Devolução prevista</th>
@@ -392,14 +404,14 @@
                 if($page > 6){
                     ?>
                     <li class="paginationLi">
-                        <a href="<?php echo "?sel=$selected&page=1&search=$search&filter_dev=$filter_dev"?>" class="a">Primeiro</a>    
+                        <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; echo "page=$anterior"; ?>" class="a">Primeiro</a>    
                     </li>
                     <?php
                 }
                 $anterior = $page - 1;
                 ?>
                 <li class="paginationLi">
-                    <a href="<?php echo "?sel=$selected&page=$anterior&search=$search&filter_dev=$filter_dev"; ?>" class="a">Anterior</a>    
+                    <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; echo "page=$anterior"; ?>" class="a">Anterior</a>    
                 </li>
                 <?php
             }
@@ -420,7 +432,7 @@
             for($i = $init; $i < $end; $i++){
                 $ival = $i +1;
                 // if($ival == $page){
-                    echo '<li class="paginationLi"><a href="?sel='.$selected.'&page='.$ival.'&search='.$search.'&filter_dev='.$filter_dev.'" class="a';
+                    echo '<li class="paginationLi"><a href="'.$current_url.'&page='.$ival.'" class="a';
                     if($ival == $page)
                         echo ' pageSelected '; 
                     echo '">'.$ival.'</a></li>';
@@ -438,13 +450,13 @@
                 $proximo = $page + 1;
                 ?>
                 <li class="paginationLi">
-                    <a href="<?php echo "?sel=$selected&page=$proximo&search=$search&filter_dev=$filter_dev"?>" class="a">Próximo</a>    
+                    <a href="<?php echo "$current_url&page=$proximo";?>" class="a">Próximo</a>    
                 </li>
                 <?php
                 if($page_count >= $init + 11){
                     ?>
                     <li class="paginationLi">
-                        <a href="<?php echo "?sel=$selected&page=$page_count&search=$search&filter_dev=$filter_dev"?>" class="a">Último</a>    
+                        <a href="<?php echo "$current_url&page=$page_count"?>" class="a">Último</a>    
                     </li>
                     <?php
                 }
@@ -458,7 +470,15 @@
     if(isset($_GET['print']))
     {
         echo "<script>
+            atualizaNumEmp();
             imprimir();
+        </script>";
+    }
+
+    if($f_dia)
+    {
+        echo "<script>
+            atualizaNumEmp();
         </script>";
     }
 ?>

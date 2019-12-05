@@ -2,6 +2,70 @@
     include "head.php";
     
     include 'login.php';
+    
+    include '../config/php/connect.php';
+    
+    $login = $_SESSION['login'];
+
+    $sql = "SELECT nome FROM user WHERE login = '$login'";
+    
+    $res = mysqli_query($conn, $sql);
+
+    $row = mysqli_fetch_array($res, MYSQLI_NUM);
+        
+    $nomeadmin = utf8_encode($row[0]);
+
+    function conta($tabela)
+    {
+        include '../config/php/connect.php';
+        if($tabela == "user")
+            $sql = "SELECT COUNT(*) FROM $tabela WHERE bloqueado = 0";
+        else
+            $sql = "SELECT COUNT(*) FROM $tabela WHERE excluido = 0";
+    
+        $res = mysqli_query($conn, $sql);
+
+        $row = mysqli_fetch_array($res, MYSQLI_NUM);
+        
+        $n = utf8_encode($row[0]);
+            
+        return $n;
+    }
+    
+    $nlivro = conta("livro");
+    $nuser = conta("user");
+    $nemp = conta("emprestimo");
+    
+    try {
+        include "../config/php/connect.php";
+        
+        $sql = "SELECT SUM(valor) AS soma
+                FROM caixa WHERE tipo = 'e' AND excluido = 0";
+
+        $res = mysqli_query($conn, $sql);
+        
+        $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+        $e = $row['soma'];
+
+        $sql = "SELECT SUM(valor) AS soma
+                FROM caixa WHERE tipo = 's' AND excluido = 0";
+
+        $res = mysqli_query($conn, $sql);
+        
+        $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+        $s = $row['soma'];
+
+        $total = $e + $s;   
+
+        if($total > 0) $symb = "+";
+        else $symb = "";
+            
+    } catch (Exception $e)
+    {
+
+    }
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +79,7 @@
     <title>Administração - Apolo</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/mainadm.css">
+    <link rel="stylesheet" href="../css/admin.css">
     <script src="../config/js/sweetalert.min.js"></script>
     <link rel="shortcut icon" href="../favicon.ico"> 
 </head>
@@ -45,6 +110,12 @@
                 <li>
                     <a href="?sel=c" class="a <?php if($selected == 'c') echo "selected"; ?>">Caixa</a>
                 </li>
+                <li>
+                    <a href="?sel=h" class="a <?php if($selected == 'h') echo "selected"; ?>">Ajuda</a>
+                </li>
+                <li>
+                    <a href="?sel=p" class="a <?php if($selected == 'p') echo "selected"; ?>">Alterar senha</a>
+                </li>
             </ul>
         </div>
         <div class="dashboard">
@@ -54,35 +125,64 @@
                     {
                         ?>
                         <h2 class="textcenter dashboardTitle" ><a href="?sel=" class="a">Painel</a></h2>
-                        <div class="contentaddnew">
-                            <a onclick="changeParentLocation('config.php')" class="addNew textcenter a">
-                                Configurações
-                            </a>
+                        <div class="contentaddnew" id="optionsContent">
+                            <div id="options">
+                                <a onclick="changeParentLocation('config.php')" class="a">Configurações do sistema</a>
+                            </div>
                         </div>
+                        <div class="content">
+                            <h2>Bem vindo, <?php echo $nomeadmin ?>!</h2>
+                            <p>
+                                Para utilizar o painel administrativo, guie-se pelas opções da barra lateral esquerda.
+                            </p>
+                            <p>
+                                Para entender melhor o sistema e os parâmetros utilizados, consulte o menu "Ajuda".
+                            </p>
 
-                        <div class="grid_3">
-                            <table class="painelTable">
-                                <tr>
-                                    <th colspan="3">Gerar Relação (.pdf)</th>
-                                </tr>
-                                <tr>
-                                    <td><a href="pdf.php?ent=ea" target="_blank" class="a relLinks">Empréstimos Atrasados</a></td>
-                                    <td><a href="pdf.php?ent=e" target="_blank" class="a relLinks">Empréstimos</a></td>
-                                    <td><a href="pdf.php?ent=l" target="_blank" class="a relLinks">Livros</a></td>
-                                    <td><a href="pdf.php?ent=a" target="_blank" class="a relLinks">Administradores</a></td>
-                                    <td><a href="pdf.php?ent=log" target="_blank" class="a relLinks">Log de Administração</a></td>
-                                </tr>
-                            </table>
-                            <table class="painelTable">
-                                <tr>
-                                    <th colspan="3">Backup (.csv)</th>
-                                </tr>
-                                <tr>
-                                    <td><a href="csv.php?ent=e" target="_blank" class="a relLinks">Empréstimos</a></td>
-                                    <td><a href="csv.php?ent=l" target="_blank" class="a relLinks">Livros</a></td>
-                                    <td><a href="csv.php?ent=a" target="_blank" class="a relLinks">Administradores</a></td>
-                                </tr>
-                            </table>
+                            <br>
+
+                            <p class="sys_status_title">
+                                Registros do sistema:
+                            </p>
+                            <p class="sys_status">
+                                <?php 
+                                    if($nlivro > 1) $s = "s"; else $s = ""; 
+                                    
+                                ?>
+                                <!-- Nº de <b>livros</b>: -->
+                                <span class="">
+                                    <?php echo $nlivro;  ?>
+                                </span>
+                                livro<?php echo $s ?>
+                            </p>
+                            <p class="sys_status">
+                                <?php 
+                                    if($nuser > 1) $s = "s"; else $s = ""; 
+                                    
+                                ?>
+                                <!-- Nº de <b>usuários</b>: -->
+                                <span class="">
+                                    <?php echo $nuser;  ?>
+                                </span>
+                                usuário<?php echo $s ?>
+                            </p>
+                            <p class="sys_status">
+                                <?php 
+                                    if($nemp > 1) $s = "s"; else $s = ""; 
+                                    
+                                ?>
+                                <!-- Nº de <b>empréstimos</b>: -->
+                                <span class="">
+                                    <?php echo $nemp;  ?>
+                                </span>
+                                empréstimo<?php echo $s ?>
+                            </p>
+                            <p class="sys_status">
+                                Balanço (R$):
+                                <span class="<?php echo ($total >= 0) ? "green" : "red";?>">
+                                    <?php echo $symb.number_format((float)$total, 2, ',', ''); ?>
+                                </span>
+                            </p>
                         </div>
                         <?php
                     }
@@ -104,6 +204,16 @@
                     else if($selected == 'c') {
                         ?>
                         <iframe src="cxa.php" frameborder="0"></iframe>
+                        <?php
+                    }
+                    else if($selected == 'h') {
+                        ?>
+                        <iframe src="ajuda.php" frameborder="0"></iframe>
+                        <?php
+                    }
+                    else if($selected == 'p') {
+                        ?>
+                        <iframe src="pass.php" frameborder="0"></iframe>
                         <?php
                     }
                     ?>

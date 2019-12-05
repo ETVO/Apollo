@@ -1,4 +1,5 @@
 <?php
+    include "presets.php";
 
     function addDays($timestamp, $days, $skipdays = array("Saturday", "Sunday"), $skipdates = array()) {
         // $skipdays: array (Monday-Sunday) eg. array("Saturday","Sunday")
@@ -54,6 +55,7 @@
     }
 
     function calculaMulta($dias){
+        $multa_dia = $multa;
         include 'connect.php';
 
         $sql = "SELECT valor FROM config WHERE nome='multa'";
@@ -67,13 +69,14 @@
             $multa = $row['valor'];
         }
 
-        $multa = $dias * $multa;
+        $multa_total = $dias * $multa_dia;
 
-        return $multa;
+        return $multa_total;
     }
 
     function getPrazo()
     {
+        $prazo = $dias_dev;
         try {
             include '../config/php/connect.php';
 
@@ -85,7 +88,7 @@
             {
                 $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
 
-                $dias_dev = $row['valor'];
+                $prazo = $row['valor'];
             }
 
             mysqli_close($conn);
@@ -93,7 +96,32 @@
 
         }
 
-        return $dias_dev;
+        return $prazo;
+    }
+
+    function getStdPass()
+    {
+        $senha = $std_pass;
+        try {
+            include '../config/php/connect.php';
+
+            $sql = "SELECT valor FROM config WHERE nome='std_pass'";
+
+            $res = mysqli_query($conn, $sql);
+
+            if(mysqli_affected_rows($conn) > 0)
+            {
+                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+                $senha = $row['valor'];
+            }
+
+            mysqli_close($conn);
+        } catch (Exception $e) {
+
+        }
+
+        return $senha;
     }
 
     function flname($name, $del)

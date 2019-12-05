@@ -28,7 +28,12 @@ function imprimir()
     var input = document.getElementById("search");
     var submit = document.getElementById("submitBtn");
     
-    input.style.display = "none";
+    if(input.value == "")
+        input.style.display = "none";
+    else
+    {
+        input.value = "Filtro: " + input.value;
+    }
     submit.style.display = "none";
 
     h.style.display = "none";

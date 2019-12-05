@@ -432,7 +432,7 @@
             for($i = $init; $i < $end; $i++){
                 $ival = $i +1;
                 // if($ival == $page){
-                    echo '<li class="paginationLi"><a href="'.$current_url.'&page='.$ival.'" class="a';
+                    echo '<li class="paginationLi"><a href="'; echo $current_url; echo ($query) ? "&" : "?"; echo '&page='.$ival.'" class="a';
                     if($ival == $page)
                         echo ' pageSelected '; 
                     echo '">'.$ival.'</a></li>';
@@ -450,13 +450,13 @@
                 $proximo = $page + 1;
                 ?>
                 <li class="paginationLi">
-                    <a href="<?php echo "$current_url&page=$proximo";?>" class="a">Próximo</a>    
+                    <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; echo "page=$proximo"; ?>" class="a">Próximo</a>    
                 </li>
                 <?php
                 if($page_count >= $init + 11){
                     ?>
                     <li class="paginationLi">
-                        <a href="<?php echo "$current_url&page=$page_count"?>" class="a">Último</a>    
+                        <a href="<?php echo $current_url; echo ($query) ? "&" : "?"; echo "page=$page_count"; ?>" class="a">Último</a>    
                     </li>
                     <?php
                 }

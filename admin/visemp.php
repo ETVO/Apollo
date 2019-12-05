@@ -369,8 +369,6 @@
                 $desc = utf8_decode($desc);
                 $sql = "INSERT INTO caixa VALUES (DEFAULT, $val_multa, '$desc', 'e', NOW(), DEFAULT);";
 
-                echo $sql;
-
                 $res = mysqli_query($conn, $sql);
 
                 if(mysqli_affected_rows($conn) > 0)
@@ -416,7 +414,7 @@
             file_put_contents($file, $append);
         }
 
-        // echo '<script>window.location.href="main.php?sel=e"</script>';
+        echo '<script>window.location.href="?id='.$id_emp.'"</script>';
     }
 
     if(isset($_GET['exc']) && $status == 'd')

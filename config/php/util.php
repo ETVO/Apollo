@@ -1,5 +1,4 @@
 <?php
-    include "presets.php";
 
     function addDays($timestamp, $days, $skipdays = array("Saturday", "Sunday"), $skipdates = array()) {
         // $skipdays: array (Monday-Sunday) eg. array("Saturday","Sunday")
@@ -55,6 +54,8 @@
     }
 
     function calculaMulta($dias){
+        include "presets.php";
+
         $multa_dia = $multa;
         include 'connect.php';
 
@@ -66,7 +67,7 @@
         {
             $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
 
-            $multa = $row['valor'];
+            $multa_dia = $row['valor'];
         }
 
         $multa_total = $dias * $multa_dia;
@@ -76,6 +77,8 @@
 
     function getPrazo()
     {
+        include "presets.php";
+
         $prazo = $dias_dev;
         try {
             include '../config/php/connect.php';
@@ -101,6 +104,8 @@
 
     function getStdPass()
     {
+        include "presets.php";
+        
         $senha = $std_pass;
         try {
             include '../config/php/connect.php';

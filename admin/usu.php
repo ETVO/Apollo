@@ -126,8 +126,8 @@
             &nbsp;&nbsp;
             <input type="hidden" name="sel" value="<?php echo $selected; ?>">
             <input type="hidden" name="first" value="0">
-            <input type="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
-            <input type="submit"  value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
+            <input type="search" id="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
+            <input type="submit" id="submit" value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
         </form>
     </div>
 

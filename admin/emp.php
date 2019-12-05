@@ -11,6 +11,8 @@
     $f_exc = true;
     $first = 1;
 
+    $limit = 15;
+
     if(isset($_GET['first']))
     {   
         $first = 0;
@@ -47,12 +49,147 @@
             $filter = 'e.devolvido = 0';
         }
     }
+
+    function updateLivro($id_livro) {
+        try {
+            include '../config/php/connect.php';
+
+            $sql = "SELECT qtde FROM livro WHERE id_livro = $id_livro";
+            
+            $res = mysqli_query($conn, $sql);
+
+            $row = mysqli_fetch_array($res, MYSQLI_NUM);
+
+            $qtde = $row[0];
+
+            $newqtde = $qtde + 1;
+
+            $sql = "UPDATE livro SET
+            qtde = $newqtde, disponivel = 1 WHERE id_livro = $id_livro";
+
+            $res = mysqli_query($conn, $sql);
+
+            mysqli_close($conn);
+        } catch (Exception $e) {
+
+        }
+    }
+
+    if(isset($_GET['dev']))
+    {
+        try {
+            include '../config/php/connect.php';
+
+            $id_emp = $_GET['dev'];
+
+            $data_dev = date('Y-m-d');
+
+            $sql = "UPDATE emprestimo SET
+            devolvido = 1,
+            data_dev = '$data_dev'
+            WHERE id_emprestimo=$id_emp";
+            
+            if($res = mysqli_query($conn, $sql))
+            {   
+                updateLivro($id_livro);
+                echo '<script>
+                    alert("Livro devolvido com sucesso!");
+                    
+                    </script>';
+                $success = true;
+            }
+            else {
+                $error = mysqli_error($conn);
+                echo '<script>
+                    alert("Algo deu errado!\nMais detalhes:'.$error.'");
+                    
+                    </script>';
+            }
+
+            mysqli_close($conn);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        if($success)
+        {
+            $append = "Usuário \"$login\" devolveu o empréstimo id $id_emp.<br>";
+            $file = 'log.html';
+            date_default_timezone_set("America/Sao_Paulo");
+
+            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+            
+            if(file_get_contents($file) != '')
+                $append = file_get_contents($file).$append;
+
+            file_put_contents($file, $append);
+        }
+    }
+
+    if(isset($_GET['exc']))
+    {
+        $idexc = $_GET['exc'];
+        $nexc = 0;
+
+        include '../config/php/connect.php';
+
+        $sql = "SELECT excluido FROM emprestimo WHERE id_emprestimo = $idexc";
+
+        $res = mysqli_query($conn, $sql);
+
+        if(mysqli_affected_rows($conn) > 0)
+        {
+            $row = mysqli_fetch_array($res, MYSQLI_NUM);
+            $nexc = $row[0];
+        }
+
+        if($nexc == 0) $nexc = 1; else $nexc = 0;
+
+        $sql = "UPDATE emprestimo SET excluido = $nexc WHERE id_emprestimo = $idexc";
+
+        $res = mysqli_query($conn, $sql);
+    }
+
+    $print = false;
+    if(isset($_GET['print']))
+    {
+        $print = true;
+    }
+
+    $url = $_SERVER['REQUEST_URI'];
+
+    $query = parse_url($url, PHP_URL_QUERY);
+
+    if($query)
+    {
+        $printurl = $url."&print=true";
+    }
+    else
+    {
+        $printurl = $url."?print=true";
+    }
 ?>
     <h2 class="textcenter dashboardTitle" >
         <a onclick="changeParentLocation('main.php?sel=e')" class="a" title="Recarregar">
             Empréstimos
         </a>
     </h2>
+    <div class="contentaddnew" id="optionsContent">
+        <div id="options">
+            <a href="<?php echo $printurl ?>" class="a">Imprimir</a>
+        </div>
+    </div>
+    <div class="contentaddnew">
+        <div id="balanco" title="De acordo com os filtros selecionados...">
+            N° de empréstimos:
+            <span class="blue" id="numero">
+            </span>
+        </div>
+    </div>
+
+    <script>
+        var lblNum = document.getElementById("numero");
+    </script>
 
     <div class="admSearch">
         <form action="" method="get" class="frmSearch" id="frmSearch">
@@ -77,7 +214,7 @@
             <th>Emprestado em</th>
             <th>Devolução prevista</th>
             <th>Devolvido?</th>
-            <th>Ações</th>
+            <th id="actions_h">Ações</th>
         </tr>
         
         <?php 
@@ -132,14 +269,19 @@
 
                 $count = $row[0];
 
+                echo "<script>lblNum.innerText = $count + '';</script>";
+
                 $limit = 10;
 
-                $sql .= " LIMIT $limit";
+                if(!$print)
+                {
+                    $sql .= " LIMIT $limit";
                 
-                if($page > 1){
-                    $offset = $page-1;
-                    $offset = $offset * $limit;
-                    $sql .= " OFFSET $offset";
+                    if($page > 1){
+                        $offset = $page-1;
+                        $offset = $offset * $limit;
+                        $sql .= " OFFSET $offset";
+                    }
                 }
 
                 $res = mysqli_query($conn, $sql);
@@ -175,11 +317,11 @@
 
                         $atrasado = false;
 
-                        if(strtotime(date('Y-m-d')) > strtotime($data_prev_dev) && !$devolvido) $atrasado = true;
+                        if(strtotime(date('Y-m-d')) > strtotime($data_prev_dev) && !$dev) $atrasado = true;
 
                         ?>
                         <tr <?php if($atrasado) echo 'title="Este empréstimo está atrasado!"'; else if($exc) echo 'title="Este empréstimo foi excluído, pois o livro emprestado foi excluído!"';  else if($dev) echo 'title="Este empréstimo já foi devolvido!"'; ?>>
-                            <td title="<?php echo $titulo; ?>"><?php echo $codigo; ?></td>
+                            <td title='"<?php echo $titulo; ?>"'><?php echo $codigo; ?></td>
                             <td title="<?php 
                                 if($turma != '') echo 'Telefone: '.$telefone.'; Turma: '.$turma;
                                 else echo 'Email: '.$email.'; Telefone: '.$telefone;
@@ -193,8 +335,10 @@
                             </td>
                             <td class="action">
                                 <a onclick="changeParentLocation('visemp.php?id=<?php echo $id ?>')" target="_blank" class="a">Visualizar</a>
+                                <span <?php if($dev || $exc || $atrasado) echo "style='display: none'"; ?>>|</span>
+                                <a href="?dev=<?php echo $id ?>" class="a" <?php if($dev || $exc || $atrasado) echo "style='display: none'"; ?>>Devolver</a>
                                 |
-                                <a href="?dev=<?php echo $id ?>" class="a" <?php if($dev || $exc) echo "style='display: none'"; ?>>Devolver</a>
+                                <a href="?exc=<?php echo $id ?>" class="a"><?php echo ($exc) ? 'Restaurar' : 'Excluir'; ?></a>
                             </td>
                         </tr>
                         <?php
@@ -230,12 +374,12 @@
             <th>Emprestado em</th>
             <th>Devolução prevista</th>
             <th>Devolvido?</th>
-            <th>Ações</th>
+            <th id="actions_f">Ações</th>
         </tr>
     </table>
 
     <?php
-    if($count > $limit){
+    if($count > $limit && !$print){
 
         $page_count = ceil($count/$limit);
         // $page_count = $count;
@@ -310,3 +454,13 @@
     </div>
     <?php
     }
+    
+    if(isset($_GET['print']))
+    {
+        echo "<script>
+            imprimir();
+        </script>";
+    }
+?>
+
+<script src="admin.js"></script>

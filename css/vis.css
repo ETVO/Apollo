@@ -203,3 +203,21 @@
 #codigo {
     color: rgb(27, 27, 71);
 }
+
+.visDouble {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: 1fr;
+}
+
+/* .status h3{
+    margin-bottom: 0.3em;
+} */
+
+.status {
+    font-size: 0.9em;
+}
+
+.status span {
+    color: inherit;
+}

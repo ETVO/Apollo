@@ -161,7 +161,7 @@
 
             $res = mysqli_query($conn, $sql);
 
-            mysqli_close();
+            mysqli_close($conn);
         } catch (Exception $e) {
 
         }
@@ -258,12 +258,15 @@
     if($fb == 3){
         ?>
             <script>
+                var delay = 1000;
                 swal({
-                    title: "Empréstimo autorizado!",
                     icon: "success",
-                }).then((value)=>{
-                    window.location.href = '?auth=88b33545f1cb20d580832bafbf259adb';
+                    title: "Empréstimo autorizado!",
+                    text: "Carregando...",
+                    buttons: false,
+                    timer: delay,
                 });
+                setTimeout(function() { window.location.href="?auth=88b33545f1cb20d580832bafbf259adb"; }, delay);       
             </script>
         <?php
     }

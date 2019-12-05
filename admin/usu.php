@@ -16,6 +16,8 @@
     $f_exc = true;
     $first = 1;
 
+    $limit = 15;
+
     if(isset($_GET['first']))
     {   
         $first = 0;
@@ -76,13 +78,46 @@
 
         }
     }
+
+    $print = false;
+    if(isset($_GET['print']))
+    {
+        $print = true;
+    }
+
+    $url = $_SERVER['REQUEST_URI'];
+
+    $query = parse_url($url, PHP_URL_QUERY);
+
+    if($query)
+    {
+        $printurl = $url."&print=true";
+    }
+    else
+    {
+        $printurl = $url."?print=true";
+    }
 ?>
     <h2 class="textcenter dashboardTitle" ><a href="?sel=<?php echo $selected; ?>" class="a">Usuários</a></h2>
-    <div class="contentaddnew">
-        <a onclick="changeParentLocation('cadusu.php')" class="addNew textcenter a">
-            Adicionar novo
-        </a>
+    
+    <div class="contentaddnew" id="optionsContent">
+        <div id="options">
+            <a href="<?php echo $printurl ?>" class="a">Imprimir</a>
+            |
+            <a onclick="changeParentLocation('cadusu.php')" class="a">Adicionar novo</a>
+        </div>
     </div>
+    <div class="contentaddnew">
+        <div id="balanco" title="De acordo com os filtros selecionados...">
+            N° de usuários:
+            <span class="blue" id="numero">
+            </span>
+        </div>
+    </div>
+
+    <script>
+        var lblNum = document.getElementById("numero");
+    </script>
 
     <div class="admSearch">
         <form action="" method="get" class="frmSearch">
@@ -104,7 +139,7 @@
             <th>Tipo</th>
             <th>Admin?</th>
             <th>Bloqueado?</th>
-            <th>Ações</th>
+            <th id="actions_h">Ações</th>
         </tr>
         
         <?php 
@@ -145,22 +180,18 @@
                 $row = mysqli_fetch_array($res, MYSQLI_NUM);
 
                 $count = $row[0];
+
+                echo "<script>lblNum.innerText = $count + '';</script>";
+
+                if(!$print)
+                {
+                    $sql .= " LIMIT $limit";
                 
-                // qtde de admins bloqueados 
-                $res = mysqli_query($conn, $sql_bloq);
-
-                $row = mysqli_fetch_array($res, MYSQLI_NUM);
-
-                $bloqs = $row[0];
-
-                $limit = 20;
-
-                $sql .= " LIMIT $limit";
-                
-                if($page > 1){
-                    $offset = $page-1;
-                    $offset = $offset * $limit;
-                    $sql .= " OFFSET $offset";
+                    if($page > 1){
+                        $offset = $page-1;
+                        $offset = $offset * $limit;
+                        $sql .= " OFFSET $offset";
+                    }
                 }
 
                 $res = mysqli_query($conn, $sql);
@@ -187,8 +218,7 @@
                             <td><?php echo ($admin) ? "Sim" : "Não"; ?></td>
                             <td class="<?php echo ($bloq) ? "red" : "green"; ?>"><?php echo $status; ?></td>
                             <td class="action">
-                                <a onclick="changeParentLocation('visusu.php?id=<?php echo $id ?>')" target="_blank" class="a">Visualizar</a>
-                                |
+                                <a onclick="changeParentLocation('visusu.php?id=<?php echo $id ?>')" target="_blank" class="a">Visualizar</a> |
                                 <a href="?bloq=<?php if($login != 'admin') echo $id; else echo '0'; ?>" class="a"><?php echo ($bloq) ? 'Desbloquear' : 'Bloquear'; ?></a>
                             </td>
                         </tr>
@@ -225,12 +255,12 @@
             <th>Tipo</th>
             <th>Admin?</th>
             <th>Bloqueado?</th>
-            <th>Ações</th>
+            <th id="actions_f">Ações</th>
         </tr>
     </table>
 
     <?php
-    if($count > $limit){
+    if($count > $limit && !$print){
 
         $page_count = ceil($count/$limit);
         // $page_count = $count;
@@ -304,6 +334,13 @@
         </ul>
     </div>
     <?php
+    }
+    
+    if(isset($_GET['print']))
+    {
+        echo "<script>
+            imprimir();
+        </script>";
     }
 ?>
 

@@ -5,6 +5,7 @@ CREATE TABLE caixa (
     valor NUMERIC(5,2) NOT NULL,
     descricao TEXT NOT NULL,
     tipo CHAR NOT NULL,
+    data DATE NOT NULL,
     excluido BOOLEAN NOT NULL DEFAULT FALSE
 );
 

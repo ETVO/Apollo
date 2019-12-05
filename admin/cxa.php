@@ -1,120 +1,141 @@
+
 <?php
-include 'head.php';
-include "login.php";
+    include 'head.php';
+    include "login.php";
 
-$sel_title = "livros";
+    $sel_title = "livros";
 
-$filter = '1 ';
-    
-$f_exc = true;
-$first = 1;
+    $filter = '1 ';
+        
+    $f_exc = true;
+    $first = 1;
 
-$limit = 15;
+    $limit = 15;
 
-if(isset($_GET['first']))
-{   
-    $first = 0;
-}
-
-$f_exc = (!isset($_GET['f_exc']) && $first == 0) ? false : true;
-
-if($f_exc)
-{
-    $filter = 'excluido = 0';
-}
-
-if(isset($_GET['exc']))
-{
-    $idexc = $_GET['exc'];
-    $nexc = 0;
-
-    include '../config/php/connect.php';
-    
-    $sql = "SELECT excluido FROM livro WHERE id_livro = $idexc";
-
-    $res = mysqli_query($conn, $sql);
-
-    if(mysqli_affected_rows($conn) > 0)
-    {
-        $row = mysqli_fetch_array($res, MYSQLI_NUM);
-        $nexc = $row[0];
+    if(isset($_GET['first']))
+    {   
+        $first = 0;
     }
-    
-    if($nexc == 0) $nexc = 1; else $nexc = 0;
 
-    $sql = "UPDATE livro SET excluido = $nexc WHERE id_livro = $idexc";
+    $f_exc = (!isset($_GET['f_exc']) && $first == 0) ? false : true;
 
-    $res = mysqli_query($conn, $sql);
+    if($f_exc)
+    {
+        $filter = 'excluido = 0';
+    }
 
-    updateEmprestimos($idexc, $nexc);
-}
+    if(isset($_GET['exc']))
+    {
+        $idexc = $_GET['exc'];
+        $nexc = 0;
 
-$print = false;
-if(isset($_GET['print']))
-{
-    $print = true;
-}
+        include '../config/php/connect.php';
+        
+        $sql = "SELECT excluido FROM caixa WHERE id = $idexc";
 
-$url = $_SERVER['REQUEST_URI'];
+        $res = mysqli_query($conn, $sql);
 
-$query = parse_url($url, PHP_URL_QUERY);
+        if(mysqli_affected_rows($conn) > 0)
+        {
+            $row = mysqli_fetch_array($res, MYSQLI_NUM);
+            $nexc = $row[0];
+        }
+        
+        if($nexc == 0) $nexc = 1; else $nexc = 0;
 
-if($query)
-{
-    $printurl = $url."&print=true";
-}
-else
-{
-    $printurl = $url."?print=true";
-}
+        $sql = "UPDATE caixa SET excluido = $nexc WHERE id = $idexc";
 
+        $res = mysqli_query($conn, $sql);
+    }
+
+    try {
+        include "../config/php/connect.php";
+        
+        $sql = "SELECT SUM(valor) AS soma
+                FROM caixa WHERE tipo = 'e'";
+
+        $res = mysqli_query($conn, $sql);
+        
+        $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+        $e = $row['soma'];
+
+        $sql = "SELECT SUM(valor) AS soma
+                FROM caixa WHERE tipo = 's'";
+
+        $res = mysqli_query($conn, $sql);
+        
+        $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+        $s = $row['soma'];
+
+        $total = $e - $s;
+
+        if($total > 0) $symb = "+";
+            
+    } catch (Exception $e)
+    {
+
+    }
+
+    $print = false;
+    if(isset($_GET['print']))
+    {
+        $print = true;
+    }
+
+    $url = $_SERVER['REQUEST_URI'];
+
+    $query = parse_url($url, PHP_URL_QUERY);
+
+    if($query)
+    {
+        $printurl = $url."&print=true";
+    }
+    else
+    {
+        $printurl = $url."?print=true";
+    }
 ?>
     <h2 class="textcenter dashboardTitle" >
-        <a onclick="changeParentLocation('main.php?sel=l')" class="a">
-            Livros
+        <a onclick="changeParentLocation('main.php?sel=c')" class="a">
+            Registros de Caixa
         </a>
     </h2>
     <div class="contentaddnew" id="optionsContent">
         <div id="options">
             <a href="<?php echo $printurl ?>" class="a">Imprimir</a>
             |
-            <a onclick="changeParentLocation('cadliv.php')" class="a">Adicionar novo</a>
+            <a onclick="changeParentLocation('cadcxa.php')" class="a">Adicionar novo</a>
         </div>
     </div>
     <div class="contentaddnew">
-        <div id="balanco" title="De acordo com os filtros selecionados...">
-            N° de livros:
-            <span class="blue" id="numero">
+        <div id="balanco">
+            Balanço (R$):
+            <span class="<?php echo ($total >= 0) ? "green" : "red";?>">
+                <?php echo $symb.number_format((float)$total, 2, ',', ''); ?>
             </span>
         </div>
     </div>
 
-    <script>
-        var lblNum = document.getElementById("numero");
-    </script>
-
     <div class="admSearch">
         <form action="" method="get" class="frmSearch" id="frmSearch">
-            <label for="f_exc" id="lbl_f_exc">Ocultar livros excluídos?</label>&nbsp;
+            <label for="f_exc" id="lbl_f_exc">Ocultar registros excluídos?</label>&nbsp;
             <input type="checkbox" name="f_exc" id="f_exc" onChange="this.form.submit()" <?php if($f_exc) echo "checked"; ?>>
             &nbsp;&nbsp;
             <input type="hidden" name="sel" value="<?php echo $selected; ?>">
             <input type="hidden" name="first" value="0">
-            <input type="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
-            <input type="submit"  value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
+            <input type="search" id="search" name="search" <?php if(isset($_GET['search'])) echo 'value="'.$_GET['search'].'"'; ?>>
+            <input type="submit" id="submit" value="Pesquisar <?php echo $sel_title ?>" class="frmInput">
         </form>
     </div>
 
     <table class="admTable">
         <tr class="header">
-            <!-- <th>Id</th> -->
-            <th>Código</th>
-            <th>Título</th>
-            <th>Autor(es)</th>
-            <th>Editora</th>
-            <th>Ano</th>
-            <th>Edição</th>
-            <th>Disponível</th>
+            <th>Tipo</th>
+            <th>Valor (R$)</th>
+            <th>Descrição</th>
+            <th>Data</th>
             <th id="actions_h">Ações</th>
         </tr>
         
@@ -128,28 +149,24 @@ else
                     $page = $_GET['page'];
 
 
-                $sql = "SELECT id_livro, 
-                                codigo, 
-                                titulo, 
-                                genero,
-                                autor, 
-                                editora, 
-                                qtde, 
-                                ano,
-                                edicao,    
-                                disponivel, 
+                $sql = "SELECT id, 
+                                tipo,
+                                valor, 
+                                descricao, 
+                                data, 
                                 excluido
-                        FROM livro";
+                        FROM caixa";
 
-                $sql_count = "SELECT COUNT(*) FROM livro";
+                $sql_count = "SELECT COUNT(*) FROM caixa";
                 
                 $search = (isset($_GET['search'])) ? ($_GET['search']) : '';
 
                 if($search != ''){       
                     $search = utf8_decode($_GET['search']);
                     $search = strtolower($search);  
-                    $search_str = " WHERE (lower(codigo) LIKE '%$search%'
-                    OR lower(titulo) LIKE '%$search%' OR lower(genero) LIKE '%$search%' OR lower(autor) LIKE '%$search%' OR lower(editora) LIKE '%$search%' OR ano LIKE '%$search%' OR edicao LIKE '%$search%') AND $filter";
+                    $search_str = " WHERE (lower(descricao) LIKE '%$search%'
+                    OR lower(tipo) LIKE '%$search%' OR lower(data) LIKE '%$search%' 
+                    OR valor LIKE '%$search%') AND $filter";
                 }
                 else {
                     $search_str = " WHERE $filter";
@@ -158,15 +175,13 @@ else
                 $sql .= $search_str;
                 $sql_count .= $search_str;
 
-                $sql .= " ORDER BY titulo ASC";
+                $sql .= " ORDER BY data ASC";
 
                 $res = mysqli_query($conn, $sql_count);
 
                 $row = mysqli_fetch_array($res, MYSQLI_NUM);
 
                 $count = $row[0];
-
-                echo "<script>lblNum.innerText = $count + '';</script>";
 
                 if(!$print)
                 {
@@ -184,43 +199,33 @@ else
                 if(mysqli_affected_rows($conn) > 0){
                     while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                     {
-                        $id = $row['id_livro'];
-                        $codigo = utf8_encode($row['codigo']);
-                        $titulo = utf8_encode($row['titulo']);
-                        $genero = utf8_encode($row['genero']);
-                        $autor = utf8_encode($row['autor']);
+                        /*
+                            id, 
+                            tipo,
+                            valor, 
+                            descricao, 
+                            data, 
+                            excluido
+                        */
+                        $id = $row['id'];
+                        
+                        $tipo = utf8_encode($row['tipo']);
+                        
+                        $valor = utf8_encode($row['valor']);
+                        
+                        $descricao = utf8_encode($row['descricao']);
+                        
+                        $data = utf8_encode($row['data']);
 
-                        $a_autor = explode("; ", $autor);
-
-                        if(sizeof($a_autor) > 2)
-                        {
-                            $autor = $a_autor[0]."; ".$a_autor[1]."; et al.";
-                        }
-
-                        $editora = utf8_encode($row['editora']);
-                        $ano = utf8_encode($row['ano']);
-                        $edicao = utf8_encode($row['edicao']);
-                        $qtde = utf8_encode($row['qtde']);
-                        $disp = utf8_encode($row['disponivel']);
                         $exc = utf8_encode($row['excluido']);
-
-                        // if($disp)
-                        //     $disp = 'Sim';
-                        // else
-                        //     $disp = 'Não';
 
                         ?>
                         <tr <?php if($exc) echo 'class = "exc"'; ?>>
-                            <td title="<?php echo $genero; ?>"><?php echo $codigo; ?></td>
-                            <td><?php echo $titulo; ?></td>
-                            <td><?php echo $autor; ?></td>
-                            <td><?php echo $editora; ?></td>
-                            <td><?php echo $ano; ?></td>
-                            <td><?php echo $edicao."ᵃ"; ?></td>
-                            <td <?php echo ($disp && !$exc) ? 'class="green"' : 'class="red"' ;?>><?php if($disp && !$exc) echo 'Sim ('.$qtde.')'; else echo 'Não'; ?></td>
+                            <td><?php echo ($tipo == 'e') ? "Entrada" : "Saída"; ?></td>
+                            <td class="<?php echo ($valor > 0) ? "green" : "red"; ?>"><?php echo $valor; ?></td>
+                            <td class="ellipsis"><?php echo $descricao; ?></td>
+                            <td><?php echo $data; ?></td>
                             <td class="action">
-                                <a onclick="changeParentLocation('visliv.php?id=<?php echo $id ?>')" target="_blank" class="a">Visualizar</a>
-                                |
                                 <a href="?exc=<?php echo $id ?>" class="a"><?php echo ($exc) ? 'Restaurar' : 'Excluir'; ?></a>
                             </td>
                         </tr>
@@ -251,20 +256,16 @@ else
         ?>
 
         <tr class="footer">
-            <!-- <th>Id</th> -->
-            <th>Código</th>
-            <th>Título</th>
-            <th>Autor(es)</th>
-            <th>Editora</th>
-            <th>Ano</th>
-            <th>Edição</th>
-            <th>Disponível</th>
+            <th>Tipo</th>
+            <th>Valor (R$)</th>
+            <th>Descrição</th>
+            <th>Data</th>
             <th id="actions_f">Ações</th>
         </tr>
     </table>
 
     <?php
-    if($count > $limit & !$print){
+    if($count > $limit && !$print){
 
         $page_count = ceil($count/$limit);
         // $page_count = $count;
@@ -347,5 +348,5 @@ else
         </script>";
     }
 ?>
-
-<script src="admin.js"></script>
+    
+<script src="../js/admin.js"></script>

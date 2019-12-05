@@ -103,7 +103,7 @@
                 if(mysqli_affected_rows($conn) > 0){
                     // echo 'a';
                     echo '<script>
-                    alert("Registro do administrador \"'.$nome.'\" alterado com sucesso!");
+                    alert("Registro do usuário \"'.$nome.'\" alterado com sucesso!");
                     </script>';
 
                     $success = true;
@@ -112,13 +112,13 @@
                     // echo 'b';
                     $erro = mysqli_error($conn);
                     echo '<script>
-                    alert("Falha ao alterar o registro do administrador \"'.$nome.'\"!\nMais detalhes: '.$erro.'");
+                    alert("Falha ao alterar o registro do usuário \"'.$nome.'\"!\nMais detalhes: '.$erro.'");
                     </script>';
                 }
             }
             if($success)
             {
-                $append = "Usuário \"$login\" alterou o registro do administrador id $id.<br>";
+                $append = "Usuário \"$login\" alterou o registro do usuário id $id.<br>";
                 if($self)
                     $append = "Usuário id \"$id\" alterou o seu próprio registro, utilizando agora o login $newlogin.<br>";
                 $file = 'log.html';
@@ -197,7 +197,7 @@
             if($success)
             {
                 if($bloq) $word = "desbloqueou"; else $word = "bloqueou";
-                $append = "Usuário \"$login\" $word o administrador id $id.<br>";
+                $append = "Usuário \"$login\" $word o usuário id $id.<br>";
                 $file = 'log.html';
                 date_default_timezone_set("America/Sao_Paulo");
 

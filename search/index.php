@@ -155,7 +155,7 @@
                                 if(isset($_GET['page']))
                                     $page = $_GET['page'];
 
-                                $sql = "SELECT id_livro, codigo, titulo, genero, autor, editora, ano, edicao, disponivel, excluido FROM livro";
+                                $sql = "SELECT id_livro, codigo, titulo, genero, autor, editora, ano, edicao, qtde, disponivel, excluido FROM livro";
                                 $sql_count = "SELECT COUNT(*) FROM livro";
                                 
                                 $search_str = " WHERE (lower(codigo) LIKE '%$search%' OR lower(titulo) LIKE '%$search%' OR lower(genero) LIKE '%$search%' 
@@ -215,6 +215,7 @@
                                         $editora = utf8_encode($row['editora']);
                                         $ano = utf8_encode($row['ano']);
                                         $edicao = utf8_encode($row['edicao']);
+                                        $qtde = utf8_encode($row['qtde']);
                                         $disp = utf8_encode($row['disponivel']);
                                         $exc = utf8_encode($row['excluido']);
 
@@ -226,8 +227,8 @@
                                         //     $disp = 'Não';
 
                                         ?>
-                                        <tr>
-                                            <td><div class="<?php if(!$disp) echo 'trIndisp'; if(in_array($id, $rol)) echo ' trSelecionado'; else echo 'trNormal';?>"><div class="symb"></div></div></td>
+                                        <tr class="<?php if(!$disp) echo 'trIndisp'; ?>">
+                                            <td><div class="<?php if(!$disp) echo 'xIndisp'; else if(in_array($id, $rol)) echo ' trSelecionado'; else echo 'trNormal';?>"><div class="symb"></div></div></td>
                                             <td title="<?php echo $genero; ?>"><?php echo $codigo; ?></td>
                                             <td>
                                                 <div class="doubletd">
@@ -239,7 +240,7 @@
                                             <td><?php echo $editora; ?></td>
                                             <td><?php echo $ano; ?></td>
                                             <td><?php echo $edicao."ᵃ"; ?></td>
-                                            <td class="<?php echo ($disp) ? 'green' : 'red'; ?>"><?php if($disp) echo 'Sim'; else echo 'Não';?></td>
+                                            <td class="<?php echo ($disp) ? 'green' : 'red'; ?>"><?php if($disp) echo 'Sim ('.$qtde.')'; else echo 'Não';?></td>
                                             <td class="searchEmprestar <?php if(!$disp) echo 'empIndisp'; if(in_array($id, $rol)) echo ' empSelecionado';?>" >
                                                 <a href="<?php if($disp){ if(in_array($id, $rol)) echo "?exc=$id&search=$search&page=$page"; else echo "?emp=$id&search=$search&page=$page"; } else echo ""; ?>" class="<?php if(!$disp) echo 'empIndispA'; else if(in_array($id, $rol)) echo ' empSelecionadoA';?>" <?php if(!$disp) echo 'disabled';?> title="<?php if($disp) echo "Emprestar '$titulo'"; else echo 'Livro indisponível!'?>">Emprestar</a>
                                             </td>

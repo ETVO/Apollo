@@ -27,12 +27,12 @@ body {
 	display: grid;
 	grid-template-columns: 1fr 6fr;
 	grid-template-rows: 1fr;
-	height: 100vh;
 }
 
 .mainMenuAdm {
 	background: #e0e0e0;
 	border: solid 1px #ccc;
+	height: 132vh;
 }
 
 .mainMenuAdmUl {
@@ -82,13 +82,22 @@ body {
 	display: flex;
 }
 
-.addNew {
+#options {
 	margin: auto;
+}
+
+#options a {
 	color: #0349fc;
 }
 
-.addNew:hover {
-	text-decoration: underline;
+#balanco {
+	margin: auto;
+	padding: 10px;
+	font-weight: bold;
+	/* font-weight: normal; */
+}
+
+#balanco span {
 }
 
 .admTable {
@@ -325,4 +334,10 @@ body {
 	grid-template-columns: 1fr 3fr;
 	grid-column-gap: 10px;
 	grid-template-rows: 1fr;
+}
+
+.ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }

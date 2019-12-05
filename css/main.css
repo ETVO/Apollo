@@ -256,6 +256,10 @@ a:disabled, a:disabled:hover, a:disabled:focus {
 	color: #00b90f;
 }
 
+.blue {
+	color: #0035e4;
+}
+
 #footer iframe {
 	width: 100%;
 	box-sizing: border-box;

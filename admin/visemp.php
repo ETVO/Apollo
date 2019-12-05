@@ -1,67 +1,34 @@
 <?php
-    session_start();
-    include '../config/php/util.php';
-
-    $login = $_SESSION['login'];
-    $senha = $_SESSION['senha'];
-    $nome = '';
-
-    $edit = false;
-    $exc = false;
-    $success = false;
     
-    if(!isset($_SESSION['login']) || !isset($_SESSION['senha'])) {
-        session_destroy();
-        header("Location: index.php");
-    }
-    else if($login == 'root' && $senha == '632f4902f2afb597923c18ea897eefa7'){
-    }
-    else {
-        try 
-        {
-            include "../config/php/connect.php";
-
-            $sql = "SELECT nome FROM user WHERE login = '$login' AND bloqueado = 0";
-
-            $res = mysqli_query($conn, $sql);
-            
-            if(mysqli_affected_rows($conn) > 0){
-                $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-                $nome = utf8_encode($row['nome']);
-                $nome = explode(" ", $nome)[0];
-            } 
-            else {
-                session_destroy();
-                header("Location: index.php");
-            }
-
-            mysqli_close($conn);
-        } catch (Exception $e){
-
-        }
-    }
-
-    $id_emp = '';
-    $titulo = '';
-    $nome = '';
-    $telefone = '';
-    $admin = '';
-    $data_emp = '';
-    $data_prev_dev = '';
-    $devolvido = '';
-    $data_dev = '';
-    $obs = '';
+    
+    include 'head.php';
+    include 'login.php';
 
     if(isset($_GET['id'])){
         $id_emp = $_GET['id'];
 
         try {
             include "../config/php/connect.php";
+            include "../config/php/util.php";
 
-            $sql = "SELECT l.id_livro, l.titulo, e.nome, e.telefone, e.turma, a.nome AS admin, data_emp, 
-            data_prev_dev, devolvido, data_dev, e.obs FROM emprestimo AS e 
-            INNER JOIN livro AS l ON e.id_livro = l.id_livro 
-            INNER JOIN user AS a ON e.id_admin = a.id_user OR e.id_admin = 0 WHERE id_emprestimo = $id_emp";
+            $sql = "SELECT l.id_livro AS id_livro, 
+                            l.codigo AS codigo, 
+                            l.titulo AS titulo, 
+                            u.nome AS usuario, 
+                            u.email AS email, 
+                            u.telefone AS telefone,
+                            u.turma AS turma, 
+                            a.nome AS admin, 
+                            data_emp, 
+                            data_prev_dev, 
+                            devolvido, 
+                            data_dev,
+                            e.excluido,
+                            e.obs
+                FROM emprestimo AS e 
+                    INNER JOIN livro AS l ON e.id_livro = l.id_livro 
+                    INNER JOIN user AS a ON e.id_admin = a.id_user
+                    INNER JOIN user AS u ON e.id_user = u.id_user WHERE id_emprestimo = $id_emp";
 
             $res = mysqli_query($conn, $sql);
 
@@ -69,9 +36,11 @@
             {
                 $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
 
-                $titulo = utf8_encode($row['titulo']);
                 $id_livro = $row['id_livro'];
-                $nome = utf8_encode($row['nome']);
+                $codigo = utf8_encode($row['codigo']);
+                $livro = utf8_encode($row['titulo']);
+                $usuario = utf8_encode($row['usuario']);
+                $email = utf8_encode($row['email']);
                 $telefone = utf8_encode($row['telefone']);
                 $turma = utf8_encode($row['turma']);
                 $admin = utf8_encode($row['admin']);
@@ -79,6 +48,7 @@
                 $data_prev_dev = utf8_encode($row['data_prev_dev']);
                 $devolvido = utf8_encode($row['devolvido']);
                 $data_dev = utf8_encode($row['data_dev']);
+                $exc = utf8_encode($row['excluido']);
                 $obs = utf8_encode($row['obs']);
                 
                 $atrasado = false;
@@ -105,75 +75,6 @@
         }
     }
 
-    if(isset($_GET['exc']))
-    {
-        // $exc = $_GET['exc'];
-        // $success = false;
-        // try {
-        //     include "../config/php/connect.php";
-
-        //     $sql = "DELETE FROM livro WHERE id_livro = $id";
-
-        //     $res = mysqli_query($conn, $sql);
-            
-        //     if(mysqli_affected_rows($conn) > 0){
-        //         echo "<script>
-        //         alert('Livro excluído com sucesso!');
-        //         </script>";
-
-        //         $success = true;
-        //     } 
-        //     else {
-        //     }
-        // } catch(Exception $e) {
-
-        // }
-        // if($success)
-        // {
-        //     $append = "Usuário \"$login\" excluiu o livro id $id.<br>";
-        //     $file = 'log.html';
-        //     date_default_timezone_set("America/Sao_Paulo");
-
-        //     $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
-            
-        //     if(file_get_contents($file) != '')
-        //         $append = file_get_contents($file).$append;
-
-        //     file_put_contents($file, $append);
-        // }
-
-        // header("Location: main.php?sel=l");
-
-    }
-
-    if(isset($_GET['multa']))
-    {
-        // if($_GET['multa'])
-        // {
-        //     try {
-        //         include '../config/php/connect.php';
-
-        //         $multa = $_SESSION['multa'];
-        //         $desc = "Multa do empréstimo id $id_emp";
-
-        //         $sql = "INSERT INTO caixa VALUES (DEFAULT, $multa, $desc);";
-
-        //         // $res = mysqli_query($conn, $sql);
-
-        //         if(mysqli_affected_rows($conn) > 0)
-        //         {
-        //             header('Location: main.php?sel=e');
-        //         }
-        //         else
-        //             header("Location: ?id=$id_emp");
-
-        //         mysqli_close($conn);
-        //     } catch (Exception $e) {
-        //         header("Location: ?id=$id_emp");
-        //     }
-        // }
-    }
-
     if($status == 'a'){
         $val_multa = calculaMulta($dias);
         $multa = $val_multa;
@@ -192,9 +93,12 @@
     else{
         $multa = 0; 
         $text = "Deseja realmente excluir este empréstimo?";
-        $opt = 'del';
+        $opt = 'exc';
         $_SESSION['multa'] = $multa;
     }
+
+    if($exc) 
+        $text = "Deseja realmente restaurar este empréstimo?";
 
     $form = false;
 
@@ -231,13 +135,38 @@
     {
         header("Location: ?id=$id_emp");
     }
+
+    function updateLivro($id_livro) {
+        try {
+            include '../config/php/connect.php';
+
+            $sql = "SELECT qtde FROM livro WHERE id_livro = $id_livro";
+            
+            $res = mysqli_query($conn, $sql);
+
+            $row = mysqli_fetch_array($res, MYSQLI_NUM);
+
+            $qtde = $row[0];
+
+            $newqtde = $qtde + 1;
+
+            $sql = "UPDATE livro SET
+            qtde = $newqtde, disponivel = 1 WHERE id_livro = $id_livro";
+
+            $res = mysqli_query($conn, $sql);
+
+            mysqli_close($conn);
+        } catch (Exception $e) {
+
+        }
+    }
     
     if(isset($_POST['subjust']))
     {
         try {
             include '../config/php/connect.php';
 
-            $justificativa = utf8_decode(mysqli_real_escape_string($conn, $_POST['just']));
+            $justificativa = utf8_decode("Justificativa de atraso:".mysqli_real_escape_string($conn, $_POST['just']));
 
             $data_dev = date('Y-m-d');
 
@@ -251,27 +180,12 @@
 
             if(mysqli_affected_rows($conn) > 0)
             {   
-                $sql = "UPDATE livro SET
-                disponivel = 1 
-                WHERE id_livro = $id_livro";
 
-                $res = mysqli_query($conn, $sql);
-
-                if(mysqli_affected_rows($conn) > 0)
-                {
-                    echo '<script>
+                updateLivro($id_livro);
+                echo '<script>
                     alert("Atraso justificado com sucesso!");
-                    
                     </script>';
-                    $success = true;
-                }
-                else {    
-                    $error = mysqli_error($conn);
-                    echo '<script>
-                        alert("Algo deu errado!\nMais detalhes:'.$error.'");
-                        
-                        </script>';
-                }
+                $success = true;
             }
             else {
                 $error = mysqli_error($conn);
@@ -322,25 +236,12 @@
             
             if($res = mysqli_query($conn, $sql))
             {   
-                $sql = "UPDATE livro SET
-                disponivel = 1 
-                WHERE id_livro = $id_livro";
-
-                if($res = mysqli_query($conn, $sql))
-                {
-                    echo '<script>
+                updateLivro($id_livro);
+                echo '<script>
                     alert("Livro devolvido com sucesso!");
                     
                     </script>';
-                    $success = true;
-                }
-                else {    
-                    $error = mysqli_error($conn);
-                    echo '<script>
-                        alert("Algo deu errado!\nMais detalhes:'.$error.'");
-                        
-                        </script>';
-                }
+                $success = true;
             }
             else {
                 $error = mysqli_error($conn);
@@ -447,7 +348,7 @@
         try {
             include '../config/php/connect.php';
 
-            $obs_multa = "Multa de $multa paga";
+            $obs_multa = "Multa de atraso no valor de $multa foi paga";
 
             $data_dev = date('Y-m-d');
 
@@ -458,41 +359,28 @@
             WHERE id_emprestimo=$id_emp";
             
             $res = mysqli_query($conn, $sql);
-            
-            // echo $sql;
 
             if(mysqli_affected_rows($conn) > 0)
             {   
-                $sql = "UPDATE livro SET
-                disponivel = 1 
-                WHERE id_livro = $id_livro";
+                updateLivro($id_livro);
+
+                $data_dev = date('d/m/Y', strtotime($data_dev));
+                $desc = "Multa de empréstimo atrasado";
+                $desc = utf8_decode($desc);
+                $sql = "INSERT INTO caixa VALUES (DEFAULT, $val_multa, '$desc', 'e', NOW(), DEFAULT);";
+
+                echo $sql;
 
                 $res = mysqli_query($conn, $sql);
 
                 if(mysqli_affected_rows($conn) > 0)
                 {
-                    $data_dev = date('d/m/Y', strtotime($data_dev));
-                    $desc = "Multa de empréstimo atrasado, paga em $data_dev";
-                    $desc = utf8_decode($desc);
-                    $sql = "INSERT INTO caixa VALUES (DEFAULT, $val_multa, '$desc');";
+                    echo '<script>
+                    alert("Multa de atraso paga com sucesso!");
+                    
+                    </script>';
 
-                    $res = mysqli_query($conn, $sql);
-
-                    if(mysqli_affected_rows($conn) > 0)
-                    {
-                        echo '<script>
-                        alert("Multa de atraso paga com sucesso!");
-                        
-                        </script>';
-                    }
-                    else {    
-                        $error = mysqli_error($conn);
-                        echo '<script>
-                            alert("Algo deu errado!\nMais detalhes:'.$error.'");
-                            
-                            </script>';
-                        $success = true;
-                    }
+                    $success = true;
                 }
                 else {    
                     $error = mysqli_error($conn);
@@ -528,56 +416,22 @@
             file_put_contents($file, $append);
         }
 
-        echo '<script>window.location.href="main.php?sel=e"</script>';
+        // echo '<script>window.location.href="main.php?sel=e"</script>';
     }
 
-    if(isset($_GET['del']) && $status == 'd')
+    if(isset($_GET['exc']) && $status == 'd')
     {
-        try {
-            include '../config/php/connect.php';
+        $nexc = $_GET['exc'];
 
-            $sql = "DELETE FROM emprestimo
-            WHERE id_emprestimo=$id_emp";
-            
-            $res = mysqli_query($conn, $sql);
+        if($nexc == 0) $nexc = 1; else $nexc = 0;
 
-            if($res = mysqli_query($conn, $sql))
-            {   
-                echo '<script>
-                alert("Empréstimo excluído com sucesso!");
-                
-                </script>';
-            }
-            else {
-                $error = mysqli_error($conn);
-                echo '<script>
-                alert("Algo deu errado!\nMais detalhes:'.$error.'");
-                
-                </script>';
-            }
+        include '../config/php/connect.php';
+        
+        $sql = "UPDATE emprestimo SET excluido = $nexc WHERE id_emprestimo = $id_emp";
 
+        $res = mysqli_query($conn, $sql);
 
-
-            mysqli_close($conn);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-
-        if($success)
-        {
-            $append = "Usuário \"$login\" excluiu o empréstimo id $id_emp.<br>";
-            $file = 'log.html';
-            date_default_timezone_set("America/Sao_Paulo");
-
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
-            
-            if(file_get_contents($file) != '')
-                $append = file_get_contents($file).$append;
-
-            file_put_contents($file, $append);
-        }
-
-        echo '<script>window.location.href="main.php?sel=e"</script>';
+        header("Location: ?id=$id_emp");
     }
 ?>
 
@@ -599,10 +453,11 @@
 </head>
 
 <body>    
-    <a href="" onclick="window.close();" class="a voltaInicio">Fechar</a><br>
     <a href="main.php?sel=e" class="a voltaInicio">Voltar à Administração</a>
     <div class="textcenter">
-        <h3>Visualizar <a href="main.php?sel=e" class="a">Empréstimo</a></h3>
+        <h3>Visualizar <a href="main.php?sel=e" class="a">Empréstimo</a> (<?php if($status == 'a') echo '<b class="status hAtrasado">ATRASADO</b>'; 
+                else if($status == 'e') echo '<b class="status hEmDia">EM DIA</b>'; 
+                else{ echo '<b class="status hDevolvido"><b>DEVOLVIDO</b>';} ?>)</h3>
     </div>
     
     <div class="visualizar">
@@ -616,25 +471,30 @@
 
         <div class="visualizarContent" <?php if($form) echo 'style="display:none"'; ?>>    
 
-            <div class="visualizarInfo">
+            <!-- <div class="visualizarInfo status">
                 <?php if($status == 'a') echo '<h3 class="hAtrasado">ATRASADO</h3>'; 
                 else if($status == 'e') echo '<h3 class="hEmDia">EM DIA</h3>'; 
                 else{ echo '<h3 class="hDevolvido"><b>DEVOLVIDO</b>'; if($d_atraso) echo ' (COM ATRASO)'; echo '</h3>';} ?>
-            </div> 
+            </div>  -->
 
             <div class="visualizarInfo">
                 <label for="">Livro</label>
-                <h3><?php echo $titulo; ?></h3>
+                <h3><?php echo "$codigo ($livro)"; ?></h3>
             </div>   
             
             <div class="visualizarInfo">
-                <label for="">Usuário</label>
-                <h3><?php echo $nome; ?></h3>
+                <label for="">Emprestado para</label>
+                <h3><?php echo $usuario; ?></h3>
             </div>   
             
             <div class="visualizarInfo">
-                <label for="">Contato (telefone)</label>
+                <label for="">Telefone</label>
                 <h3><?php echo $telefone; ?></h3>
+            </div>
+            
+            <div class="visualizarInfo">
+                <label for="">Email</label>
+                <h3><?php echo $email; ?></h3>
             </div>   
             
             <div class="visualizarInfo">
@@ -647,19 +507,21 @@
                 <h3><?php echo $admin; ?></h3>
             </div>   
             
-            <div class="visualizarInfo">
-                <label for="">Emprestado em</label>
-                <h3><?php echo date('d/m/Y', strtotime($data_emp)); ?></h3>
-            </div>   
-            
-            <div class="visualizarInfo">
-                <label for="">Prazo de devolução</label>
-                <h3><?php echo date('d/m/Y', strtotime($data_prev_dev)); ?></h3>
-            </div>   
+            <div class="visDouble">
+                <div class="visualizarInfo">
+                    <label for="">Emprestado em</label>
+                    <h3><?php echo date('d/m/Y', strtotime($data_emp)); ?></h3>
+                </div>   
+                
+                <div class="visualizarInfo">
+                    <label for="">Prazo de devolução</label>
+                    <h3><?php echo date('d/m/Y', strtotime($data_prev_dev)); ?></h3>
+                </div>   
+            </div>
             
             <div class="visualizarInfo">
                 <label for="">Devolvido</label>
-                <h3><?php $datadev = date('d/m/Y', strtotime($data_dev)); echo ($devolvido) ? "Sim (em $datadev)" : 'Não'; ?></h3>
+                <h3 class="<?php if($devolvido) echo "green"; ?>"><?php $datadev = date('d/m/Y', strtotime($data_dev)); echo ($devolvido) ? "Sim (em $datadev)" : 'Não'; ?></h3>
             </div>  
             
             <div class="visualizarInfo">
@@ -682,10 +544,10 @@
                     buttons: true,
                 }).then((yes) =>{
                     if(yes){
-                        window.location.href = '?id=$id_emp&$opt=true';
+                        window.location.href = '?id=$id_emp&$opt=$exc';
                     }
                 });"; ?>" class="<?php if($status == 'd') echo 'btnExcluir'; else echo 'btnRenovar'; ?>">
-                    <?php if($status == 'a') echo 'Pagar Multa'; else if($status == 'e') echo 'Renovar'; else echo 'Excluir';  ?>
+                    <?php if($status == 'a') echo 'Pagar Multa'; else if($status == 'e') echo 'Renovar'; else if($exc) echo "Restaurar"; else echo 'Excluir';  ?>
                 </button>
             </div>
         </div>

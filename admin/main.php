@@ -19,7 +19,7 @@
     <link rel="shortcut icon" href="../favicon.ico"> 
 </head>
 
-<body>    
+<body> 
     <a href="" onclick="" class="a voltaInicio"></a><br>
     <a href="index.php" class="a voltaInicio">Voltar ao Início</a>
     <div class="textcenter">
@@ -41,6 +41,9 @@
                 </li>
                 <li>
                     <a href="?sel=u" class="a <?php if($selected == 'u') echo "selected"; ?>">Usuários</a>
+                </li>
+                <li>
+                    <a href="?sel=c" class="a <?php if($selected == 'c') echo "selected"; ?>">Caixa</a>
                 </li>
             </ul>
         </div>
@@ -96,6 +99,11 @@
                     else if($selected == 'u') {
                         ?>
                         <iframe src="usu.php" frameborder="0"></iframe>
+                        <?php
+                    }
+                    else if($selected == 'c') {
+                        ?>
+                        <iframe src="cxa.php" frameborder="0"></iframe>
                         <?php
                     }
                     ?>

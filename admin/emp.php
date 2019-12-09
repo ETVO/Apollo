@@ -331,7 +331,7 @@
                         else
                         {
                             ?>
-                            <tr <?php if($exc) echo 'title="Este empréstimo foi excluído!" class="exc"'; else if($atrasado) echo 'title="Este empréstimo está atrasado!"'; else if($dev) echo 'title="Este empréstimo já foi devolvido!"'; ?>>
+                            <tr <?php if($exc) echo 'title="Este empréstimo foi excluído!" class="exc"'; else if($atrasado) echo 'title="Este empréstimo está atrasado!"'; else if($dev) echo 'title="Este empréstimo já foi devolvido!"'; ?> class="tr">
                                 <td title='"<?php echo $titulo; ?>"' class="titleprint ellipsis"><?php echo $codigo; ?></td>
                                 <td title="<?php 
                                     if($turma != '') echo 'Turma: '.$turma;
@@ -340,7 +340,7 @@
                                 <td><?php echo $admin; ?></td>
                                 <td><?php echo date('d/m/Y', strtotime($data_emp)); ?></td>
                                 <td <?php if($atrasado) echo 'class="red"'; ?>><?php echo date('d/m/Y', strtotime($data_prev_dev));?></td>
-                                <td class="<?php if($dev) echo 'green'; else echo 'red'; ?>">
+                                <td class="<?php if($dev) echo 'green'; else if($atrasado) echo 'red'; ?>">
                                     <?php if($dev) echo 'Sim'; else echo 'Não';
                                     if($data_dev == null) echo ''; else echo ' ('.date('d/m/Y', strtotime($data_dev)).')'; ?>
                                 </td>
@@ -365,6 +365,14 @@
                         </tr>
                     <?php
                 }
+
+                ?>
+                    <tr id="nenhum" style="display: none">
+                        <td colspan="9" class="textcenter">
+                            Não há nenhum registro!
+                        </td>
+                    </tr>
+                <?php
 
                 mysqli_close($conn);
             } catch (Exception $e) {

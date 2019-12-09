@@ -74,9 +74,12 @@ function submitForm(formId)
 function atualizaNumEmp()
 {
     var lblNum = document.getElementById("numero");
-    var count = document.getElementsByTagName("tr");
-    count = count.length - 2;
+    var count = document.getElementsByClassName("tr");
+    count = count.length;
     // if(count == NaN) count = 0;  
 
+    if(count < 0) count = 0;
     lblNum.innerText = count + '';
+    
+    if(count == 0) document.getElementById("nenhum").style = null;
 }

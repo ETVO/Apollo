@@ -20,7 +20,8 @@
             
             case 'e':
                 $onscript = 'emprestimo';
-                $a_csv = array('id_emprestimo', 'id_livro', 'id_admin', 'id_user', 'data_emp', 'data_prev_dev', 'data_dev', 'obs', 'devolvido', 'excluido');
+                $a_csv = array('id_emprestimo', 'codigo', 'titulo', 'usuario', 'email', 'telefone', 'turma', 'admin', 
+                'data_emp', 'data_prev_dev', 'devolvido', 'data_dev', 'excluido');
                 break;
             
             case 'c':
@@ -52,7 +53,6 @@
             $query = "SELECT * from $onscript ORDER BY id_$onscript DESC";  
         else 
             $query = "SELECT id_emprestimo, 
-                            l.id_livro AS id_livro, 
                             l.codigo AS codigo, 
                             l.titulo AS titulo, 
                             u.nome AS usuario, 

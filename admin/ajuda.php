@@ -26,7 +26,8 @@
         'Como posso alterar minha própria senha?', 
         'Temos dois exemplares do mesmo livro. Como faço para registrá-los?', 
         'Para que serve a página "Caixa"?', 
-        'Vi que no Painel há a opção "Configurações do sistema".<br>Para que isso serve?'
+        'Vi que no Painel há a opção "Configurações do sistema".<br>Para que isso serve?', 
+        'Para que serve a opção "Imprimir códigos" no Painel?'
     ];
 
     $items = 
@@ -36,7 +37,8 @@
     Todos os exemplares terão o mesmo código, mas serão tratados de maneira individual pelo sistema.',
     'Na página "Caixa", os administradores, como você, podem visualizar todas as transações realizadas e registradas no sistema. Isso serve para controlar o pagamento das multas de atraso e outras movimentações da Biblioteca ou do Grêmio.',
     'Nessa página, você pode ajustar algumas configurações do sistema, como prazo de devolução, multa por dia de atraso ou até a senha padrão com que são criados os usuários.<br>
-    Obs.: Essa senha será utilizada somente para usuários criados na página "Finalizar Empréstimo", pois no painel administrativo a senha pode ser definida logo no registro.'
+    Obs.: Essa senha será utilizada somente para usuários criados na página "Finalizar Empréstimo", pois no painel administrativo a senha pode ser definida logo no registro.',
+    'A opção "Imprimir códigos" permite que os administradores imprimam uma ficha com todos os códigos dos livros do sistema. Na página, você pode alterar parâmetros visuais para personalizar as etiquetas dos registros.'
 ];
 
 ?>

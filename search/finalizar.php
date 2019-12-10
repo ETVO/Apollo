@@ -57,7 +57,11 @@
     <link rel="stylesheet" href="../css/final.css">
     <link rel="stylesheet" href="../css/footer.css">
     <script src="../config/js/sweetalert.min.js"></script>
-    <link rel="shortcut icon" href="../favicon.ico"> 
+    <script src="../config/js/jquery.min.js"></script>
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link href="../config/js/select2.min.css" rel="stylesheet" />
+    <script src="../config/js/select2.min.js"></script>
 </head>
 
 <body>
@@ -143,9 +147,8 @@
         </div>
         <form action="autorizar.php" method="post" class="infoFrm">
             <div class="infoField">
-                <label for="users">Selecione o usuário</label>
-                <select name="id_emp" id="users" required>
-                    <!-- <option value="" disabled selected>-- Selecione uma opção --</option> -->
+                <label for="users">Selecione o usuário</label><br>
+                <select class="js-example-basic-single" name="id_emp" id="users" required>
                     <?php
 
                     $sql = "SELECT id_user, nome, ra, tipo, login FROM user WHERE bloqueado = 0 AND login != 'admin'";
@@ -203,4 +206,5 @@
 </body>
 
 <script src="../js/main.js"></script>
+<script src="../js/finalizar.js"></script>
 </html>

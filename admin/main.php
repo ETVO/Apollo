@@ -33,6 +33,16 @@
     }
     
     $nlivro = conta("livro");
+    
+    $sql = "SELECT SUM(qtde) AS soma
+    FROM livro WHERE excluido = 0";
+
+    $res = mysqli_query($conn, $sql);
+
+    $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+    $slivro = $row['soma'];
+
     $nuser = conta("user");
     $nemp = conta("emprestimo");
     
@@ -128,6 +138,8 @@
                         <div class="contentaddnew" id="optionsContent">
                             <div id="options">
                                 <a onclick="changeParentLocation('config.php')" class="a">Configurações do sistema</a>
+                                |
+                                <a onclick="changeParentLocation('codigos.php')" class="a">Imprimir códigos</a>
                             </div>
                         </div>
                         <div class="content">
@@ -149,11 +161,24 @@
                                     if($nlivro > 1) $s = "s"; else $s = ""; 
                                     
                                 ?>
-                                <!-- Nº de <b>livros</b>: -->
                                 <span class="">
                                     <?php echo $nlivro;  ?>
                                 </span>
                                 livro<?php echo $s ?>
+                                <?php 
+                                    if($slivro > 1) $s = "es"; else $s = "";
+                                     
+                                    if($slivro != null)
+                                    {
+                                        ?>
+                                        <span class="">
+                                            (<?php echo $slivro;  ?>
+                                        </span>
+                                        exemplar<?php echo $s ?>)
+                                        <?php
+                                    }
+                                ?>
+                                
                             </p>
                             <p class="sys_status">
                                 <?php 

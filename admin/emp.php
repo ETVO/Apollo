@@ -94,6 +94,13 @@
             
             if($res = mysqli_query($conn, $sql))
             {   
+                $sql = "SELECT id_livro FROM emprestimo WHERE id_emprestimo = $id_emp";
+
+                $res = mysqli_query($conn, $sql);
+
+                $row = mysqli_fetch_array($res, MYSQLI_NUM);
+                $id_livro = $row[0];
+
                 updateLivro($id_livro);
                 echo '<script>
                     alert("Livro devolvido com sucesso!");
@@ -301,7 +308,6 @@
 
                         $id = $row['id_emprestimo'];
                         $id_livro = $row['id_livro'];
-                        $id_admin = $row['id_livro'];
                         
                         $codigo = utf8_encode($row['codigo']);
                         $titulo = utf8_encode($row['titulo']);
@@ -340,7 +346,7 @@
                                 <td><?php echo $admin; ?></td>
                                 <td><?php echo date('d/m/Y', strtotime($data_emp)); ?></td>
                                 <td <?php if($atrasado) echo 'class="red"'; ?>><?php echo date('d/m/Y', strtotime($data_prev_dev));?></td>
-                                <td class="<?php if($dev) echo 'green'; else if($atrasado) echo 'red'; ?>">
+                                <td class="<?php if($dev) echo 'green'; else if($atrasado   ) echo 'red'; ?>">
                                     <?php if($dev) echo 'Sim'; else echo 'Não';
                                     if($data_dev == null) echo ''; else echo ' ('.date('d/m/Y', strtotime($data_dev)).')'; ?>
                                 </td>
@@ -377,7 +383,7 @@
                 mysqli_close($conn);
             } catch (Exception $e) {
                 ?>
-                    <tr>
+                    <tr class="tr">
                         <td colspan="9" class="textcenter">
                             Não há nenhum registro!
                         </td>
@@ -478,17 +484,16 @@
     if(isset($_GET['print']))
     {
         echo "<script>
-            atualizaNumEmp();
+            // atualizaNumEmp();
             imprimir();
         </script>";
     }
-
-    if($f_dia)
-    {
-        echo "<script>
-            atualizaNumEmp();
-        </script>";
-    }
+    // else if($f_dia)
+    // {
+    //     echo "<script>
+    //         atualizaNumEmp();
+    //     </script>";
+    // }
 ?>
 
 <script src="../js/admin.js"></script>

@@ -8,7 +8,7 @@ CREATE TABLE user (
     senha TEXT NOT NULL,
     turma VARCHAR(7),
     tipo VARCHAR(15) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
     telefone VARCHAR(16),
     admin BOOLEAN NOT NULL DEFAULT FALSE,
     bloqueado BOOLEAN NOT NULL DEFAULT FALSE

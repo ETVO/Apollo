@@ -34,6 +34,7 @@
 
                 $res = mysqli_query($conn, $sql);
                 if(mysqli_affected_rows($conn) > 0){
+                    $nome = utf8_encode($nome);
                     echo '<script>
                     alert("Usuário \"'.$nome.'\" inserido com sucesso!");
                     window.location.href = "prg.php?url=main.php?sel=u";

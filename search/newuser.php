@@ -125,7 +125,7 @@
             </select>
             <br><br>
             <label for="nome">Nome</label><br>
-            <input type="text" name="nome" id="nome" required maxlenght="70">
+            <input type="text" name="nome" required maxlenght="70">
             <br><br>
             <label for="ra" id="lblRa">RA</label><br>
             <input type="number" name="ra" id="ra" maxlenght="7" min="1000000">
@@ -137,10 +137,10 @@
             <input type="text" name="turma" id="ano" maxlenght="3" placeholder="Ex.: 73A">
             <br><br>
             <label for="telefone">Telefone</label><br>
-            <input type="text" name="telefone" id="telefone" maxlenght="15" placeholder="Ex.: 14987654321" required>
+            <input type="text" name="telefone" maxlenght="15" placeholder="Ex.: 14987654321" required>
             <br><br>
             <label for="email">Email</label><br>
-            <input type="email" name="email" id="email" maxlenght="255">
+            <input type="email" name="email" maxlenght="255">
             <br><br>
             <button type="submit" name="subCadUser" class="cadBtn">Salvar</button>
             <button type="reset" class="cadBtn reset">Limpar</button>

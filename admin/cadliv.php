@@ -50,6 +50,7 @@
             $titulo = utf8_encode($titulo);
             if(mysqli_affected_rows($conn) > 0){
                 // echo 'a';
+                $titulo = utf8_encode($titulo);
                 echo '<script>
                 alert("Livro \"'.$titulo.'\" inserido com sucesso!");
                 </script>';

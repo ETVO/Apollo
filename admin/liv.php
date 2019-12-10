@@ -9,7 +9,7 @@ $filter = '1 ';
 $f_exc = true;
 $first = 1;
 
-$limit = 15;
+$limit = 12;
 
 if(isset($_GET['first']))
 {   
@@ -67,6 +67,19 @@ else
     $printurl = $url."?print=true";
 }
 
+include '../config/php/connect.php';
+
+$sql = "SELECT SUM(qtde) AS soma
+FROM livro WHERE excluido = 0";
+
+$res = mysqli_query($conn, $sql);
+
+$row = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+$soma = $row['soma'];
+
+$soma = ($soma != null) ? $soma : 0;
+
 ?>
     <h2 class="textcenter dashboardTitle">
         <a onclick="changeParentLocation('main.php?sel=l')" class="a" id="title" value="Livros">
@@ -86,6 +99,11 @@ else
         <div id="balanco" title="De acordo com os filtros selecionados...">
             N° de livros:
             <span class="blue" id="numero">
+            </span>
+            |
+            N° de exemplares:
+            <span class="blue">
+                <?php echo $soma ?>
             </span>
         </div>
     </div>

@@ -165,7 +165,7 @@ $soma = ($soma != null) ? $soma : 0;
                 $search = (isset($_GET['search'])) ? ($_GET['search']) : '';
 
                 if($search != ''){       
-                    $search = utf8_decode($_GET['search']);
+                    $search = ($_GET['search']);
                     $search = strtolower($search);  
                     $search_str = " WHERE (lower(codigo) LIKE '%$search%'
                     OR lower(titulo) LIKE '%$search%' OR lower(genero) LIKE '%$search%' OR lower(autor) LIKE '%$search%' OR lower(editora) LIKE '%$search%' OR ano LIKE '%$search%' OR edicao LIKE '%$search%') AND $filter";
@@ -204,10 +204,10 @@ $soma = ($soma != null) ? $soma : 0;
                     while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                     {
                         $id = $row['id_livro'];
-                        $codigo = utf8_encode($row['codigo']);
-                        $titulo = utf8_encode($row['titulo']);
-                        $genero = utf8_encode($row['genero']);
-                        $autor = utf8_encode($row['autor']);
+                        $codigo = ($row['codigo']);
+                        $titulo = ($row['titulo']);
+                        $genero = ($row['genero']);
+                        $autor = ($row['autor']);
 
                         $a_autor = explode("; ", $autor);
 
@@ -216,12 +216,12 @@ $soma = ($soma != null) ? $soma : 0;
                             $autor = $a_autor[0]."; ".$a_autor[1]."; et al.";
                         }
 
-                        $editora = utf8_encode($row['editora']);
-                        $ano = utf8_encode($row['ano']);
-                        $edicao = utf8_encode($row['edicao']);
-                        $qtde = utf8_encode($row['qtde']);
-                        $disp = utf8_encode($row['disponivel']);
-                        $exc = utf8_encode($row['excluido']);
+                        $editora = ($row['editora']);
+                        $ano = ($row['ano']);
+                        $edicao = ($row['edicao']);
+                        $qtde = ($row['qtde']);
+                        $disp = ($row['disponivel']);
+                        $exc = ($row['excluido']);
 
                         // if($disp)
                         //     $disp = 'Sim';

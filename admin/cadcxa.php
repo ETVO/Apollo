@@ -9,10 +9,10 @@
         {
             include "../config/php/connect.php";
 
-            $valor = utf8_decode(mysqli_real_escape_string($conn, $_POST['valor']));
-            $descricao = utf8_decode(mysqli_real_escape_string($conn, $_POST['descricao']));
-            $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
-            $data = utf8_decode(mysqli_real_escape_string($conn, $_POST['data']));
+            $valor = (mysqli_real_escape_string($conn, $_POST['valor']));
+            $descricao = (mysqli_real_escape_string($conn, $_POST['descricao']));
+            $tipo = (mysqli_real_escape_string($conn, $_POST['tipo']));
+            $data = (mysqli_real_escape_string($conn, $_POST['data']));
 
             if($tipo == 's')
             {
@@ -59,7 +59,7 @@
                 $file = 'log.html';
                 date_default_timezone_set("America/Sao_Paulo");
 
-                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                $append = '['.date('d/m/Y H:i:s').'] '.$append;
                 
                 if(file_get_contents($file) != '')
                     $append = file_get_contents($file).$append;

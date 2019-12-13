@@ -23,10 +23,10 @@
             {
                 $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
                 
-                $codigo = utf8_encode($row['codigo']);
-                $titulo = utf8_encode($row['titulo']);
-                $genero = utf8_encode($row['genero']);
-                $autor = utf8_encode($row['autor']);
+                $codigo = ($row['codigo']);
+                $titulo = ($row['titulo']);
+                $genero = ($row['genero']);
+                $autor = ($row['autor']);
 
                 $a_autor = explode("; ", $autor);
 
@@ -35,13 +35,13 @@
                     $autor = $a_autor[0]."; ".$a_autor[1]."; et al.";
                 }
 
-                $editora = utf8_encode($row['editora']);
-                $ano = utf8_encode($row['ano']);
-                $edicao = utf8_encode($row['edicao']);
-                $obs = utf8_encode($row['obs']);
-                $disp = utf8_encode($row['disponivel']);
-                $exc = utf8_encode($row['excluido']);
-                $qtde = utf8_encode($row['qtde']);
+                $editora = ($row['editora']);
+                $ano = ($row['ano']);
+                $edicao = ($row['edicao']);
+                $obs = ($row['obs']);
+                $disp = ($row['disponivel']);
+                $exc = ($row['excluido']);
+                $qtde = ($row['qtde']);
             }
             else {
                 header("Location: main.php");
@@ -74,16 +74,16 @@
 
             include "../config/php/connect.php";
 
-            $titulo = utf8_decode(mysqli_real_escape_string($conn, $_POST['titulo']));
-            $abrev = utf8_decode(mysqli_real_escape_string($conn, $_POST['genero']));
+            $titulo = (mysqli_real_escape_string($conn, $_POST['titulo']));
+            $abrev = (mysqli_real_escape_string($conn, $_POST['genero']));
             $genero = getGenero($abrev);
-            $autor = utf8_decode(mysqli_real_escape_string($conn, $_POST['autor']));
-            $editora = utf8_decode(mysqli_real_escape_string($conn, $_POST['editora']));            
-            $ano = utf8_decode(mysqli_real_escape_string($conn, $_POST['ano']));
-            $edicao = utf8_decode(mysqli_real_escape_string($conn, $_POST['edicao']));
-            $obs = utf8_decode(mysqli_real_escape_string($conn, $_POST['obs']));
-            $disp = utf8_decode(mysqli_real_escape_string($conn, $_POST['disp']));
-            $qtde = utf8_decode(mysqli_real_escape_string($conn, $_POST['qtde']));
+            $autor = (mysqli_real_escape_string($conn, $_POST['autor']));
+            $editora = (mysqli_real_escape_string($conn, $_POST['editora']));            
+            $ano = (mysqli_real_escape_string($conn, $_POST['ano']));
+            $edicao = (mysqli_real_escape_string($conn, $_POST['edicao']));
+            $obs = (mysqli_real_escape_string($conn, $_POST['obs']));
+            $disp = (mysqli_real_escape_string($conn, $_POST['disp']));
+            $qtde = (mysqli_real_escape_string($conn, $_POST['qtde']));
 
             $codigo = getCodigo($abrev, $id);
             
@@ -97,7 +97,7 @@
 
             echo $sql;
 
-            $titulo = utf8_encode($titulo);
+            $titulo = ($titulo);
             if(mysqli_affected_rows($conn) > 0)
             {
                 echo '<script>
@@ -120,7 +120,7 @@
                 $file = 'log.html';
                 date_default_timezone_set("America/Sao_Paulo");
     
-                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                $append = '['.date('d/m/Y H:i:s').'] '.$append;
                 
                 if(file_get_contents($file) != '')
                     $append = file_get_contents($file).$append;

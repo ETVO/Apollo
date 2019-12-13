@@ -37,19 +37,19 @@
                 $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
 
                 $id_livro = $row['id_livro'];
-                $codigo = utf8_encode($row['codigo']);
-                $livro = utf8_encode($row['titulo']);
-                $usuario = utf8_encode($row['usuario']);
-                $email = utf8_encode($row['email']);
-                $telefone = utf8_encode($row['telefone']);
-                $turma = utf8_encode($row['turma']);
-                $admin = utf8_encode($row['admin']);
-                $data_emp = utf8_encode($row['data_emp']);
-                $data_prev_dev = utf8_encode($row['data_prev_dev']);
-                $devolvido = utf8_encode($row['devolvido']);
-                $data_dev = utf8_encode($row['data_dev']);
-                $exc = utf8_encode($row['excluido']);
-                $obs = utf8_encode($row['obs']);
+                $codigo = ($row['codigo']);
+                $livro = ($row['titulo']);
+                $usuario = ($row['usuario']);
+                $email = ($row['email']);
+                $telefone = ($row['telefone']);
+                $turma = ($row['turma']);
+                $admin = ($row['admin']);
+                $data_emp = ($row['data_emp']);
+                $data_prev_dev = ($row['data_prev_dev']);
+                $devolvido = ($row['devolvido']);
+                $data_dev = ($row['data_dev']);
+                $exc = ($row['excluido']);
+                $obs = ($row['obs']);
                 
                 $atrasado = false;
                 $d_atraso = false;
@@ -166,7 +166,7 @@
         try {
             include '../config/php/connect.php';
 
-            $justificativa = utf8_decode("Justificativa de atraso:".mysqli_real_escape_string($conn, $_POST['just']));
+            $justificativa = ("Justificativa de atraso:".mysqli_real_escape_string($conn, $_POST['just']));
 
             $data_dev = date('Y-m-d');
 
@@ -208,7 +208,7 @@
             $file = 'log.html';
             date_default_timezone_set("America/Sao_Paulo");
 
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+            $append = '['.date('d/m/Y H:i:s').'] '.$append;
             
             if(file_get_contents($file) != '')
                 $append = file_get_contents($file).$append;
@@ -224,7 +224,7 @@
         try {
             include '../config/php/connect.php';
 
-            $dev = utf8_decode(mysqli_real_escape_string($conn, $_POST['dev']));
+            $dev = (mysqli_real_escape_string($conn, $_POST['dev']));
 
             $data_dev = date('Y-m-d');
 
@@ -264,7 +264,7 @@
             $file = 'log.html';
             date_default_timezone_set("America/Sao_Paulo");
 
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+            $append = '['.date('d/m/Y H:i:s').'] '.$append;
             
             if(file_get_contents($file) != '')
                 $append = file_get_contents($file).$append;
@@ -332,7 +332,7 @@
             $file = 'log.html';
             date_default_timezone_set("America/Sao_Paulo");
 
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+            $append = '['.date('d/m/Y H:i:s').'] '.$append;
             
             if(file_get_contents($file) != '')
                 $append = file_get_contents($file).$append;
@@ -366,7 +366,7 @@
 
                 $data_dev = date('d/m/Y', strtotime($data_dev));
                 $desc = "Multa de empréstimo atrasado";
-                $desc = utf8_decode($desc);
+                $desc = ($desc);
                 $sql = "INSERT INTO caixa VALUES (DEFAULT, $val_multa, '$desc', 'e', NOW(), DEFAULT);";
 
                 $res = mysqli_query($conn, $sql);
@@ -406,7 +406,7 @@
             $file = 'log.html';
             date_default_timezone_set("America/Sao_Paulo");
 
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+            $append = '['.date('d/m/Y H:i:s').'] '.$append;
             
             if(file_get_contents($file) != '')
                 $append = file_get_contents($file).$append;

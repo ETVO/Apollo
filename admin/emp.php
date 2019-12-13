@@ -34,7 +34,7 @@
 
     if(isset($_GET['search']))
     {   
-        $search = utf8_decode($_GET['search']);
+        $search = ($_GET['search']);
     }
     
     if(isset($_GET['f_dev']))
@@ -127,7 +127,7 @@
             $file = 'log.html';
             date_default_timezone_set("America/Sao_Paulo");
 
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+            $append = '['.date('d/m/Y H:i:s').'] '.$append;
             
             if(file_get_contents($file) != '')
                 $append = file_get_contents($file).$append;
@@ -263,7 +263,7 @@
                 $search = (isset($_GET['search'])) ? ($_GET['search']) : '';
 
                 if($search != ''){   
-                    $search = utf8_decode($_GET['search']);
+                    $search = ($_GET['search']);
                     $search = strtolower($search);
                     $search_str = " WHERE (lower(codigo) LIKE '%$search%' OR lower(titulo) LIKE '%$search%' OR lower(u.nome) LIKE '%$search%' OR lower(u.email) LIKE '%$search%' OR lower(u.telefone) LIKE '%$search%' OR lower(a.nome) LIKE '%$search%' OR data_emp LIKE '%$search%' OR data_prev_dev LIKE '%$search%' OR data_dev LIKE '%$search%') AND $filter";
                 }
@@ -309,24 +309,24 @@
                         $id = $row['id_emprestimo'];
                         $id_livro = $row['id_livro'];
                         
-                        $codigo = utf8_encode($row['codigo']);
-                        $titulo = utf8_encode($row['titulo']);
+                        $codigo = ($row['codigo']);
+                        $titulo = ($row['titulo']);
                         
-                        $nome = utf8_encode($row['usuario']);
+                        $nome = ($row['usuario']);
                         $nome = flname($nome, ' ');
-                        $email = utf8_encode($row['email']);
-                        $telefone = utf8_encode($row['telefone']);
-                        $turma = utf8_encode($row['turma']);
+                        $email = ($row['email']);
+                        $telefone = ($row['telefone']);
+                        $turma = ($row['turma']);
                         
-                        $admin = utf8_encode($row['admin']);
+                        $admin = ($row['admin']);
                         $admin = flname($admin, ' ');
                         
-                        $data_emp = utf8_encode($row['data_emp']);
-                        $data_prev_dev = utf8_encode($row['data_prev_dev']);
-                        $data_dev = utf8_encode($row['data_dev']);
+                        $data_emp = ($row['data_emp']);
+                        $data_prev_dev = ($row['data_prev_dev']);
+                        $data_dev = ($row['data_dev']);
                         
-                        $dev = utf8_encode($row['devolvido']);
-                        $exc = utf8_encode($row['excluido']);
+                        $dev = ($row['devolvido']);
+                        $exc = ($row['excluido']);
 
                         $atrasado = false;
 

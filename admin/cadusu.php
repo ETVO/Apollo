@@ -9,16 +9,16 @@
         {
             include "../config/php/connect.php";
 
-            $nome = utf8_decode(mysqli_real_escape_string($conn, $_POST['nome']));
-            $ra  = (isset($_POST['turma'])) ? "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "null";
-            $newlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
-            $newsenha = utf8_decode(mysqli_real_escape_string($conn, $_POST['senha']));
+            $nome = (mysqli_real_escape_string($conn, $_POST['nome']));
+            $ra  = (isset($_POST['turma'])) ? "'".(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "null";
+            $newlogin = (mysqli_real_escape_string($conn, $_POST['login']));
+            $newsenha = (mysqli_real_escape_string($conn, $_POST['senha']));
             $newsenha = md5($newsenha);
-            $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
-            $turma = (isset($_POST['turma'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['turma'])) : "null";
-            $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
-            $email = utf8_decode(mysqli_real_escape_string($conn, $_POST['email']));
-            $admin = (isset($_POST['admin'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['admin'])) : "false";
+            $tipo = (mysqli_real_escape_string($conn, $_POST['tipo']));
+            $turma = (isset($_POST['turma'])) ? (mysqli_real_escape_string($conn, $_POST['turma'])) : "null";
+            $telefone = (mysqli_real_escape_string($conn, $_POST['telefone']));
+            $email = (mysqli_real_escape_string($conn, $_POST['email']));
+            $admin = (isset($_POST['admin'])) ? (mysqli_real_escape_string($conn, $_POST['admin'])) : "false";
             
             $sql = "SELECT * FROM user WHER login = '$newlogin'";
             $res = mysqli_query($conn, $sql);
@@ -34,7 +34,7 @@
 
                 $res = mysqli_query($conn, $sql);
                 if(mysqli_affected_rows($conn) > 0){
-                    $nome = utf8_encode($nome);
+                    $nome = ($nome);
                     echo '<script>
                     alert("Usuário \"'.$nome.'\" inserido com sucesso!");
                     window.location.href = "prg.php?url=main.php?sel=u";
@@ -65,7 +65,7 @@
                 $file = 'log.html';
                 date_default_timezone_set("America/Sao_Paulo");
 
-                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                $append = '['.date('d/m/Y H:i:s').'] '.$append;
                 
                 if(file_get_contents($file) != '')
                     $append = file_get_contents($file).$append;

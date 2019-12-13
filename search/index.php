@@ -74,12 +74,15 @@
         header("Location: ?search=$search&page=$page");
     }
 ?>
+<?php 
+header("Content-type: text/html; charset=utf-8"); 
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
@@ -143,7 +146,7 @@
                         <?php
                         if(isset($_GET['search']))
                         {
-                            $search = utf8_decode($_GET['search']);
+                            $search = ($_GET['search']);
                             $or_search = $search;
                             try {
                                 include "../config/php/connect.php";
@@ -165,6 +168,8 @@
                                 $sql .= $search_str;
 
                                 $sql_count .= $search_str;
+
+                                // echo $sql;
 
                                 $res = mysqli_query($conn, $sql_count);
 
@@ -200,10 +205,10 @@
                                     while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                                     {
                                         $id = $row['id_livro'];
-                                        $codigo = utf8_encode($row['codigo']);
-                                        $titulo = utf8_encode($row['titulo']);
-                                        $genero = utf8_encode($row['genero']);
-                                        $autor = utf8_encode($row['autor']);
+                                        $codigo = ($row['codigo']);
+                                        $titulo = ($row['titulo']);
+                                        $genero = ($row['genero']);
+                                        $autor = ($row['autor']);
 
                                         $a_autor = explode("; ", $autor);
 
@@ -212,12 +217,12 @@
                                             $autor = $a_autor[0]."; ".$a_autor[1]."; et al.";
                                         }
 
-                                        $editora = utf8_encode($row['editora']);
-                                        $ano = utf8_encode($row['ano']);
-                                        $edicao = utf8_encode($row['edicao']);
-                                        $qtde = utf8_encode($row['qtde']);
-                                        $disp = utf8_encode($row['disponivel']);
-                                        $exc = utf8_encode($row['excluido']);
+                                        $editora = ($row['editora']);
+                                        $ano = ($row['ano']);
+                                        $edicao = ($row['edicao']);
+                                        $qtde = ($row['qtde']);
+                                        $disp = ($row['disponivel']);
+                                        $exc = ($row['excluido']);
 
                                         if($exc) $disp = false;
 

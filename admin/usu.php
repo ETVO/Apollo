@@ -166,7 +166,7 @@
                 $search = (isset($_GET['search'])) ? ($_GET['search']) : '';
 
                 if($search != ''){  
-                    $search = utf8_decode($_GET['search']);
+                    $search = ($_GET['search']);
                     $search = strtolower($search);
                     $search_str = " WHERE (lower(nome) LIKE '%$search%' OR lower(login) LIKE '%$search%' 
                     OR lower(tipo) LIKE '%$search%' OR ra LIKE '%$search%') AND $filter";
@@ -205,12 +205,12 @@
                     while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                     {
                         $id = $row['id_user'];
-                        $nome = utf8_encode($row['nome']);
-                        $ra = ($row['ra'] != null) ? utf8_encode($row['ra']) : "-";
-                        $login = utf8_encode($row['login']);
-                        $tipo = utf8_encode($row['tipo']);
+                        $nome = ($row['nome']);
+                        $ra = ($row['ra'] != null) ? ($row['ra']) : "-";
+                        $login = ($row['login']);
+                        $tipo = ($row['tipo']);
                         $admin = $row['admin'];
-                        $bloq = utf8_encode($row['bloqueado']);
+                        $bloq = ($row['bloqueado']);
                         
                         $status = ($bloq) ? "Sim" : "Não";
 

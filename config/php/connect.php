@@ -10,6 +10,9 @@
     //Connection
     $conn = new mysqli($server, $username, $password, $db);
 
+    $conn->set_charset("utf8");
+    header("Content-type: text/html; charset=utf-8"); 
+
     if($conn->connect_error){
         // return array("A conexão falhou!", $conn->connect_error, false);
         // die("A conexão falhou: ".$conn->connect_error);

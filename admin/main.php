@@ -13,7 +13,7 @@
 
     $row = mysqli_fetch_array($res, MYSQLI_NUM);
         
-    $nomeadmin = utf8_encode($row[0]);
+    $nomeadmin = ($row[0]);
 
     function conta($tabela)
     {
@@ -27,7 +27,7 @@
 
         $row = mysqli_fetch_array($res, MYSQLI_NUM);
         
-        $n = utf8_encode($row[0]);
+        $n = ($row[0]);
             
         return $n;
     }

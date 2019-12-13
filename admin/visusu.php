@@ -22,16 +22,16 @@
             {
                 $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
                 
-                $nome = utf8_encode($row['nome']);
-                $ra = utf8_encode($row['ra']);
-                $vislogin = utf8_encode($row['login']);
-                $senha = utf8_encode($row['senha']);
-                $tipo = utf8_encode($row['tipo']);
-                $turma = utf8_encode($row['turma']);
-                $telefone = utf8_encode($row['telefone']);
-                $email = utf8_encode($row['email']);
-                $bloq = utf8_encode($row['bloqueado']);
-                $admin = utf8_encode($row['admin']);
+                $nome = ($row['nome']);
+                $ra = ($row['ra']);
+                $vislogin = ($row['login']);
+                $senha = ($row['senha']);
+                $tipo = ($row['tipo']);
+                $turma = ($row['turma']);
+                $telefone = ($row['telefone']);
+                $email = ($row['email']);
+                $bloq = ($row['bloqueado']);
+                $admin = ($row['admin']);
             }
             else {
                 // header("Location: main.php");
@@ -68,17 +68,17 @@
             include "../config/php/connect.php";
 
 
-            $nome = utf8_decode(mysqli_real_escape_string($conn, $_POST['nome']));
-            $newra  = (isset($_POST['turma'])) ? "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "null";
-            $newlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
-            $oldlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login_atual']));
-            $newsenha = (isset($_POST['senha'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['senha'])) : "null";
+            $nome = (mysqli_real_escape_string($conn, $_POST['nome']));
+            $newra  = (isset($_POST['turma'])) ? "'".(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "null";
+            $newlogin = (mysqli_real_escape_string($conn, $_POST['login']));
+            $oldlogin = (mysqli_real_escape_string($conn, $_POST['login_atual']));
+            $newsenha = (isset($_POST['senha'])) ? (mysqli_real_escape_string($conn, $_POST['senha'])) : "null";
             $newsenha = md5($newsenha);
-            $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
-            $turma = utf8_decode(mysqli_real_escape_string($conn, $_POST['turma']));
-            $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
-            $email = utf8_decode(mysqli_real_escape_string($conn, $_POST['email']));
-            $admin = (isset($_POST['admin'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['admin'])) : "false";
+            $tipo = (mysqli_real_escape_string($conn, $_POST['tipo']));
+            $turma = (mysqli_real_escape_string($conn, $_POST['turma']));
+            $telefone = (mysqli_real_escape_string($conn, $_POST['telefone']));
+            $email = (mysqli_real_escape_string($conn, $_POST['email']));
+            $admin = (isset($_POST['admin'])) ? (mysqli_real_escape_string($conn, $_POST['admin'])) : "false";
             
             $samelogin = $newlogin == $oldlogin;
             
@@ -124,7 +124,7 @@
                 $file = 'log.html';
                 date_default_timezone_set("America/Sao_Paulo");
 
-                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                $append = '['.date('d/m/Y H:i:s').'] '.$append;
                 
                 if(file_get_contents($file) != '')
                     $append = file_get_contents($file).$append;
@@ -201,7 +201,7 @@
                 $file = 'log.html';
                 date_default_timezone_set("America/Sao_Paulo");
 
-                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                $append = '['.date('d/m/Y H:i:s').'] '.$append;
                 
                 if(file_get_contents($file) != '')
                     $append = file_get_contents($file).$append;

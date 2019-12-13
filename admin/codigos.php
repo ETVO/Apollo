@@ -89,8 +89,8 @@
                     while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                     {
                         $id = $row['id_livro'];
-                        $codigo = utf8_encode($row['codigo']);
-                        $titulo = utf8_encode($row['titulo']);
+                        $codigo = ($row['codigo']);
+                        $titulo = ($row['titulo']);
 
                         ?>
                         <div class="cell"><?php echo $codigo; ?></div>

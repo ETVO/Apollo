@@ -25,7 +25,7 @@
             
             if(mysqli_affected_rows($conn) > 0){
                 $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-                $nome = utf8_encode($row['nome']);
+                $nome = ($row['nome']);
                 $nome = explode(" ", $nome)[0];
             } 
             else {
@@ -55,17 +55,17 @@
 
         $pdf->SetFont($doc_font,'',8);
         $pdf->SetY(280);
-        $text = utf8_decode('Página ');
+        $text = ('Página ');
         $pdf->Cell(190, 10, $text.$pdf->PageNo(), 0, 1, 'C');
         
         $pdf->SetY($y);
 
         $pdf->SetFont($doc_font,'B',22);
-        $text = utf8_decode('Apolo');
+        $text = ('Apolo');
         $pdf->Cell(190,10,$text,0,1,'C');
         
         $pdf->SetFont($doc_font,'B',24);
-        $text = utf8_decode('Biblioteca - CTI Bauru');
+        $text = ('Biblioteca - CTI Bauru');
         $pdf->Cell(190,10,$text,0,1,'C');
         
         switch($ent)
@@ -73,11 +73,11 @@
             case 'l':
                 $selected = 'rel_livros';
                 $pdf->SetFont($doc_font,'',18);
-                $text = utf8_decode('Relação de Livros');
+                $text = ('Relação de Livros');
                 $pdf->Cell(190,10,$text,0,1,'C');
         
                 $pdf->SetFont($doc_font,'B',12);
-                $text = utf8_decode('('.date('d/m/Y').')');
+                $text = ('('.date('d/m/Y').')');
                 $pdf->Cell(190,3,$text,0,1,'C');
         
                 $pdf->Ln(5);
@@ -102,9 +102,9 @@
                     if($count > 1) $s = 's';
                     
                     if($count > 0)
-                        $text = utf8_decode($count.' livro'.$s. ' registrado'.$s);
+                        $text = ($count.' livro'.$s. ' registrado'.$s);
                     else 
-                        $text = utf8_decode('Nenhum livro registrado');
+                        $text = ('Nenhum livro registrado');
                     $pdf->Cell(190,3,$text,0,1,'C');
 
                     $pdf->Ln(5);
@@ -128,42 +128,42 @@
                     $cw_7 = 25;
                     
 
-                    $text = utf8_decode('Id');
+                    $text = ('Id');
                     $pdf->MultiCell($cw_0, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_0, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Título');
+                    $text = ('Título');
                     $pdf->MultiCell($cw_1, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_1, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Gênero ');
+                    $text = ('Gênero ');
                     $pdf->MultiCell($cw_2, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_2, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Autor(es)');
+                    $text = ('Autor(es)');
                     $pdf->MultiCell($cw_3, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_3, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Editora');
+                    $text = ('Editora');
                     $pdf->MultiCell($cw_4, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_4, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Ano');
+                    $text = ('Ano');
                     $pdf->MultiCell($cw_5, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_5, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Edição');
+                    $text = ('Edição');
                     $pdf->MultiCell($cw_6, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_6, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Disponível');
+                    $text = ('Disponível');
                     $pdf->MultiCell($cw_7, $ch_head, $text, $cb_head, $ca_head, $cf_head);
                     
                     $pdf->SetFont($table_font,'B',$table_fontsize);
@@ -179,9 +179,9 @@
                         while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                         {
                             $id = $row['id_livro'];
-                            $titulo = utf8_encode($row['titulo']);
-                            $genero = utf8_encode($row['genero']);
-                            $autor = utf8_encode($row['autor']);
+                            $titulo = ($row['titulo']);
+                            $genero = ($row['genero']);
+                            $autor = ($row['autor']);
 
                             $a_autor = explode("; ", $autor);
 
@@ -190,10 +190,10 @@
                                 $autor = $a_autor[0]."; ".$a_autor[1]."; et al.";
                             }
 
-                            $editora = utf8_encode($row['editora']);
-                            $ano = utf8_encode($row['ano']);
-                            $edicao = utf8_encode($row['edicao']);
-                            $disp = utf8_encode($row['disponivel']);
+                            $editora = ($row['editora']);
+                            $ano = ($row['ano']);
+                            $edicao = ($row['edicao']);
+                            $disp = ($row['disponivel']);
 
                             if($disp)
                                 $disp = 'Sim';
@@ -211,7 +211,7 @@
 
                                     $pdf->SetFont($doc_font,'',8);
                                     $pdf->SetY(280);
-                                    $text = utf8_decode('Página ');
+                                    $text = ('Página ');
                                     $pdf->Cell(190, 10, $text.$pdf->PageNo(), 0, 1, 'C');
                                     
                                     $pdf->SetY($y);
@@ -235,13 +235,13 @@
 
                                 $pdf->SetXY($current_x, $current_y);
 
-                                $text = utf8_decode($id);
+                                $text = ($id);
                                 $pdf->MultiCell($cw_0, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $mj = $j;
 
                                 $pdf->SetXY($current_x + $cw_0, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($titulo);
+                                $text = ($titulo);
                                 $pdf->MultiCell($cw_1, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_1, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -250,7 +250,7 @@
 
                                 $pdf->SetXY($current_x + $cw_1, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($genero);
+                                $text = ($genero);
                                 $pdf->MultiCell($cw_2, $ch_row, $text, $cb_row,$ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_2, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -259,7 +259,7 @@
 
                                 $pdf->SetXY($current_x + $cw_2, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($autor);
+                                $text = ($autor);
                                 $pdf->MultiCell($cw_3, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_3, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -268,7 +268,7 @@
 
                                 $pdf->SetXY($current_x + $cw_3, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($editora);
+                                $text = ($editora);
                                 $pdf->MultiCell($cw_4, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_4, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -277,7 +277,7 @@
 
                                 $pdf->SetXY($current_x + $cw_4, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($ano);
+                                $text = ($ano);
                                 $pdf->MultiCell($cw_5, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_5, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -286,7 +286,7 @@
 
                                 $pdf->SetXY($current_x + $cw_5, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($edicao.'ª');
+                                $text = ($edicao.'ª');
                                 $pdf->MultiCell($cw_6, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_6, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -295,7 +295,7 @@
 
                                 $pdf->SetXY($current_x + $cw_6, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($disp);
+                                $text = ($disp);
                                 $pdf->MultiCell($cw_7, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_7, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -319,11 +319,11 @@
             case 'a':
                 $selected = 'rel_admins';
                 $pdf->SetFont($doc_font,'',18);
-                $text = utf8_decode('Relação de Administradores');
+                $text = ('Relação de Administradores');
                 $pdf->Cell(190,10,$text,0,1,'C');
         
                 $pdf->SetFont($doc_font,'B',12);
-                $text = utf8_decode('('.date('d/m/Y').')');
+                $text = ('('.date('d/m/Y').')');
                 $pdf->Cell(190,3,$text,0,1,'C');
         
                 $pdf->Ln(5);
@@ -351,9 +351,9 @@
                     }
                     
                     if($count > 0)
-                        $text = utf8_decode($count.' administrador'.$es. ' registrado'.$s);
+                        $text = ($count.' administrador'.$es. ' registrado'.$s);
                     else
-                        $text = utf8_decode('Nenhum administrador registrado');
+                        $text = ('Nenhum administrador registrado');
                     $pdf->Cell(190,3,$text,0,1,'C');
 
                     $pdf->Ln(5);
@@ -375,37 +375,37 @@
                     $cw_5 = 15;
                     $cw_6 = 20;
 
-                    $text = utf8_decode('Id');
+                    $text = ('Id');
                     $pdf->MultiCell($cw_0, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_0, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Nome');
+                    $text = ('Nome');
                     $pdf->MultiCell($cw_1, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_1, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('RA');
+                    $text = ('RA');
                     $pdf->MultiCell($cw_2, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_2, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Login');
+                    $text = ('Login');
                     $pdf->MultiCell($cw_3, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_3, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Tipo');
+                    $text = ('Tipo');
                     $pdf->MultiCell($cw_4, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_4, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Série');
+                    $text = ('Série');
                     $pdf->MultiCell($cw_5, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_5, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Bloqueado');
+                    $text = ('Bloqueado');
                     $pdf->MultiCell($cw_6, $ch_head, $text, $cb_head, $ca_head, $cf_head);
                     
                     $pdf->SetFont($table_font,'B',$table_fontsize);
@@ -421,15 +421,15 @@
                         while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                         {
                             $id = $row['id_user'];
-                            $nome = utf8_encode($row['nome']);
-                            $ra = utf8_encode($row['ra']);
+                            $nome = ($row['nome']);
+                            $ra = ($row['ra']);
                             if($ra == '') $ra = '-';
-                            $login = utf8_encode($row['login']);
-                            // $turma = utf8_encode($row['turma']);
-                            $tipo = utf8_encode($row['tipo']);
-                            $ano = utf8_encode($row['ano']);
+                            $login = ($row['login']);
+                            // $turma = ($row['turma']);
+                            $tipo = ($row['tipo']);
+                            $ano = ($row['ano']);
                             if($ano == '')  $ano = '-'; else $ano = $ano.'º';
-                            $bloq = utf8_encode($row['bloqueado']);
+                            $bloq = ($row['bloqueado']);
 
                             if($bloq)
                                 $bloq = 'Sim';
@@ -447,7 +447,7 @@
 
                                 $pdf->SetFont($doc_font,'',8);
                                 $pdf->SetY(280);
-                                $text = utf8_decode('Página ');
+                                $text = ('Página ');
                                 $pdf->Cell(190, 10, $text.$pdf->PageNo(), 0, 1, 'C');
                                 
                                 $pdf->SetY($y);
@@ -471,13 +471,13 @@
 
                             $pdf->SetXY($current_x, $current_y);
 
-                            $text = utf8_decode($id);
+                            $text = ($id);
                             $pdf->MultiCell($cw_0, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $mj = $j;
 
                             $pdf->SetXY($current_x + $cw_0, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($nome);
+                            $text = ($nome);
                             $pdf->MultiCell($cw_1, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_1, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -486,7 +486,7 @@
 
                             $pdf->SetXY($current_x + $cw_1, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($ra);
+                            $text = ($ra);
                             $pdf->MultiCell($cw_2, $ch_row, $text, $cb_row,$ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_2, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -495,7 +495,7 @@
 
                             $pdf->SetXY($current_x + $cw_2, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($login);
+                            $text = ($login);
                             $pdf->MultiCell($cw_3, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_3, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -504,7 +504,7 @@
 
                             $pdf->SetXY($current_x + $cw_3, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($tipo);
+                            $text = ($tipo);
                             $pdf->MultiCell($cw_4, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_4, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -513,7 +513,7 @@
 
                             $pdf->SetXY($current_x + $cw_4, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($ano);
+                            $text = ($ano);
                             $pdf->MultiCell($cw_5, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_5, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -522,7 +522,7 @@
 
                             $pdf->SetXY($current_x + $cw_5, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($bloq);
+                            $text = ($bloq);
                             $pdf->MultiCell($cw_6, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_6, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -546,11 +546,11 @@
             case 'e':
                 $selected = 'rel_emprestimos';
                 $pdf->SetFont($doc_font,'',18);
-                $text = utf8_decode('Relação de Empréstimos');
+                $text = ('Relação de Empréstimos');
                 $pdf->Cell(190,10,$text,0,1,'C');
         
                 $pdf->SetFont($doc_font,'B',12);
-                $text = utf8_decode('('.date('d/m/Y').')');
+                $text = ('('.date('d/m/Y').')');
                 $pdf->Cell(190,3,$text,0,1,'C');
         
                 $pdf->Ln(5);
@@ -575,9 +575,9 @@
                     if($count > 1) $s = 's';
                     
                     if($count > 0)
-                        $text = utf8_decode($count.' empréstimo'.$s. ' registrado'.$s);
+                        $text = ($count.' empréstimo'.$s. ' registrado'.$s);
                     else
-                        $text = utf8_decode('Nenhum empréstimo registrado');
+                        $text = ('Nenhum empréstimo registrado');
                     $pdf->Cell(190,3,$text,0,1,'C');
 
                     $pdf->Ln(5);
@@ -601,42 +601,42 @@
                     $cw_7 = 23; // Devolução 
                     
 
-                    $text = utf8_decode('Id');
+                    $text = ('Id');
                     $pdf->MultiCell($cw_0, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_0, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Livro');
+                    $text = ('Livro');
                     $pdf->MultiCell($cw_1, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_1, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Usuário');
+                    $text = ('Usuário');
                     $pdf->MultiCell($cw_2, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_2, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Autorizado por');
+                    $text = ('Autorizado por');
                     $pdf->MultiCell($cw_3, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_3, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Emprestado em');
+                    $text = ('Emprestado em');
                     $pdf->MultiCell($cw_4, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_4, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Dev. prevista');
+                    $text = ('Dev. prevista');
                     $pdf->MultiCell($cw_5, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_5, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Devolvido');
+                    $text = ('Devolvido');
                     $pdf->MultiCell($cw_6, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_6, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Devolução');
+                    $text = ('Devolução');
                     $pdf->MultiCell($cw_7, $ch_head, $text, $cb_head, $ca_head, $cf_head);
                     
                     $pdf->SetFont($table_font,'B',$table_fontsize);
@@ -654,17 +654,17 @@
                         while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                         {
                             $id = $row['id_emprestimo'];
-                            $titulo = utf8_encode($row['titulo']);
-                            $nome = utf8_encode($row['nome']);
+                            $titulo = ($row['titulo']);
+                            $nome = ($row['nome']);
                             $nome = flname($nome, ' ');  
-                            $telefone = utf8_encode($row['telefone']);
-                            $admin = utf8_encode($row['admin']);
+                            $telefone = ($row['telefone']);
+                            $admin = ($row['admin']);
                             $admin = flname($admin, ' ');
-                            $data_emp = utf8_encode($row['data_emp']); $data_emp = date('d/m/Y', strtotime($data_emp));
-                            $data_prev_dev = utf8_encode($row['data_prev_dev']); $data_prev_dev = date('d/m/Y', strtotime($data_prev_dev));
-                            $devolvido = utf8_encode($row['devolvido']);
+                            $data_emp = ($row['data_emp']); $data_emp = date('d/m/Y', strtotime($data_emp));
+                            $data_prev_dev = ($row['data_prev_dev']); $data_prev_dev = date('d/m/Y', strtotime($data_prev_dev));
+                            $devolvido = ($row['devolvido']);
                             if($devolvido == '1') $devolvido = 'Sim'; else $devolvido = 'Não';
-                            $data_dev = utf8_encode($row['data_dev']); if($data_dev == null) $data_dev = '-'; else $data_dev = date('d/m/Y', strtotime($data_dev));
+                            $data_dev = ($row['data_dev']); if($data_dev == null) $data_dev = '-'; else $data_dev = date('d/m/Y', strtotime($data_dev));
 
                             $atrasado = false;
 
@@ -682,7 +682,7 @@
 
                                 $pdf->SetFont($doc_font,'',8);
                                 $pdf->SetY(280);
-                                $text = utf8_decode('Página ');
+                                $text = ('Página ');
                                 $pdf->Cell(190, 10, $text.$pdf->PageNo(), 0, 1, 'C');
                                 
                                 $pdf->SetY($y);
@@ -706,13 +706,13 @@
 
                             $pdf->SetXY($current_x, $current_y);
 
-                            $text = utf8_decode($id);
+                            $text = ($id);
                             $pdf->MultiCell($cw_0, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $mj = $j;
 
                             $pdf->SetXY($current_x + $cw_0, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($titulo);
+                            $text = ($titulo);
                             $pdf->MultiCell($cw_1, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_1, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -721,7 +721,7 @@
 
                             $pdf->SetXY($current_x + $cw_1, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($nome);
+                            $text = ($nome);
                             $pdf->MultiCell($cw_2, $ch_row, $text, $cb_row,$ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_2, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -730,7 +730,7 @@
 
                             $pdf->SetXY($current_x + $cw_2, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($admin);
+                            $text = ($admin);
                             $pdf->MultiCell($cw_3, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_3, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -739,7 +739,7 @@
 
                             $pdf->SetXY($current_x + $cw_3, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($data_emp);
+                            $text = ($data_emp);
                             $pdf->MultiCell($cw_4, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_4, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -748,7 +748,7 @@
 
                             $pdf->SetXY($current_x + $cw_4, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($data_prev_dev);
+                            $text = ($data_prev_dev);
                             $pdf->MultiCell($cw_5, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_5, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -757,7 +757,7 @@
 
                             $pdf->SetXY($current_x + $cw_5, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($devolvido);
+                            $text = ($devolvido);
                             $pdf->MultiCell($cw_6, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_6, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -766,7 +766,7 @@
 
                             $pdf->SetXY($current_x + $cw_6, $current_y);
                             $current_x = $pdf->GetX();
-                            $text = utf8_decode($data_dev);
+                            $text = ($data_dev);
                             $pdf->MultiCell($cw_7, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                             $j = $pdf->GetMultiCellHeight($cw_7, $ch_row, $text, $cb_row, $ca_row);
                             if($j > $mj){
@@ -789,11 +789,11 @@
             case 'ea':
                 $selected = 'rel_atrasados';
                 $pdf->SetFont($doc_font,'',18);
-                $text = utf8_decode('Relação de Empréstimos Atrasados');
+                $text = ('Relação de Empréstimos Atrasados');
                 $pdf->Cell(190,10,$text,0,1,'C');
         
                 $pdf->SetFont($doc_font,'B',12);
-                $text = utf8_decode('('.date('d/m/Y').')');
+                $text = ('('.date('d/m/Y').')');
                 $pdf->Cell(190,3,$text,0,1,'C');
         
                 $pdf->Ln(5);
@@ -820,9 +820,9 @@
                     if($count > 1) $s = 's';
                     
                     if($count > 0)
-                        $text = utf8_decode($count.' empréstimo'.$s. ' atrasado'.$s);
+                        $text = ($count.' empréstimo'.$s. ' atrasado'.$s);
                     else
-                        $text = utf8_decode('Nenhum empréstimo atrasado');
+                        $text = ('Nenhum empréstimo atrasado');
                     $pdf->Cell(190,3,$text,0,1,'C');
 
                     $pdf->Ln(5);
@@ -846,42 +846,42 @@
                     $cw_7 = 23; // Devolução 
                     
 
-                    $text = utf8_decode('Id');
+                    $text = ('Id');
                     $pdf->MultiCell($cw_0, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_0, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Livro');
+                    $text = ('Livro');
                     $pdf->MultiCell($cw_1, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_1, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Usuário');
+                    $text = ('Usuário');
                     $pdf->MultiCell($cw_2, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_2, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Turma');
+                    $text = ('Turma');
                     $pdf->MultiCell($cw_3, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_3, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Emprestado em');
+                    $text = ('Emprestado em');
                     $pdf->MultiCell($cw_4, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_4, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Dev. prevista');
+                    $text = ('Dev. prevista');
                     $pdf->MultiCell($cw_5, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_5, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Devolvido');
+                    $text = ('Devolvido');
                     $pdf->MultiCell($cw_6, $ch_head, $text, $cb_head, $ca_head, $cf_head);
             
                     $pdf->SetXY($current_x + $cw_6, $current_y);
                     $current_x = $pdf->GetX();
-                    $text = utf8_decode('Devolução');
+                    $text = ('Devolução');
                     $pdf->MultiCell($cw_7, $ch_head, $text, $cb_head, $ca_head, $cf_head);
                     
                     $pdf->SetFont($table_font,'B',$table_fontsize);
@@ -899,18 +899,18 @@
                         while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                         {
                             $id = $row['id_emprestimo'];
-                            $titulo = utf8_encode($row['titulo']);
-                            $nome = utf8_encode($row['nome']);
+                            $titulo = ($row['titulo']);
+                            $nome = ($row['nome']);
                             $nome = flname($nome, ' ');  
-                            $telefone = utf8_encode($row['telefone']);
-                            $turma = utf8_encode($row['turma']);
-                            // $admin = utf8_encode($row['admin']);
+                            $telefone = ($row['telefone']);
+                            $turma = ($row['turma']);
+                            // $admin = ($row['admin']);
                             // $admin = flname($admin, ' ');
-                            $data_emp = utf8_encode($row['data_emp']); $data_emp = date('d/m/Y', strtotime($data_emp));
-                            $data_prev_dev = utf8_encode($row['data_prev_dev']); $data_prev_dev = date('d/m/Y', strtotime($data_prev_dev));
-                            $devolvido = utf8_encode($row['devolvido']);
+                            $data_emp = ($row['data_emp']); $data_emp = date('d/m/Y', strtotime($data_emp));
+                            $data_prev_dev = ($row['data_prev_dev']); $data_prev_dev = date('d/m/Y', strtotime($data_prev_dev));
+                            $devolvido = ($row['devolvido']);
                             if($devolvido == '1') $devolvido = 'Sim'; else $devolvido = 'Não';
-                            $data_dev = utf8_encode($row['data_dev']); if($data_dev == null) $data_dev = '-'; else $data_dev = date('d/m/Y', strtotime($data_dev));
+                            $data_dev = ($row['data_dev']); if($data_dev == null) $data_dev = '-'; else $data_dev = date('d/m/Y', strtotime($data_dev));
 
                             $atrasado = true;
 
@@ -930,7 +930,7 @@
 
                                     $pdf->SetFont($doc_font,'',8);
                                     $pdf->SetY(280);
-                                    $text = utf8_decode('Página ');
+                                    $text = ('Página ');
                                     $pdf->Cell(190, 10, $text.$pdf->PageNo(), 0, 1, 'C');
                                     
                                     $pdf->SetY($y);
@@ -954,13 +954,13 @@
 
                                 $pdf->SetXY($current_x, $current_y);
 
-                                $text = utf8_decode($id);
+                                $text = ($id);
                                 $pdf->MultiCell($cw_0, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $mj = $j;
 
                                 $pdf->SetXY($current_x + $cw_0, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($titulo);
+                                $text = ($titulo);
                                 $pdf->MultiCell($cw_1, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_1, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -969,7 +969,7 @@
 
                                 $pdf->SetXY($current_x + $cw_1, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($nome);
+                                $text = ($nome);
                                 $pdf->MultiCell($cw_2, $ch_row, $text, $cb_row,$ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_2, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -978,7 +978,7 @@
 
                                 $pdf->SetXY($current_x + $cw_2, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($turma);
+                                $text = ($turma);
                                 $pdf->MultiCell($cw_3, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_3, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -987,7 +987,7 @@
 
                                 $pdf->SetXY($current_x + $cw_3, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($data_emp);
+                                $text = ($data_emp);
                                 $pdf->MultiCell($cw_4, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_4, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -996,7 +996,7 @@
 
                                 $pdf->SetXY($current_x + $cw_4, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($data_prev_dev);
+                                $text = ($data_prev_dev);
                                 $pdf->MultiCell($cw_5, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_5, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -1005,7 +1005,7 @@
 
                                 $pdf->SetXY($current_x + $cw_5, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($devolvido);
+                                $text = ($devolvido);
                                 $pdf->MultiCell($cw_6, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_6, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -1014,7 +1014,7 @@
 
                                 $pdf->SetXY($current_x + $cw_6, $current_y);
                                 $current_x = $pdf->GetX();
-                                $text = utf8_decode($data_dev);
+                                $text = ($data_dev);
                                 $pdf->MultiCell($cw_7, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                                 $j = $pdf->GetMultiCellHeight($cw_7, $ch_row, $text, $cb_row, $ca_row);
                                 if($j > $mj){
@@ -1042,11 +1042,11 @@
 
                 $selected = 'adm_weblog';
                 $pdf->SetFont($doc_font,'',18);
-                $text = utf8_decode('Log de Administração');
+                $text = ('Log de Administração');
                 $pdf->Cell(190,10,$text,0,1,'C');
         
                 $pdf->SetFont($doc_font,'B',12);
-                $text = utf8_decode('('.date('d/m/Y').')');
+                $text = ('('.date('d/m/Y').')');
                 $pdf->Cell(190,3,$text,0,1,'C');
         
                 $pdf->Ln(5);
@@ -1074,7 +1074,7 @@
                 $sub = 0;
                 $len = 3000;
 
-                $text = utf8_decode($file);
+                $text = ($file);
                 $pdf->MultiCell($cw_row, $ch_row, $text, $cb_row, $ca_row, $cf_row);
                 
                 break;

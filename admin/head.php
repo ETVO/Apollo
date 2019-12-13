@@ -45,7 +45,7 @@
     //             if(mysqli_affected_rows($conn) > 0)
     //             {
     //                 $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-    //                 $bloq = utf8_encode($row['bloqueado']);
+    //                 $bloq = ($row['bloqueado']);
     //             }
     //             else
     //             {
@@ -82,7 +82,7 @@
     //             $file = 'log.html';
     //             date_default_timezone_set("America/Sao_Paulo");
 
-    //             $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+    //             $append = '['.date('d/m/Y H:i:s').'] '.$append;
                 
     //             if(file_get_contents($file) != '')
     //                 $append = file_get_contents($file).$append;
@@ -102,7 +102,7 @@
     //             if(mysqli_affected_rows($conn) > 0)
     //             {
     //                 $row = mysqli_fetch_array($res, MYSQLI_NUM);
-    //                 $qtde_emp = utf8_encode($row[0]);
+    //                 $qtde_emp = ($row[0]);
     //             }
     //             else
     //             {
@@ -137,7 +137,7 @@
     //             if(mysqli_affected_rows($conn) > 0)
     //             {
     //                 $row = mysqli_fetch_array($res, MYSQLI_NUM);
-    //                 $titulo = utf8_encode($row[0]);
+    //                 $titulo = ($row[0]);
     //             }
 
     //             $sql = "DELETE FROM livro WHERE id_livro=$id";
@@ -168,7 +168,7 @@
     //             $file = 'log.html';
     //             date_default_timezone_set("America/Sao_Paulo");
 
-    //             $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+    //             $append = '['.date('d/m/Y H:i:s').'] '.$append;
                 
     //             if(file_get_contents($file) != '')
     //                 $append = file_get_contents($file).$append;

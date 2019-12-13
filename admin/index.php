@@ -42,7 +42,7 @@
         $file = 'log.html';
         date_default_timezone_set("America/Sao_Paulo");
 
-        $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+        $append = '['.date('d/m/Y H:i:s').'] '.$append;
         
         if(file_get_contents($file) != '')
             $append = file_get_contents($file).$append;
@@ -73,7 +73,7 @@
 <body>
 <?php
 
-    $login = utf8_encode($login);
+    $login = ($login);
 
     // echo $fb;
     if($fb == 1){

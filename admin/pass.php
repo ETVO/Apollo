@@ -31,8 +31,8 @@
         {
             include "../config/php/connect.php";
 
-            $newsenha = utf8_decode(mysqli_real_escape_string($conn, $_POST['senha']));
-            $consenha = utf8_decode(mysqli_real_escape_string($conn, $_POST['consenha']));
+            $newsenha = (mysqli_real_escape_string($conn, $_POST['senha']));
+            $consenha = (mysqli_real_escape_string($conn, $_POST['consenha']));
 
             if($newsenha != $consenha)
             {

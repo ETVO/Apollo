@@ -16,15 +16,15 @@
             include "../config/php/connect.php";
             include "../config/php/util.php";
 
-            $nome = utf8_decode(mysqli_real_escape_string($conn, $_POST['nome']));
-            $ra  = (isset($_POST['turma'])) ? "'".utf8_decode(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "";
-            $newlogin = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
+            $nome = (mysqli_real_escape_string($conn, $_POST['nome']));
+            $ra  = (isset($_POST['turma'])) ? "'".(mysqli_real_escape_string($conn, $_POST['ra']))."'" : "";
+            $newlogin = (mysqli_real_escape_string($conn, $_POST['login']));
             $newsenha = getStdPass();
             $newsenha = md5($newsenha);
-            $tipo = utf8_decode(mysqli_real_escape_string($conn, $_POST['tipo']));
-            $turma = (isset($_POST['turma'])) ? utf8_decode(mysqli_real_escape_string($conn, $_POST['turma'])) : "";
-            $telefone = utf8_decode(mysqli_real_escape_string($conn, $_POST['telefone']));
-            $email = utf8_decode(mysqli_real_escape_string($conn, $_POST['email']));
+            $tipo = (mysqli_real_escape_string($conn, $_POST['tipo']));
+            $turma = (isset($_POST['turma'])) ? (mysqli_real_escape_string($conn, $_POST['turma'])) : "";
+            $telefone = (mysqli_real_escape_string($conn, $_POST['telefone']));
+            $email = (mysqli_real_escape_string($conn, $_POST['email']));
             $admin = "false";
             
             $sql = "SELECT * FROM user WHER login = '$newlogin'";
@@ -70,7 +70,7 @@
                 $file = '../admin/log.html';
                 date_default_timezone_set("America/Sao_Paulo");
 
-                $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+                $append = '['.date('d/m/Y H:i:s').'] '.$append;
                 
                 if(file_get_contents($file) != '')
                     $append = file_get_contents($file).$append;

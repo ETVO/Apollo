@@ -98,9 +98,9 @@
                         {
                             $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
                             $id = $row['id_livro'];
-                            $titulo = utf8_encode($row['titulo']);
-                            $genero = utf8_encode($row['genero']);
-                            $autor = utf8_encode($row['autor']);
+                            $titulo = ($row['titulo']);
+                            $genero = ($row['genero']);
+                            $autor = ($row['autor']);
 
                             $a_autor = explode("; ", $autor);
 
@@ -109,10 +109,10 @@
                                 $autor = $a_autor[0]."; ".$a_autor[1]."; et al.";
                             }
 
-                            $editora = utf8_encode($row['editora']);
-                            $ano = utf8_encode($row['ano']);
-                            $edicao = utf8_encode($row['edicao']);
-                            $disp = utf8_encode($row['disponivel']);
+                            $editora = ($row['editora']);
+                            $ano = ($row['ano']);
+                            $edicao = ($row['edicao']);
+                            $disp = ($row['disponivel']);
                             
                             ?>
                             <tr>
@@ -158,12 +158,12 @@
                     if(mysqli_affected_rows($conn) > 0){
                         while($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
                         {
-                            $id_emp = utf8_encode($row['id_user']);
-                            $nome = utf8_encode($row['nome']);
-                            $ra = utf8_encode($row['ra']);
-                            $tipo = utf8_encode($row['tipo']);
+                            $id_emp = ($row['id_user']);
+                            $nome = ($row['nome']);
+                            $ra = ($row['ra']);
+                            $tipo = ($row['tipo']);
                             $rastr = ($tipo == "Aluno") ? "(RA $ra)" : "";
-                            $login = utf8_encode($row['login']);
+                            $login = ($row['login']);
 
                             ?>
                             <option value="<?php echo $id_emp ?>"><?php echo "$nome ($login) - $tipo $rastr"; ?></option>

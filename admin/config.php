@@ -48,7 +48,7 @@
             $file = 'log.html';
             date_default_timezone_set("America/Sao_Paulo");
 
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+            $append = '['.date('d/m/Y H:i:s').'] '.$append;
             
             if(file_get_contents($file) != '')
                 $append = file_get_contents($file).$append;
@@ -111,7 +111,7 @@
             $file = 'log.html';
             date_default_timezone_set("America/Sao_Paulo");
 
-            $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+            $append = '['.date('d/m/Y H:i:s').'] '.$append;
             
             if(file_get_contents($file) != '')
                 $append = file_get_contents($file).$append;
@@ -150,7 +150,7 @@
                 }
                 else if($row['nome'] == 'std_pass')
                 {
-                    $std_pass = utf8_encode($row['valor']);
+                    $std_pass = ($row['valor']);
                 }
             }
         }

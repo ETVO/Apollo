@@ -60,10 +60,10 @@
         if(mysqli_affected_rows($conn) > 0){
             $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
 
-            $nome = utf8_encode($row['nome']);
-            $email = utf8_encode($row['email']);
-            $telefone = utf8_encode($row['telefone']);
-            $turma = utf8_encode($row['turma']);
+            $nome = ($row['nome']);
+            $email = ($row['email']);
+            $telefone = ($row['telefone']);
+            $turma = ($row['turma']);
             if($turma == 'null' || $turma == '' ) $turma = "-";
         }
     }
@@ -77,8 +77,8 @@
         {
             include "../config/php/connect.php";
 
-            $login = utf8_decode(mysqli_real_escape_string($conn, $_POST['login']));
-            $senha = utf8_decode(mysqli_real_escape_string($conn, $_POST['password']));
+            $login = (mysqli_real_escape_string($conn, $_POST['login']));
+            $senha = (mysqli_real_escape_string($conn, $_POST['password']));
             $md5 = md5($senha);
 
             if($login == 'root'){
@@ -125,7 +125,7 @@
         $file = '../admin/log.html';
         date_default_timezone_set("America/Sao_Paulo");
 
-        $append = '['.date('d/m/Y H:i:s', ).'] '.$append;
+        $append = '['.date('d/m/Y H:i:s').'] '.$append;
         
         if(file_get_contents($file) != '')
             $append = file_get_contents($file).$append;
@@ -235,7 +235,7 @@
 <body>
 <?php
 
-    $login = utf8_encode($login);
+    $login = ($login);
 
     $error_msg = array("Login incorreto!", "Senha incorreta!");
 
@@ -387,9 +387,9 @@
                         {
                             $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
                             $id = $row['id_livro'];
-                            $titulo = utf8_encode($row['titulo']);
-                            $genero = utf8_encode($row['genero']);
-                            $autor = utf8_encode($row['autor']);
+                            $titulo = ($row['titulo']);
+                            $genero = ($row['genero']);
+                            $autor = ($row['autor']);
 
                             $a_autor = explode("; ", $autor);
 
@@ -398,10 +398,10 @@
                                 $autor = $a_autor[0]."; ".$a_autor[1]."; et al.";
                             }
 
-                            $editora = utf8_encode($row['editora']);
-                            $ano = utf8_encode($row['ano']);
-                            $edicao = utf8_encode($row['edicao']);
-                            $disp = utf8_encode($row['disponivel']);
+                            $editora = ($row['editora']);
+                            $ano = ($row['ano']);
+                            $edicao = ($row['edicao']);
+                            $disp = ($row['disponivel']);
                             
                             ?>
                             <tr>

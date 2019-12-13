@@ -167,7 +167,7 @@
                 $search = (isset($_GET['search'])) ? ($_GET['search']) : '';
 
                 if($search != ''){       
-                    $search = utf8_decode($_GET['search']);
+                    $search = ($_GET['search']);
                     $search = strtolower($search);  
                     $search_str = " WHERE (lower(descricao) LIKE '%$search%'
                     OR lower(tipo) LIKE '%$search%' OR lower(data) LIKE '%$search%' 
@@ -214,15 +214,15 @@
                         */
                         $id = $row['id'];
                         
-                        $tipo = utf8_encode($row['tipo']);
+                        $tipo = ($row['tipo']);
                         
-                        $valor = utf8_encode($row['valor']);
+                        $valor = ($row['valor']);
                         
-                        $descricao = utf8_encode($row['descricao']);
+                        $descricao = ($row['descricao']);
                         
-                        $data = utf8_encode($row['data']);
+                        $data = ($row['data']);
 
-                        $exc = utf8_encode($row['excluido']);
+                        $exc = ($row['excluido']);
 
                         ?>
                         <tr <?php if($exc) echo 'class = "exc"'; ?>>

@@ -27,15 +27,15 @@
             else if(strtolower($a) == 'a ' || strtolower($a) == 'o ')
                 $titulo = substr($titulo, 2).", $a";
 
-            $titulo = utf8_decode(mysqli_real_escape_string($conn, $_POST['titulo']));
-            $abrev = utf8_decode(mysqli_real_escape_string($conn, $_POST['genero']));
+            $titulo = (mysqli_real_escape_string($conn, $_POST['titulo']));
+            $abrev = (mysqli_real_escape_string($conn, $_POST['genero']));
             $genero = getGenero($abrev);
-            $autor = utf8_decode(mysqli_real_escape_string($conn, $_POST['autor']));
-            $editora = utf8_decode(mysqli_real_escape_string($conn, $_POST['editora']));            
-            $ano = utf8_decode(mysqli_real_escape_string($conn, $_POST['ano']));
-            $edicao = utf8_decode(mysqli_real_escape_string($conn, $_POST['edicao']));
-            $qtde = utf8_decode(mysqli_real_escape_string($conn, $_POST['qtde']));
-            $obs = utf8_decode(mysqli_real_escape_string($conn, $_POST['obs']));
+            $autor = (mysqli_real_escape_string($conn, $_POST['autor']));
+            $editora = (mysqli_real_escape_string($conn, $_POST['editora']));            
+            $ano = (mysqli_real_escape_string($conn, $_POST['ano']));
+            $edicao = (mysqli_real_escape_string($conn, $_POST['edicao']));
+            $qtde = (mysqli_real_escape_string($conn, $_POST['qtde']));
+            $obs = (mysqli_real_escape_string($conn, $_POST['obs']));
 
             if($qtde <= 0) $disp = false;
             else $disp = true;
@@ -47,10 +47,10 @@
 
             $res = mysqli_query($conn, $sql);
             
-            $titulo = utf8_encode($titulo);
+            $titulo = ($titulo);
             if(mysqli_affected_rows($conn) > 0){
                 // echo 'a';
-                $titulo = utf8_encode($titulo);
+                $titulo = ($titulo);
                 echo '<script>
                 alert("Livro \"'.$titulo.'\" inserido com sucesso!");
                 </script>';

@@ -25,7 +25,7 @@
                 <div class="present">
                     <div class="presentContent">
                         <div class="presentLogo">
-                            <img src="" alt="">
+                            <img src="../imgs/logo.png" alt="">
                         </div>
                         <div class="presentTitle">
                             <h1 onclick="window.location.href='main';">Apolo</h1>
